@@ -151,7 +151,6 @@
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProtocolExtension.h" />
-    <ClInclude Include="Reactor_macro.h" />
     <ClInclude Include="RTTIDefinition.h" />
     <ClInclude Include="RTTIDefinition_macros.h" />
     <ClInclude Include="RTTIException.h" />
