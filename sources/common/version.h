@@ -1,0 +1,17 @@
+#pragma once
+
+#define CAD_MAJOR		1
+#define CAD_MINOR		0
+#define CAD_HOTFIX		0
+#define CAD_REVISION	0
+
+#define CAD_MAJOR_STR		"1"
+#define CAD_MINOR_STR		"0"
+#define CAD_HOTFIX_STR		"0"
+#define CAD_REVISION_STR	"0"
+
+#define CAD_COMPANY "R-Soft\0"
+#define CAD_VERSION  CAD_MAJOR_STR "." CAD_MINOR_STR "." CAD_HOTFIX_STR "." CAD_REVISION_STR
+#define CAD_COPYRIGHT "Copyright R-Soft 2021\0"
+#define CAD_PRODUCT "MiniCAD"
+#define CAD_PRODUCT_VERSION CAD_MAJOR_STR "." CAD_MINOR_STR "." CAD_HOTFIX_STR "." CAD_REVISION_STR "\0"

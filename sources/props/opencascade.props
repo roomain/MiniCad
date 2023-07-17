@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OPENCASCADE_DIR>$(SolutionDir)..\Externals\opencascade-7.4.0</OPENCASCADE_DIR>
+    <OPENCASCADE_INC>$(OPENCASCADE_DIR)\inc</OPENCASCADE_INC>
+    <OPENCASCADE_LIB>$(OPENCASCADE_DIR)\win64\vc14\lib</OPENCASCADE_LIB>
+    <OPENCASCADE_BIN>$(OPENCASCADE_DIR)\win64\vc14\bin</OPENCASCADE_BIN>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OPENCASCADE_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OPENCASCADE_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(OPENCASCADE_BIN)\*.dll $(OutDir)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OPENCASCADE_DIR">
+      <Value>$(OPENCASCADE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCASCADE_INC">
+      <Value>$(OPENCASCADE_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCASCADE_LIB">
+      <Value>$(OPENCASCADE_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENCASCADE_BIN">
+      <Value>$(OPENCASCADE_BIN)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

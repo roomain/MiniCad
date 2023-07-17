@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <BENCHMARK_DIR>$(solutionDir)..\Externals\benchmark</BENCHMARK_DIR>
+    <BENCHMARK_INC>$(BENCHMARK_DIR)\include</BENCHMARK_INC>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(BENCHMARK_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(BENCHMARK_DIR)\VS2019\src\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>benchmark.lib;benchmark_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="BENCHMARK_DIR">
+      <Value>$(BENCHMARK_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BENCHMARK_INC">
+      <Value>$(BENCHMARK_INC)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

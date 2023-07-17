@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <VCPKG>C:\vcpkg</VCPKG>
+    <VCPKG_INSTALLED>$(VCPKG)\installed</VCPKG_INSTALLED>
+    <VCPKG_PACKAGE>$(VCPKG)\packages</VCPKG_PACKAGE>
+    <VCPKG_INSTALLED>$(VCPKG)\installed</VCPKG_INSTALLED>
+    <VCPKG_INC>$(VCPKG_INSTALLED)\x64-windows\include</VCPKG_INC>
+    <GMP_INC>$(VCPKG_INSTALLED)\x64-windows\include\CGAL\GMP</GMP_INC>
+    <MPFR_INC>$(VCPKG_PACKAGE)\mpfr_x64-windows</VCPKG_INC>
+    <VCPKG_LIB>$(VCPKG_INSTALLED)\x64-windows\lib</VCPKG_LIB>
+    <VCPKG_BIN>$(VCPKG_INSTALLED)\x64-windows\bin</VCPKG_BIN>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VCPKG_INC);$(GMP_INC);$(MPFR_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(VCPKG_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mpfr.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      copy $(VCPKG_BIN)\mpfr-6.dll $(OutDir)
+      copy $(VCPKG_BIN)\gmp.dll $(OutDir)
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="VCPKG">
+      <Value>$(VCPKG)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCPKG_INSTALLED">
+      <Value>$(VCPKG_INSTALLED)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCPKG_PACKAGE">
+      <Value>$(VCPKG_PACKAGE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCPKG_INSTALLED">
+      <Value>$(VCPKG_INSTALLED)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCPKG_INC">
+      <Value>$(VCPKG_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GMP_INC">
+      <Value>$(GMP_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="MPFR_INC">
+      <Value>$(MPFR_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCPKG_LIB">
+      <Value>$(VCPKG_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VCPKG_BIN">
+      <Value>$(VCPKG_BIN)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <QSCINTILLA_DIR>$(SolutionDir)..\Externals\QScintilla_src-2.13.0</QSCINTILLA_DIR>
+    <QSCINTILLA_INC>$(QSCINTILLA_DIR)\src</QSCINTILLA_INC>
+    <QSCINTILLA_LIB>$(QSCINTILLA_DIR)\build\release</QSCINTILLA_LIB>
+    <QSCINTILLA_BIN>$(QSCINTILLA_DIR)\build\release</QSCINTILLA_BIN>
+    <QSCINTILLA_LIB_DEBUG>$(QSCINTILLA_DIR)\build\debug</QSCINTILLA_LIB_DEBUG>
+    <QSCINTILLA_BIN_DEBUG>$(QSCINTILLA_DIR)\build\debug</QSCINTILLA_BIN_DEBUG>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(QSCINTILLA_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(QSCINTILLA_LIB_DEBUG);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>qscintilla2_qt5d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(QSCINTILLA_BIN_DEBUG)\*.dll $(OutDir)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="QSCINTILLA_DIR">
+      <Value>$(QSCINTILLA_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QSCINTILLA_INC">
+      <Value>$(QSCINTILLA_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QSCINTILLA_LIB">
+      <Value>$(QSCINTILLA_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QSCINTILLA_BIN">
+      <Value>$(QSCINTILLA_BIN)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QSCINTILLA_LIB_DEBUG">
+      <Value>$(QSCINTILLA_LIB_DEBUG)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QSCINTILLA_BIN_DEBUG">
+      <Value>$(QSCINTILLA_BIN_DEBUG)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

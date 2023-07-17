@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <GLAD_DIR>$(SolutionDir)../Externals/glad</GLAD_DIR>
+    <GLAD_INC>$(GLAD_DIR)/include</GLAD_INC>
+    <GLAD_LIB>$(SolutionDir)../Externals/GladLib/x64/Release</GLAD_LIB>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(GLAD_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(GLAD_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="GLAD_DIR">
+      <Value>$(GLAD_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLAD_INC">
+      <Value>$(GLAD_INC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLAD_LIB">
+      <Value>$(GLAD_LIB)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
