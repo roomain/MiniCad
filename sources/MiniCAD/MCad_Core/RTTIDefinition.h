@@ -49,7 +49,7 @@ public:
 	* @param pDef class definition to test
 	* @brief return true if defined class is inherited class defined by pDef
 	*/
-	[[nodiscard]] constexpr  bool isKindOf(const std::shared_ptr<RTTIDefinition>& pDef)const noexcept;
+	[[nodiscard]] bool isKindOf(const std::shared_ptr<RTTIDefinition>& pDef)const noexcept;
 
 	/*
 	* @return class name

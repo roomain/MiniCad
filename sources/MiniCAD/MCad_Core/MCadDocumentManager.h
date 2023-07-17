@@ -34,7 +34,7 @@ public:
 	static [[nodiscard]] MCadDocumentManager& Instance();
 	[[nodiscard]] MCadDocumentWPtr currentDocument();
 	[[nodiscard]] size_t count()const noexcept;
-	void setCurrentDocument(const MCadDocumentPtr& pDoc);
+	void setCurrentDocument(const MCadDocumentPtr& a_pDoc);
 	using MCadDocumentIter = std::vector<MCadDocumentPtr>::iterator;
 	[[nodiscard]] MCadDocumentIter begin();
 	[[nodiscard]] MCadDocumentIter end();
