@@ -13,6 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\RTTI">
+      <UniqueIdentifier>{ed098cf4-b46e-4cb6-916a-ee7a9104d9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\RTTI">
+      <UniqueIdentifier>{ae74fe5c-c147-48dd-a075-96f16334d41a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Stream">
+      <UniqueIdentifier>{2145b8dc-fc8b-4012-8cef-0c85b16b392e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Stream">
+      <UniqueIdentifier>{51f1ea83-f0e0-4f8e-b78a-db4b2353f0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Document">
+      <UniqueIdentifier>{90f00af3-d9a5-4b42-9e00-c04a77579da9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Document">
+      <UniqueIdentifier>{91aa0fc1-bca6-4502-bb63-28660ad20649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\UndoRedo">
+      <UniqueIdentifier>{62a3e465-a6c1-4179-abd1-016a4e095ea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\UndoRedo">
+      <UniqueIdentifier>{b3992b97-c8f2-4033-9a77-c438fc2e0b81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -24,22 +48,7 @@
     <ClInclude Include="local_resources.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="RTTIDefinition.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="RTTIException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="RTTIException_macro.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="ProtocolExtension.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="TRTTIDefinition.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="RTTIDefinition_macros.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="MCad_Core_globals.h">
@@ -54,15 +63,33 @@
     <ClInclude Include="MCadDocumentManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="TRTTIDefinition.h">
+      <Filter>Fichiers d%27en-tête\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="RTTIDefinition.h">
+      <Filter>Fichiers d%27en-tête\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="RTTIDefinition_macros.h">
+      <Filter>Fichiers d%27en-tête\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="RTTIException.h">
+      <Filter>Fichiers d%27en-tête\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="RTTIException_macro.h">
+      <Filter>Fichiers d%27en-tête\RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadInputStream.h">
+      <Filter>Fichiers d%27en-tête\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadOutputStream.h">
+      <Filter>Fichiers d%27en-tête\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadBinaryBuffer.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="RTTIException.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="RTTIDefinition.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="MCadObject.cpp">
@@ -70,6 +97,12 @@
     </ClCompile>
     <ClCompile Include="MCadDocumentManager.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="RTTIDefinition.cpp">
+      <Filter>Fichiers sources\RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="RTTIException.cpp">
+      <Filter>Fichiers sources\RTTI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,24 +19,26 @@ size_t MCadDocumentManager::count()const noexcept
 void MCadDocumentManager::setCurrentDocument(const MCadDocumentPtr& a_pDoc)
 {
 	m_pCurrentDocument = a_pDoc;
+	// TODO
 }
 
-MCadDocumentManager::MCadDocumentIter MCadDocumentManager::begin()
+void MCadDocumentManager::add_reactor(const MCadDocManagerReactorPtr& a_pReactor)
 {
-	return m_vDocument.begin();
+	m_vReactors.emplace_back(a_pReactor);
 }
 
-MCadDocumentManager::MCadDocumentIter MCadDocumentManager::end()
+void MCadDocumentManager::remove_reactor(const MCadDocManagerReactorPtr& a_pReactor)
 {
-	return m_vDocument.end();
+	std::remove(m_vReactors.begin(), m_vReactors.end(), a_pReactor);
 }
 
-MCadDocumentManager::MCadDocumentConst_Iter MCadDocumentManager::cbegin()
+size_t MCadDocumentManager::count_reactor()const
 {
-	return m_vDocument.cbegin();
+	return m_vReactors.size();
 }
 
-MCadDocumentManager::MCadDocumentConst_Iter MCadDocumentManager::cend()
+void MCadDocumentManager::remove_allReactor()
 {
-	return m_vDocument.cend();
+	m_vReactors.clear();
 }
+

@@ -144,8 +144,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="IMCadInputStream.h" />
+    <ClInclude Include="IMCadOutputStream.h" />
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="IMCadObjectReactor.h" />
+    <ClInclude Include="MCadBinaryBuffer.h" />
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCad_Core_globals.h" />
