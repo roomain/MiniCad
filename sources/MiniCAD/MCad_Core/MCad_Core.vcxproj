@@ -149,8 +149,11 @@
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
+    <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadObject.h" />
+    <ClInclude Include="MCadProperty.h" />
+    <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProtocolExtension.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="TRTTIDefinition.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MCadDocument.cpp" />
     <ClCompile Include="MCadDocumentManager.cpp" />
     <ClCompile Include="MCadObject.cpp" />
     <ClCompile Include="pch.cpp">

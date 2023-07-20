@@ -13,5 +13,6 @@
 #include "RTTIDefinition.h"
 #include "ProtocolExtension.h"
 #include "MCadDocumentManager.h"
+#include "MCadDocument.h"
 #include "MCadObject.h"
 #endif //PCH_H

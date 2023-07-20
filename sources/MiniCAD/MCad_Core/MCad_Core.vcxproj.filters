@@ -37,6 +37,12 @@
     <Filter Include="Fichiers sources\UndoRedo">
       <UniqueIdentifier>{b3992b97-c8f2-4033-9a77-c438fc2e0b81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Reactors">
+      <UniqueIdentifier>{6093df32-2103-461f-8843-03ba6883705f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Reactors">
+      <UniqueIdentifier>{6a6dfb2f-11bd-4644-a62c-4609ee75f0ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,13 +60,7 @@
     <ClInclude Include="MCad_Core_globals.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="IMCadObjectReactor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="MCadObject.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="MCadDocumentManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="TRTTIDefinition.h">
@@ -87,6 +87,21 @@
     <ClInclude Include="MCadBinaryBuffer.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
+    <ClInclude Include="MCadDocumentManager.h">
+      <Filter>Fichiers d%27en-tête\Document</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadDocument.h">
+      <Filter>Fichiers d%27en-tête\Document</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadObjectReactor.h">
+      <Filter>Fichiers d%27en-tête\Reactors</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadReactive.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadProperty.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -95,14 +110,17 @@
     <ClCompile Include="MCadObject.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="MCadDocumentManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="RTTIDefinition.cpp">
       <Filter>Fichiers sources\RTTI</Filter>
     </ClCompile>
     <ClCompile Include="RTTIException.cpp">
       <Filter>Fichiers sources\RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadDocumentManager.cpp">
+      <Filter>Fichiers sources\Document</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadDocument.cpp">
+      <Filter>Fichiers sources\Document</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

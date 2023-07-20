@@ -6,25 +6,29 @@
 ************************************************/
 #include <vector>
 #include <memory>
+#include "MCadReactive.h"
+#include "MCad_Core_globals.h"
 
-class MCadDocumentManagetReactor;
-using MCadDocumentManagetReactorPtr = std::shared_ptr<MCadDocumentManagetReactor>;
+
 
 class MCadDocument;
 using MCadDocumentPtr = std::shared_ptr<MCadDocument>;
 using MCadDocumentWPtr = std::weak_ptr<MCadDocument>;
 
 class MCadDocManagerReactor;
-using MCadDocManagerReactorPtr = std::shared_ptr<MCadDocManagerReactor>;
 
+
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#pragma warning(disable : 4251)
 
 /*@brief Manage opened documents*/
-class MCadDocumentManager
+class MCAD_CORE_EXPORT MCadDocumentManager : public MCadReactive<MCadDocManagerReactor>
 {
+	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, MCadReactive<MCadDocManagerReactor>)
 private:
 	std::vector<MCadDocumentPtr> m_vDocument;			/*!< opened documents*/
 	MCadDocumentWPtr m_pCurrentDocument;				/*!< current document*/
-	std::vector<MCadDocManagerReactorPtr> m_vReactors;	/*!< manager reactors*/
 	
 	MCadDocumentManager() = default;
 
@@ -35,10 +39,19 @@ public:
 	MCadDocumentManager& operator = (const MCadDocumentManager&) = delete;
 	MCadDocumentManager& operator = (MCadDocumentManager&&) = delete;
 
+	/*@brief document manager instance*/
 	static [[nodiscard]] MCadDocumentManager& Instance();
+
+	/*@brief current document*/
 	[[nodiscard]] MCadDocumentWPtr currentDocument();
+
+	/*@brief number of documents*/
 	[[nodiscard]] size_t count()const noexcept;
+
+	/*@brief set document as current*/
 	void setCurrentDocument(const MCadDocumentPtr& a_pDoc);
+
+	/*@brief iterator on opened documents*/
 	using MCadDocumentIter = std::vector<MCadDocumentPtr>::iterator;
 	[[nodiscard]] constexpr MCadDocumentIter begin() { return m_vDocument.begin(); }
 	[[nodiscard]] constexpr MCadDocumentIter end() {return m_vDocument.end();	}
@@ -47,10 +60,6 @@ public:
 	[[nodiscard]] MCadDocumentConst_Iter cbegin() { return m_vDocument.cbegin(); }
 	[[nodiscard]] MCadDocumentConst_Iter cend() { return m_vDocument.cend(); }
 
-	/*@brief reactors management*/
-	void add_reactor(const MCadDocManagerReactorPtr& a_pReactor);
-	void remove_reactor(const MCadDocManagerReactorPtr& a_pReactor);
-	size_t count_reactor()const;
-	void remove_allReactor();
 };
 
+#pragma warning(pop)
