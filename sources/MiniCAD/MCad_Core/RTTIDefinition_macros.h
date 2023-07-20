@@ -9,6 +9,7 @@
 #include <format>
 #include "TRTTIDefinition.h"
 #include "RTTIException.h"
+#include <source_location>
 
 template<typename ...Types>
 class DefinitionsStub {};
@@ -18,7 +19,9 @@ template<typename Type, typename ...Other>
 constexpr void getAndCheckDefinition(std::vector<RTTIDefinitionPtr>& a_vDef, DefinitionsStub<Type, Other ...>&& a_trash)
 {
 	if (!Type::definition())
-		throw RTTIException(RTTIException::ExceptType::Except_ParentNotDefined, std::format("Classname {}", typeid(Type).name()));
+		throw RTTIException(RTTIException::ExceptType::Except_ParentNotDefined, 
+			std::source_location::current(),
+			std::format("Classname {}", typeid(Type).name()));
 	a_vDef.push_back(Type::definition());
 	getAndCheckDefinition(a_vDef, DefinitionsStub<Other ...>());
 }
@@ -27,7 +30,9 @@ template<typename Type>
 constexpr void getAndCheckDefinition(std::vector<RTTIDefinitionPtr>& a_vDef, DefinitionsStub<Type>&& a_trash)
 {
 	if (!Type::definition())
-		throw RTTIException(RTTIException::ExceptType::Except_ParentNotDefined, std::format("Classname {}", typeid(Type).name()));
+		throw RTTIException(RTTIException::ExceptType::Except_ParentNotDefined,
+			std::source_location::current(), 
+			std::format("Classname {}", typeid(Type).name()));
 	a_vDef.push_back(Type::definition());
 }
 
@@ -43,7 +48,7 @@ public: \
 	static inline void releaseDef()\
 	{\
 		if(s_definition.use_count() > 1)\
-			throw RTTIException(RTTIException::ExceptType::Except_CantUnitialize);\
+			throw RTTIException(RTTIException::ExceptType::Except_CantUnitialize, std::source_location::current());\
 		s_definition.reset(); \
 	}
 
@@ -60,14 +65,14 @@ public:\
 	[[nodiscard]] virtual inline RTTIDefinitionPtr isA()const \
 	{\
 		if(!classname::s_definition)\
-			throw RTTIException(RTTIException::ExceptType::Except_NotDefined); \
+			throw RTTIException(RTTIException::ExceptType::Except_NotDefined, std::source_location::current()); \
 		return classname::s_definition; \
 	}\
 \
 	[[nodiscard]] virtual inline bool isKindOf(const RTTIDefinitionPtr& a_def)const \
 	{\
 		if(!classname::s_definition)\
-			throw RTTIException(RTTIException::ExceptType::Except_NotDefined); \
+			throw RTTIException(RTTIException::ExceptType::Except_NotDefined, std::source_location::current()); \
 		return classname::s_definition->isKindOf(a_def); \
 	}\
 \
@@ -75,14 +80,14 @@ public:\
 	[[nodiscard]] inline bool isKindOf()const \
 	{\
 		if(!classname::s_definition)\
-			throw RTTIException(RTTIException::ExceptType::Except_NotDefined); \
+			throw RTTIException(RTTIException::ExceptType::Except_NotDefined, std::source_location::current()); \
 		return classname::s_definition->isKindOf(KindType::definition()); \
 	}\
 \
 	[[nodiscard]] inline ProtocolExtensionPtr getProtocolExt(const RTTIDefinitionPtr& a_def)const \
 	{\
 		if(!classname::s_definition)\
-			throw RTTIException(RTTIException::ExceptType::Except_NotDefined); \
+			throw RTTIException(RTTIException::ExceptType::Except_NotDefined, std::source_location::current()); \
 		return classname::s_definition->getProtocolExt(a_def); \
 	}\
 \
@@ -90,7 +95,7 @@ public:\
 	[[nodiscard]] inline ProtocolExtensionPtr getProtocolExt()const \
 	{\
 		if(!classname::s_definition)\
-			throw RTTIException(RTTIException::ExceptType::Except_NotDefined); \
+			throw RTTIException(RTTIException::ExceptType::Except_NotDefined, std::source_location::current()); \
 		return classname::s_definition->getProtocolExt(KindType::definition()); \
 	}\
 \

@@ -151,6 +151,7 @@
     <ClInclude Include="MCadBinaryBuffer.h" />
     <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
+    <ClInclude Include="MCadException.h" />
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCad_Core_globals.h" />

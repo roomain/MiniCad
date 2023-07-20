@@ -2,7 +2,8 @@
 
 
 
-RTTIException::RTTIException(ExceptType a_Type, std::string_view a_extra) : m_exceptType{ a_Type }, m_extra { a_extra }
+RTTIException::RTTIException(ExceptType a_Type, const std::source_location& a_loc, const std::string_view& a_extra) :
+	MCadException(a_loc, a_extra), m_exceptType{ a_Type }
 {
 	//
 }
