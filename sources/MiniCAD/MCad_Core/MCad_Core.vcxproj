@@ -152,7 +152,6 @@
     <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadObject.h" />
-    <ClInclude Include="MCadProperty.h" />
     <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />
