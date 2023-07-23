@@ -8,6 +8,10 @@
 #include "MCadObject.h"
 #include <string>
 
+
+#pragma warning(push)
+#pragma warning(disable : 4251)
+
 /*@brief base class for named object*/
 class MCAD_CORE_EXPORT MCadNamedObject : public MCadObject
 {
@@ -25,3 +29,5 @@ public:
 	virtual [[nodiscard]] bool setName(const std::string& a_name);
 };
 
+
+#pragma warning(pop)

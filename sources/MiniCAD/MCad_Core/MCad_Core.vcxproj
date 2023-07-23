@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="IMCadContainer.h" />
     <ClInclude Include="IMCadDocumentReactor.h" />
     <ClInclude Include="IMCadInputStream.h" />
     <ClInclude Include="IMCadOutputStream.h" />
