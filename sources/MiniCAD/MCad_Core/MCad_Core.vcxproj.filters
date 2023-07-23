@@ -43,6 +43,21 @@
     <Filter Include="Fichiers sources\Reactors">
       <UniqueIdentifier>{6a6dfb2f-11bd-4644-a62c-4609ee75f0ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Objects">
+      <UniqueIdentifier>{c13bb095-6ce1-4b8a-865c-aa6af45b3053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Objects">
+      <UniqueIdentifier>{0f9f61d4-d3b3-4862-ab66-22f41e80f139}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Container">
+      <UniqueIdentifier>{126d75d5-f623-467a-b1fe-5c3e57cab7fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\ProtocolExtensions">
+      <UniqueIdentifier>{53678616-82a5-4b2e-93a3-913564b6761c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\ProtocolExtensions">
+      <UniqueIdentifier>{5fe7019d-10c2-4d8f-ba67-343347c5fc29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -58,9 +73,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="MCad_Core_globals.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="MCadObject.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="TRTTIDefinition.h">
@@ -96,15 +108,27 @@
     <ClInclude Include="IMCadObjectReactor.h">
       <Filter>Fichiers d%27en-tête\Reactors</Filter>
     </ClInclude>
+    <ClInclude Include="IMCadDocManagerReactor.h">
+      <Filter>Fichiers d%27en-tête\Reactors</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadDocumentReactor.h">
+      <Filter>Fichiers d%27en-tête\Reactors</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadUndoRedo.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadObject.h">
+      <Filter>Fichiers d%27en-tête\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="MCadReactive.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\Reactors</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadNamedObject.h">
+      <Filter>Fichiers d%27en-tête\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="MCadObject.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="RTTIDefinition.cpp">
@@ -118,6 +142,15 @@
     </ClCompile>
     <ClCompile Include="MCadDocument.cpp">
       <Filter>Fichiers sources\Document</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadUndoRedo.cpp">
+      <Filter>Fichiers sources\UndoRedo</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadObject.cpp">
+      <Filter>Fichiers sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadNamedObject.cpp">
+      <Filter>Fichiers sources\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

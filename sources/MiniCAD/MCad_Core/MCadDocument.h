@@ -9,7 +9,7 @@
 #include "MCadReactive.h"
 #include "MCad_Core_globals.h"
 
-class MCadDocumentReactor;
+class IMCadDocumentReactor;
 class IMCadFileInputStream;
 class IMCadFileOutputStream;
 
@@ -19,9 +19,9 @@ class IMCadFileOutputStream;
 #pragma warning(disable : 4251)
 
 /*@brief base class for document*/
-class MCadDocument : public MCadReactive<MCadDocumentReactor>
+class MCadDocument : public MCadReactive<IMCadDocumentReactor>
 {
-	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<MCadDocumentReactor>)
+	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<IMCadDocumentReactor>)
 private:
 	std::string	m_sFilePath;					/*@brief file path of document*/
 

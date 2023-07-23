@@ -6,6 +6,7 @@
 * @author Roomain
 ************************************************/
 #include <string>
+#include <memory>
 
 /*@brief Base of input stream*/
 class IMCadInputStream
@@ -27,11 +28,6 @@ public:
 	virtual IMCadInputStream& operator >> (double&) = 0;
 	virtual IMCadInputStream& operator >> (float&) = 0;
 	virtual IMCadInputStream& operator >> (std::string&) = 0;
-	//virtual IMCadInputStream& operator >> (gp_Pnt&) = 0;
-	//virtual IMCadInputStream& operator >> (gp_Vec&) = 0;
-	//virtual IMCadInputStream& operator >> (glm::dvec2&) = 0;
-	//virtual IMCadInputStream& operator >> (glm::dvec3&) = 0;
-	//virtual IMCadInputStream& operator >> (glm::dvec4&) = 0;
-	//virtual IMCadInputStream& operator >> (glm::dquat&) = 0;
-	//virtual IMCadInputStream& operator >> (glm::dmat4&) = 0;
 };
+
+using IMCadInputStreamPtr = std::shared_ptr<IMCadInputStream>;

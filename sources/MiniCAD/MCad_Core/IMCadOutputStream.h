@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include <string>
+#include <memory>
 
 /*@brief Base of input stream*/
 class IMCadOutputStream
@@ -23,11 +24,6 @@ public:
 	virtual IMCadOutputStream& operator << (const double&) = 0;
 	virtual IMCadOutputStream& operator << (const float) = 0;
 	virtual IMCadOutputStream& operator << (const std::string&) = 0;
-	//virtual IMCadOutputStream& operator << (const gp_Pnt&) = 0;
-	//virtual IMCadOutputStream& operator << (const gp_Vec&) = 0;
-	//virtual IMCadOutputStream& operator << (const glm::dvec2&) = 0;
-	//virtual IMCadOutputStream& operator << (const glm::dvec3&) = 0;
-	//virtual IMCadOutputStream& operator << (const glm::dvec4&) = 0;
-	//virtual IMCadOutputStream& operator << (const glm::dquat&) = 0;
-	//virtual IMCadOutputStream& operator << (const glm::dmat4&) = 0;
 };
+
+using IMCadOutputStreamPtr = std::shared_ptr<IMCadOutputStream>;

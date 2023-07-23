@@ -119,6 +119,7 @@ public: \
 	}
 
 /*@brief declare RTTI for a derived class*/
+/*DECLARE_RTTI_DERIVED(version, classname, parents classes)*/
 #define DECLARE_RTTI_DERIVED(version, classname, ...) \
 BASE_RTTI_STATIC(version, classname)\
 BASE_DEFINITION_MACRO(version, classname)\

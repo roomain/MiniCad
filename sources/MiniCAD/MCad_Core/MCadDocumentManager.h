@@ -12,10 +12,8 @@
 
 
 class MCadDocument;
-using MCadDocumentPtr = std::shared_ptr<MCadDocument>;
-using MCadDocumentWPtr = std::weak_ptr<MCadDocument>;
 
-class MCadDocManagerReactor;
+class IMCadDocManagerReactor;
 
 
 #pragma warning(push)
@@ -23,17 +21,17 @@ class MCadDocManagerReactor;
 #pragma warning(disable : 4251)
 
 /*@brief Manage opened documents*/
-class MCAD_CORE_EXPORT MCadDocumentManager : public MCadReactive<MCadDocManagerReactor>
+class MCAD_CORE_EXPORT MCadDocumentManager : public MCadReactive<IMCadDocManagerReactor>
 {
-	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, MCadReactive<MCadDocManagerReactor>)
+	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, MCadReactive<IMCadDocManagerReactor>)
 private:
-	std::vector<MCadDocumentPtr> m_vDocument;			/*!< opened documents*/
-	MCadDocumentWPtr m_pCurrentDocument;				/*!< current document*/
+	std::vector<std::shared_ptr<MCadDocument>> m_vDocument;		/*!< opened documents*/
+	std::weak_ptr<MCadDocument> m_pCurrentDocument;				/*!< current document*/
 	
 	MCadDocumentManager() = default;
 
 public:
-	~MCadDocumentManager() = default;
+	virtual ~MCadDocumentManager() = default;
 	MCadDocumentManager(const MCadDocumentManager&) = delete;
 	MCadDocumentManager(MCadDocumentManager&&) = delete;
 	MCadDocumentManager& operator = (const MCadDocumentManager&) = delete;
@@ -43,20 +41,20 @@ public:
 	static [[nodiscard]] MCadDocumentManager& Instance();
 
 	/*@brief current document*/
-	[[nodiscard]] MCadDocumentWPtr currentDocument();
+	[[nodiscard]] std::weak_ptr<MCadDocument> currentDocument();
 
 	/*@brief number of documents*/
 	[[nodiscard]] size_t count()const noexcept;
 
 	/*@brief set document as current*/
-	void setCurrentDocument(const MCadDocumentPtr& a_pDoc);
+	void setCurrentDocument(const std::shared_ptr<MCadDocument>& a_pDoc);
 
 	/*@brief iterator on opened documents*/
-	using MCadDocumentIter = std::vector<MCadDocumentPtr>::iterator;
+	using MCadDocumentIter = std::vector<std::shared_ptr<MCadDocument>>::iterator;
 	[[nodiscard]] constexpr MCadDocumentIter begin() { return m_vDocument.begin(); }
 	[[nodiscard]] constexpr MCadDocumentIter end() {return m_vDocument.end();	}
 
-	using MCadDocumentConst_Iter = std::vector<MCadDocumentPtr>::const_iterator;
+	using MCadDocumentConst_Iter = std::vector<std::shared_ptr<MCadDocument>>::const_iterator;
 	[[nodiscard]] MCadDocumentConst_Iter cbegin() { return m_vDocument.cbegin(); }
 	[[nodiscard]] MCadDocumentConst_Iter cend() { return m_vDocument.cend(); }
 

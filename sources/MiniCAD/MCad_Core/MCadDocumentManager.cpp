@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "IMCadDocManagerReactor.h"
+
 
 MCadDocumentManager& MCadDocumentManager::Instance()
 {
@@ -6,7 +8,7 @@ MCadDocumentManager& MCadDocumentManager::Instance()
 	return s_instance;
 }
 
-MCadDocumentWPtr MCadDocumentManager::currentDocument()
+std::weak_ptr<MCadDocument> MCadDocumentManager::currentDocument()
 {
 	return m_pCurrentDocument;
 }
@@ -16,8 +18,9 @@ size_t MCadDocumentManager::count()const noexcept
 	return m_vDocument.size();
 }
 
-void MCadDocumentManager::setCurrentDocument(const MCadDocumentPtr& a_pDoc)
+void MCadDocumentManager::setCurrentDocument(const std::shared_ptr<MCadDocument>& a_pDoc)
 {
 	m_pCurrentDocument = a_pDoc;
-	// TODO
+	for (auto& pReac : m_vReactors)
+		pReac->onCurrentDocument(a_pDoc.get());
 }
