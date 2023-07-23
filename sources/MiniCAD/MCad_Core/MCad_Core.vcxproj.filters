@@ -126,6 +126,9 @@
     <ClInclude Include="MCadNamedObject.h">
       <Filter>Fichiers d%27en-tête\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="MCadException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

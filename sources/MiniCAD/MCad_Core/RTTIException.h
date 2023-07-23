@@ -6,13 +6,14 @@
 ************************************************/
 #include <exception>
 #include <string>
+#include "MCadException.h"
 #include "MCad_Core_globals.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4275)
 #pragma warning(disable : 4251)
 /*@brief Special exception for RTTI*/
-class MCAD_CORE_EXPORT RTTIException : public std::exception
+class MCAD_CORE_EXPORT RTTIException : public MCadException
 {
 public:
 	enum class ExceptType : int
@@ -23,7 +24,7 @@ public:
 		Except_Unknown
 	};
 
-	explicit RTTIException(ExceptType a_Type, std::string_view a_extra = "");
+	explicit RTTIException(ExceptType a_Type, const std::source_location& a_loc, const std::string_view& a_extra = "");
 	RTTIException() = delete;
 	virtual ~RTTIException() = default;
 	[[nodiscard]] ExceptType type()const noexcept;
@@ -32,7 +33,6 @@ public:
 
 private:
 	ExceptType m_exceptType;		/*!< exception type (determine the error message)*/
-	std::string	m_extra;			/*!< extra message*/
 };
 
 #pragma warning(pop)
