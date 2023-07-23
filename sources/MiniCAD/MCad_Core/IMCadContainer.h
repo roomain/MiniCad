@@ -22,12 +22,16 @@ public:
 	IMCadContainer() = default;
 	virtual ~IMCadContainer() = default;
 
+	/*@brief add object to container*/
+	/*@return true if correctly added*/
 	virtual [[nodiscard]] bool add(const Contained& a_object)
 	{
 		emplace(a_object);
 		return true;
 	}
 
+	/*@brief add object to container*/
+	/*@return true if correctly added*/
 	virtual [[nodiscard]] bool add(Contained&& a_object)
 	{
 		emplace(a_object);
@@ -41,10 +45,6 @@ public:
 	Container::const_iterator cend() { return m_container.cend(); }
 };
 
-
-
-
-
 template<typename Contained, typename Container>
 class IMCadFilterContainer : public IMCadContainer<Contained, Container>
 {
@@ -56,6 +56,8 @@ public:
 	IMCadFilterContainer() = default;
 	virtual ~IMCadFilterContainer() = default;
 
+	/*@brief add object to container*/
+	/*@return true if correctly added*/
 	virtual [[nodiscard]] bool add(const Contained& a_object)
 	{
 		if (filter(a_object))
@@ -66,6 +68,8 @@ public:
 		return false;
 	}
 
+	/*@brief add object to container*/
+	/*@return true if correctly added*/
 	virtual [[nodiscard]] bool add(Contained&& a_object)
 	{
 		if (filter(a_object))
