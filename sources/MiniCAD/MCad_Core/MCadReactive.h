@@ -66,7 +66,7 @@ public:
 	template<typename Type>
 	void remove_allReactor()
 	{
-		std::remove_if(m_vReactors.begin(), m_vReactors.end(), [](const auto& a_reac) {return a_reac->isKindOf<Type>(); });
+		std::erase_if(m_vReactors, [](const auto& a_reac) {return a_reac->isKindOf<Type>(); });
 	}
 
 	/*@brief count reactor of type type*/

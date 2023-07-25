@@ -41,8 +41,8 @@ public:
 	virtual [[nodiscard]] size_t count()const = 0;
 	Container::iterator begin() { return m_container.begin(); }
 	Container::iterator end() { return m_container.end(); }
-	Container::const_iterator cbegin() { return m_container.cbegin(); }
-	Container::const_iterator cend() { return m_container.cend(); }
+	Container::const_iterator cbegin()const { return m_container.cbegin(); }
+	Container::const_iterator cend()const { return m_container.cend(); }
 };
 
 template<typename Contained, typename Container>

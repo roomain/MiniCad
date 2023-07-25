@@ -55,8 +55,8 @@ public:
 	[[nodiscard]] constexpr MCadDocumentIter end() {return m_vDocument.end();	}
 
 	using MCadDocumentConst_Iter = std::vector<std::shared_ptr<MCadDocument>>::const_iterator;
-	[[nodiscard]] MCadDocumentConst_Iter cbegin() { return m_vDocument.cbegin(); }
-	[[nodiscard]] MCadDocumentConst_Iter cend() { return m_vDocument.cend(); }
+	[[nodiscard]] MCadDocumentConst_Iter cbegin()const { return m_vDocument.cbegin(); }
+	[[nodiscard]] MCadDocumentConst_Iter cend()const { return m_vDocument.cend(); }
 
 };
 

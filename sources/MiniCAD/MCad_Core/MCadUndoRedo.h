@@ -58,9 +58,9 @@ public:
 class MCadUndoRedo
 {
 private:
-	bool m_active = true;						/*!< undo redo activation*/
-	std::deque<Session> m_sessionList;	/*!< list of undoredo session*/
-	//
+	bool m_active = true;							/*!< undo redo activation*/
+	std::deque<Session> m_sessionList;				/*!< list of undoredo session*/
+	std::deque<Session>::iterator m_currentSession;	/*!< iterator on current session*/
 public:
 
 	/*@brief start undo recording (automatically enable)*/

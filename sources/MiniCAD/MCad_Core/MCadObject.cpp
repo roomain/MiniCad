@@ -10,6 +10,11 @@ MCadObject::MCadObject()
 
 MCadObject::~MCadObject()
 {
+	// remove from owner
+	auto pOwner = m_pOwner.lock();
+	if (pOwner)
+		pOwner->onChildDelete(this);
+
 	for (const auto pReact : m_vReactors)
 		pReact->onObjectDeleted(this);
 }
