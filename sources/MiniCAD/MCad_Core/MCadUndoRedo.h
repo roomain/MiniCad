@@ -8,6 +8,7 @@
 #include "MCadObject.h"
 #include <chrono>
 #include <map>
+#include <deque>
 #include <mutex> // for concurent undo buffer writing
 
 class IMCaInputStream;
@@ -57,8 +58,21 @@ public:
 class MCadUndoRedo
 {
 private:
-	bool m_active;						/*!< undeo redo activation*/
-	std::list<Session> m_sessionList;	/*!< list of undoredo session*/
+	bool m_active = true;						/*!< undo redo activation*/
+	std::deque<Session> m_sessionList;	/*!< list of undoredo session*/
 	//
 public:
+
+	/*@brief start undo recording (automatically enable)*/
+	void startUndoRecord();
+	/*@brief end endo record, flush to undo file*/
+	void endUndoRecord();
+	/*@brief redo*/
+	void redo();
+	/*@brief undo*/
+	void undo();
+	/*@brief is undo possible*/
+	bool hasUndo()const noexcept;
+	/*@brief is redo possible*/
+	bool hasRedo()const noexcept;
 };

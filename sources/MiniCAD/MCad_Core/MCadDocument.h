@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include "MCadReactive.h"
+#include "MCadUndoRedo.h"
 #include "MCad_Core_globals.h"
 
 class IMCadDocumentReactor;
@@ -23,7 +24,8 @@ class MCadDocument : public MCadReactive<IMCadDocumentReactor>
 {
 	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<IMCadDocumentReactor>)
 private:
-	std::string	m_sFilePath;					/*@brief file path of document*/
+	std::string	m_sFilePath;					/*!< file path of document*/
+	MCadUndoRedo m_undoRedo;					/*!< tool of undo redo*/
 
 public:
 	MCadDocument() = default;
