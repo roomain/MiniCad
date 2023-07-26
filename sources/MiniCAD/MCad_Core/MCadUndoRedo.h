@@ -59,14 +59,22 @@ class MCadUndoRedo
 {
 private:
 	bool m_active = true;							/*!< undo redo activation*/
+	bool m_sessionActive = false;					/*!< flag indicating an active session*/
 	std::deque<Session> m_sessionList;				/*!< list of undoredo session*/
+	/**/
 	std::deque<Session>::iterator m_currentSession;	/*!< iterator on current session*/
 public:
-
+	MCadUndoRedo(const MCadUndoRedo&) = delete;
+	MCadUndoRedo();
+	virtual ~MCadUndoRedo();
+	void enableUndo(const bool a_enable) { m_active = a_enable; }
+	[[nodiscard]] bool undoEnabled()const noexcept { return m_active; }
 	/*@brief start undo recording (automatically enable)*/
 	void startUndoRecord();
 	/*@brief end endo record, flush to undo file*/
 	void endUndoRecord();
+	/*@brief cancel current*/
+	void cancel();
 	/*@brief redo*/
 	void redo();
 	/*@brief undo*/
