@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "MCadBinaryBuffer.h"
+#include <array>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -53,19 +54,19 @@ namespace TestMCadCore
 
 		TEST_METHOD(Test_WriteIntTable)
 		{
-			int writeBuffer[] = { 0, 1, 2, 3, 4, 5 };
+			std::array<int, 6> writeBuffer = { 0, 1, 2, 3, 4, 5 };
 			MCadBinaryBuffer buffer;
-			auto size = buffer.write<int>(writeBuffer, 6);
+			auto size = buffer.write<int>(writeBuffer.data(), 6);
 			Assert::AreEqual(sizeof(int) *6, size, L"Wrong size");
 		}
 
 		TEST_METHOD(Test_readIntTable)
 		{
-			int writeBuffer[] = { 0, 1, 2, 3, 4, 5 };
+			std::array<int, 6> writeBuffer = { 0, 1, 2, 3, 4, 5 };
 			MCadBinaryBuffer buffer;
-			auto writesize = buffer.write<int>(writeBuffer, 6);
-			int readBuffer[] = { -1, -1, -1, -1, -1, -1 };
-			auto readsize = buffer.read<int>(readBuffer, 6);
+			auto writesize = buffer.write<int>(writeBuffer.data(), 6);
+			std::array<int, 6> readBuffer = { -1, -1, -1, -1, -1, -1 };
+			auto readsize = buffer.read<int>(readBuffer.data(), 6);
 			Assert::AreEqual(writesize, readsize, L"Wrong size");
 			for (int i = 0; i < 6; ++i)
 				Assert::AreEqual(writeBuffer[i], readBuffer[i], L"Wrong data");

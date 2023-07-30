@@ -26,10 +26,12 @@ public:
 		m_vBuffer.reserve(MIN_SIZE);
 	}
 	~MCadBinaryBuffer() = default;
-	constexpr size_t size()const noexcept { return m_vBuffer.size(); }
+	[[nodiscard]] constexpr size_t size()const noexcept { return m_vBuffer.size(); }
+
+	void clear() { m_vBuffer.clear(); }
 	
 	template<typename Type>
-	[[nodiscard]]size_t write(const Type& a_data)
+	size_t write(const Type& a_data)
 	{
 		auto pTempBuffer = reinterpret_cast<const unsigned char*>(&a_data);
 		std::copy(pTempBuffer, pTempBuffer + sizeof(Type), std::back_inserter(m_vBuffer));
@@ -37,7 +39,7 @@ public:
 	}
 
 	template<typename Type>
-	[[nodiscard]] size_t write(const Type* a_data, const size_t& a_dataCount)
+	size_t write(const Type* a_data, const size_t& a_dataCount)
 	{
 		auto pTempBuffer = reinterpret_cast<const unsigned char*>(a_data);
 		std::copy(pTempBuffer, pTempBuffer + sizeof(Type) * a_dataCount, std::back_inserter(m_vBuffer));
@@ -68,6 +70,13 @@ public:
 		auto pDataBuffer = reinterpret_cast<unsigned char*>(a_data);
 		std::copy(pData, pData + sizeof(Type) * a_Size, pDataBuffer);
 		return endIndex;
+	}
+
+	template<typename Type, typename ForwardIter> 
+	[[nodiscard]] size_t read(const size_t& a_Size, ForwardIter a_iterator, const size_t& from = 0)const
+	{
+		std::copy(m_vBuffer.begin() + from, m_vBuffer.begin() + from + a_Size * sizeof(Type), a_iterator);
+		return from + sizeof(Type) * a_Size;
 	}
 };
 

@@ -154,8 +154,10 @@
     <ClInclude Include="IMCadDocManagerReactor.h" />
     <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
+    <ClInclude Include="MCadInputBinStream.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
+    <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />
@@ -170,8 +172,10 @@
   <ItemGroup>
     <ClCompile Include="MCadDocument.cpp" />
     <ClCompile Include="MCadDocumentManager.cpp" />
+    <ClCompile Include="MCadInputBinStream.cpp" />
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
+    <ClCompile Include="MCadOutputBinStream.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

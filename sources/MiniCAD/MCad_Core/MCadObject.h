@@ -42,6 +42,7 @@ protected:
 	/*@brief function for owner: reaction when child will be deleted*/
 	virtual void onChildDelete(MCadObject* const a_child) = 0;
 
+
 public:
 	MCadObject();
 	virtual ~MCadObject();

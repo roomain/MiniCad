@@ -12,9 +12,9 @@
 class IMCadInputStream
 {
 public:
-	virtual IMCadInputStream& setPos(const size_t& offset) = 0;
-	virtual IMCadInputStream& shift(const size_t& offset) = 0;
-	virtual bool atEnd()const noexcept = 0;
+	virtual IMCadInputStream& setPos(const size_t& a_offset) = 0;
+	virtual IMCadInputStream& shift(const size_t& a_offset) = 0;
+	virtual void atStart() = 0;
 	//-----------------------------------------------------------------
 	virtual IMCadInputStream& operator >> (unsigned long long&) = 0;
 	virtual IMCadInputStream& operator >> (long long&) = 0;

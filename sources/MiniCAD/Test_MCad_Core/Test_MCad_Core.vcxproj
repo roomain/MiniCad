@@ -168,6 +168,7 @@
     </ClCompile>
     <ClCompile Include="Test_MCadBinaryBuffer.cpp" />
     <ClCompile Include="Test_MCad_Core_RTTI.cpp" />
+    <ClCompile Include="Test_MCad_Core_Stream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

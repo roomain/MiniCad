@@ -129,6 +129,12 @@
     <ClInclude Include="IMCadContainer.h">
       <Filter>Fichiers d%27en-tête\Container</Filter>
     </ClInclude>
+    <ClInclude Include="MCadInputBinStream.h">
+      <Filter>Fichiers d%27en-tête\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadOutputBinStream.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="MCadNamedObject.cpp">
       <Filter>Fichiers sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadInputBinStream.cpp">
+      <Filter>Fichiers sources\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadOutputBinStream.cpp">
+      <Filter>Fichiers sources\Stream</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,8 +11,8 @@
 #include <deque>
 #include <mutex> // for concurent undo buffer writing
 
-class IMCaInputStream;
-class IMCaOutputStream;
+class IMCadInputStream;
+class IMCadOutputStream;
 using IMCadInputStreamPtr = std::shared_ptr<IMCadInputStream>;
 using IMCadOutputStreamPtr = std::shared_ptr<IMCadOutputStream>;
 
@@ -43,8 +43,8 @@ private:
 
 	std::mutex m_readWriteMutex;
 	std::chrono::time_point<std::chrono::system_clock> m_timePoint;	/*!< time of undo session*/
-	MCadBinaryBuffer m_undoBuffer;									/*!< saving buffer*/
-	std::list<Record> m_mpRecord;									/*!< list of record*/
+	MCadBinaryBufferPtr m_pUndoBuffer;								/*!< saving buffer*/
+	std::unordered_map<ObjectUID, Record> m_umRecord;				/*!< list of record*/
 	std::map<ObjectUID, MCadObjectWPtr> m_PointerRelocMap;			/*!< Pointer Relocation Map (for deleted object)*/
 	// For container: retrieve deleted contained objects in relocMap
 

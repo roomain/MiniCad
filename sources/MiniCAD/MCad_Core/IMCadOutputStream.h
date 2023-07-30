@@ -15,7 +15,6 @@ public:
 	virtual IMCadOutputStream& operator << (const long long&) = 0;
 	virtual IMCadOutputStream& operator << (const bool) = 0;
 	virtual IMCadOutputStream& operator << (const char) = 0;
-	virtual IMCadOutputStream& operator << (const char*) = 0;
 	virtual IMCadOutputStream& operator << (const unsigned char) = 0;
 	virtual IMCadOutputStream& operator << (const short) = 0;
 	virtual IMCadOutputStream& operator << (const unsigned short) = 0;
