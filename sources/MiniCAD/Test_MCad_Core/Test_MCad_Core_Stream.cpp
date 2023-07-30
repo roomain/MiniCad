@@ -101,6 +101,14 @@ namespace TestMCadCore
 			Assert::AreEqual(sizeof(size_t) + sizeof(char) * text.length(), m_pBuffer->size(), L"Wrong buffer size string");
 		}
 
+		TEST_METHOD(Test_WriteWString)
+		{
+			MCadOutputBinStream outStream(m_pBuffer);
+			const std::wstring text = L"azerty";
+			outStream << text;
+			Assert::AreEqual(sizeof(size_t) + sizeof(wchar_t) * text.length(), m_pBuffer->size(), L"Wrong buffer size string");
+		}
+
 		//--------------------------------------------------------------------------------------------------------------
 		TEST_METHOD(Test_ReadLongLong)
 		{
@@ -194,6 +202,17 @@ namespace TestMCadCore
 			outStream << text;
 			MCadInputBinStream inStream(m_pBuffer);
 			std::string textRet;
+			inStream >> textRet;
+			Assert::AreEqual(text, textRet, L"Wrong read");
+		}
+
+		TEST_METHOD(Test_ReadWString)
+		{
+			MCadOutputBinStream outStream(m_pBuffer);
+			const std::wstring text = L"azerty";
+			outStream << text;
+			MCadInputBinStream inStream(m_pBuffer);
+			std::wstring textRet;
 			inStream >> textRet;
 			Assert::AreEqual(text, textRet, L"Wrong read");
 		}

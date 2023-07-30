@@ -93,3 +93,13 @@ IMCadOutputStream& MCadOutputBinStream::operator << (const std::string& a_value)
 	}
 	return *this;
 }
+
+IMCadOutputStream& MCadOutputBinStream::operator << (const std::wstring& a_value)
+{
+	if (m_inputBuffer)
+	{
+		m_inputBuffer->write(a_value.length());
+		m_inputBuffer->write(a_value.c_str(), a_value.length());
+	}
+	return *this;
+}

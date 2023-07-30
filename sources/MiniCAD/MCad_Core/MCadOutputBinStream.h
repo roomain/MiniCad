@@ -37,6 +37,7 @@ public:
 	IMCadOutputStream& operator << (const double& a_value)final;
 	IMCadOutputStream& operator << (const float a_value)final;
 	IMCadOutputStream& operator << (const std::string& a_value)final;
+	IMCadOutputStream& operator << (const std::wstring& a_value)final;
 };
 
 #pragma warning(pop)

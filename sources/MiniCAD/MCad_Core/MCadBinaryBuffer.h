@@ -75,7 +75,9 @@ public:
 	template<typename Type, typename ForwardIter> 
 	[[nodiscard]] size_t read(const size_t& a_Size, ForwardIter a_iterator, const size_t& from = 0)const
 	{
-		std::copy(m_vBuffer.begin() + from, m_vBuffer.begin() + from + a_Size * sizeof(Type), a_iterator);
+		std::copy(reinterpret_cast<const Type*>(m_vBuffer.data() + from),
+			reinterpret_cast<const Type*>(m_vBuffer.data() + from) + a_Size, a_iterator);
+
 		return from + sizeof(Type) * a_Size;
 	}
 };

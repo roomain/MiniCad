@@ -28,6 +28,7 @@ public:
 	virtual IMCadInputStream& operator >> (double&) = 0;
 	virtual IMCadInputStream& operator >> (float&) = 0;
 	virtual IMCadInputStream& operator >> (std::string&) = 0;
+	virtual IMCadInputStream& operator >> (std::wstring&) = 0;
 };
 
 using IMCadInputStreamPtr = std::shared_ptr<IMCadInputStream>;

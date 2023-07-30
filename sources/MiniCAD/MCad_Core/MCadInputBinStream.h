@@ -40,6 +40,7 @@ public:
 	IMCadInputStream& operator >> (double& a_value) final;
 	IMCadInputStream& operator >> (float& a_value) final;
 	IMCadInputStream& operator >> (std::string& a_value) final;
+	IMCadInputStream& operator >> (std::wstring& a_value) final;
 };
 
 #pragma warning(pop)

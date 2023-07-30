@@ -23,6 +23,7 @@ public:
 	virtual IMCadOutputStream& operator << (const double&) = 0;
 	virtual IMCadOutputStream& operator << (const float) = 0;
 	virtual IMCadOutputStream& operator << (const std::string&) = 0;
+	virtual IMCadOutputStream& operator << (const std::wstring&) = 0;
 };
 
 using IMCadOutputStreamPtr = std::shared_ptr<IMCadOutputStream>;

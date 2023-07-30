@@ -128,3 +128,19 @@ IMCadInputStream& MCadInputBinStream::operator >> (std::string& a_value)
 	return *this;
 }
 
+
+IMCadInputStream& MCadInputBinStream::operator >> (std::wstring& a_value)
+{
+	if (m_inputBuffer)
+	{
+		size_t stringLen = 0;
+		m_offset = m_inputBuffer->read(stringLen, m_offset);
+		if (stringLen > 0)
+		{
+			m_offset = m_inputBuffer->read<wchar_t>(stringLen, std::back_inserter(a_value), m_offset);
+		}
+	}
+
+	return *this;
+}
+
