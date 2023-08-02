@@ -27,6 +27,7 @@ private:
 	std::string	m_sFilePath;					/*!< file path of document*/
 	MCadUndoRedo m_undoRedo;					/*!< tool of undo redo*/
 
+
 public:
 	MCadDocument() = default;
 	virtual ~MCadDocument() = default;

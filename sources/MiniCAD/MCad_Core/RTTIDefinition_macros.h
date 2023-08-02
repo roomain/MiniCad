@@ -10,6 +10,8 @@
 #include "TRTTIDefinition.h"
 #include "RTTIException.h"
 #include <source_location>
+#include "UndoRedoProtocol.h"
+
 
 template<typename ...Types>
 class DefinitionsStub {};
@@ -50,7 +52,8 @@ public: \
 		if(s_definition.use_count() > 1)\
 			throw RTTIException(RTTIException::ExceptType::Except_CantUnitialize, std::source_location::current());\
 		s_definition.reset(); \
-	}
+	}\
+	
 
 //------------------------------------------------------------------------------------------------------------------------------------
 /*@brief Generate base member functions for RTTI*/

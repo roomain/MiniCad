@@ -58,6 +58,9 @@
     <Filter Include="Fichiers sources\ProtocolExtensions">
       <UniqueIdentifier>{5fe7019d-10c2-4d8f-ba67-343347c5fc29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Tools">
+      <UniqueIdentifier>{132a67db-cb29-4f78-bf49-3252b4311876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -135,6 +138,21 @@
     <ClInclude Include="MCadOutputBinStream.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="MCadScoped.h">
+      <Filter>Fichiers d%27en-tête\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadVector.h">
+      <Filter>Fichiers d%27en-tête\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadRecord.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadRecordSession.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCad_macros.h">
+      <Filter>Fichiers d%27en-tête\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -166,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="MCadOutputBinStream.cpp">
       <Filter>Fichiers sources\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadRecordSession.cpp">
+      <Filter>Fichiers sources\UndoRedo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

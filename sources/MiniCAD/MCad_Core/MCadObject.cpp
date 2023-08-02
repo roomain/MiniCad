@@ -1,10 +1,11 @@
 #include "pch.h"
 
+std::atomic_bool MCadObject::m_sEnableUIDGen = true;
 std::atomic_ullong MCadObject::m_UIDGen = 0;
 
 MCadObject::MCadObject()
 {
-	m_ObjectUID = ++MCadObject::m_UIDGen;
+	m_ObjectUID = m_sEnableUIDGen ? ++MCadObject::m_UIDGen : 0;
 	m_pDoc = MCadDocumentManager::Instance().currentDocument();
 }
 

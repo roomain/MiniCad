@@ -7,6 +7,11 @@ MCadInputBinStream::MCadInputBinStream(const MCadBinaryBufferPtr& a_buffer) : m_
 	//
 }
 
+void MCadInputBinStream::setBuffer(const MCadBinaryBufferPtr& a_buffer)
+{
+	m_inputBuffer = a_buffer;
+}
+
 IMCadInputStream& MCadInputBinStream::setPos(const size_t& a_offset)
 {
 	m_offset = a_offset;

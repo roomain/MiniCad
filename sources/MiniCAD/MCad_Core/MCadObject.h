@@ -15,6 +15,7 @@ class MCadDocument;
 class MCadObject;
 class IMCadInputStream;
 class IMCadOutputStream;
+class MCadRecordSession;
 
 using MCadObjectPtr = std::shared_ptr<MCadObject>;
 using MCadObjectWPtr = std::weak_ptr<MCadObject>;
@@ -30,6 +31,7 @@ using ObjectUID = unsigned long long;
 class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public std::enable_shared_from_this<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
+		friend MCadRecordSession;
 private:
 	std::atomic_bool m_bErased = false;				/*!< erased flag (object is no more usable)*/
 	std::weak_ptr<MCadDocument> m_pDoc;				/*!< document container*/
@@ -37,11 +39,19 @@ private:
 
 protected:
 	MCadObjectWPtr m_pOwner;			/*!< pointer to owner*/
-	static std::atomic_ullong m_UIDGen;	/*!< unique identifier generator*/
+
+	static std::atomic_bool m_sEnableUIDGen;	/*!< enable idenfigier generator*/
+	static std::atomic_ullong m_UIDGen;			/*!< unique identifier generator*/
 
 	/*@brief function for owner: reaction when child will be deleted*/
 	virtual void onChildDelete(MCadObject* const a_child) = 0;
 
+	/*@brief is uid generator enabled*/
+	static bool isUIDGeneratorEnabled() { return m_sEnableUIDGen; }
+	/*@brief enabling uid genrator*/
+	static void enableUIDGenerator(bool a_bEnable) { m_sEnableUIDGen = a_bEnable; }
+
+	void setUID(const ObjectUID& a_uid) { m_ObjectUID = a_uid; }
 
 public:
 	MCadObject();
@@ -60,7 +70,7 @@ public:
 	/*@brief save object to stream*/
 	virtual bool save(IMCadOutputStream& a_stream)const = 0;
 
-	/*@brief set erase fag */
+	/*@brief set erase flag */
 	void erase();
 	/*@return flag is erased*/
 	inline bool isErased()const noexcept { return m_bErased; }

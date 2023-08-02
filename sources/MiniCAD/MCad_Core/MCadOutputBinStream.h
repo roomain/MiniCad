@@ -18,13 +18,15 @@ using MCadBinaryBufferPtr = std::shared_ptr<MCadBinaryBuffer>;
 class MCAD_CORE_EXPORT MCadOutputBinStream : public IMCadOutputStream
 {
 private:
-	MCadBinaryBufferPtr m_inputBuffer;	/*!< input buffer*/
+	MCadBinaryBufferPtr m_outputBuffer;	/*!< input buffer*/
 	size_t m_offset = 0;				/*!< buffer offset*/
 
 public:
-	MCadOutputBinStream() = delete;
+	MCadOutputBinStream() = default;
 	explicit MCadOutputBinStream(const MCadBinaryBufferPtr& a_buffer);
 	virtual ~MCadOutputBinStream() = default;
+	void setBuffer(const MCadBinaryBufferPtr& a_buffer);
+	[[nodiscard]] constexpr bool hasBuffer()const noexcept { return m_inputBuffer.get() != nullptr; }
 	IMCadOutputStream& operator << (const unsigned long long& a_value)final;
 	IMCadOutputStream& operator << (const long long& a_value)final;
 	IMCadOutputStream& operator << (const bool a_value)final;

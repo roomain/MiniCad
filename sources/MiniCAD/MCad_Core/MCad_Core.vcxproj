@@ -148,6 +148,7 @@
     <ClInclude Include="IMCadDocumentReactor.h" />
     <ClInclude Include="IMCadInputStream.h" />
     <ClInclude Include="IMCadOutputStream.h" />
+    <ClInclude Include="IMCadRecord.h" />
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
@@ -159,7 +160,11 @@
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
+    <ClInclude Include="MCadRecordSession.h" />
+    <ClInclude Include="MCadScoped.h" />
+    <ClInclude Include="MCadVector.h" />
     <ClInclude Include="MCad_Core_globals.h" />
+    <ClInclude Include="MCad_macros.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProtocolExtension.h" />
     <ClInclude Include="RTTIDefinition.h" />
@@ -176,6 +181,7 @@
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
     <ClCompile Include="MCadOutputBinStream.cpp" />
+    <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

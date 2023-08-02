@@ -21,12 +21,14 @@ private:
 	size_t m_offset = 0;				/*!< buffer offset*/
 
 public:
-	MCadInputBinStream() = delete;
+	MCadInputBinStream() = default;
 	explicit MCadInputBinStream(const MCadBinaryBufferPtr& a_buffer);
 	virtual ~MCadInputBinStream() = default;
 	IMCadInputStream& setPos(const size_t& offset) final;
 	IMCadInputStream& shift(const size_t& offset) final;
 	void atStart()final;
+	void setBuffer(const MCadBinaryBufferPtr& a_buffer);
+	[[nodiscard]] constexpr bool hasBuffer()const noexcept { return m_inputBuffer.get() != nullptr; }
 	//-----------------------------------------------------------------
 	IMCadInputStream& operator >> (unsigned long long& a_value) final;
 	IMCadInputStream& operator >> (long long& a_value) final;
