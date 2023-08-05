@@ -19,6 +19,54 @@ namespace TestMCadCore
 			Assert::IsNull(VirtualClass::definition().get(), L"Released definition not null");
 		}
 
+		TEST_METHOD(Test_initTemplateDef)
+		{
+			Assert::IsNull(TemplateClass<int>::definition().get(), L"Definition not null");
+			TemplateClass<int>::initDef();
+			Assert::IsNotNull(TemplateClass<int>::definition().get(), L"Definition null");
+			
+
+			TemplateClass<float>::initDef();
+			Assert::IsFalse(TemplateClass<int>::definition().get() == TemplateClass<float>::definition().get(), L"Same definition");
+			Assert::IsFalse(TemplateClass<int>::definition()->isKindOf(TemplateClass<float>::definition()), L"Wrong is king of");
+			TemplateClass<float>::releaseDef();
+
+			TemplateClass<int>::releaseDef();
+			Assert::IsNull(TemplateClass<int>::definition().get(), L"Released definition not null");
+			//---------------------------------------------------------------------------------------------------------------------------------------------
+			OtherClass::initDef();
+			Assert::IsNull(TemplateDerivatedClass<int>::definition().get(), L"Definition not null");
+			TemplateDerivatedClass<int>::initDef();
+			Assert::IsNotNull(TemplateDerivatedClass<int>::definition().get(), L"Definition null");
+			TemplateDerivatedClass<int>::releaseDef();
+			Assert::IsNull(TemplateDerivatedClass<int>::definition().get(), L"Released definition not null");
+			OtherClass::releaseDef();
+		}
+
+		TEST_METHOD(Test_initTemplateRerivedDef)
+		{
+			Assert::IsNull(TemplateClass<int>::definition().get(), L"Definition not null");
+			TemplateClass<int>::initDef();
+			Assert::IsNotNull(TemplateClass<int>::definition().get(), L"Definition null");
+
+			Assert::IsNull(TemplateDerivatedClassAux<int>::definition().get(), L"Definition not null");
+			TemplateDerivatedClassAux<int>::initDef();
+			Assert::IsNotNull(TemplateDerivatedClassAux<int>::definition().get(), L"Definition null");
+
+
+			TemplateClass<float>::initDef();
+			Assert::IsFalse(TemplateDerivatedClassAux<int>::definition().get() == TemplateClass<float>::definition().get(), L"Same definition");
+			Assert::IsFalse(TemplateDerivatedClassAux<int>::definition()->isKindOf(TemplateClass<float>::definition()), L"Wrong is king of");
+			TemplateClass<float>::releaseDef();
+
+			Assert::IsTrue(TemplateDerivatedClassAux<int>::definition()->isKindOf(TemplateClass<int>::definition()), L"Wrong is king of");
+			TemplateDerivatedClassAux<int>::releaseDef();
+			TemplateClass<int>::releaseDef();
+			Assert::IsNull(TemplateClass<int>::definition().get(), L"Released definition not null");
+		}
+
+		
+
 		TEST_METHOD(Test_initDef_Except)
 		{
 			Assert::IsNull(DerivedFromVirtualClass::definition().get(), L"Definition not null");

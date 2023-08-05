@@ -147,6 +147,7 @@
     <ClInclude Include="IMCadContainer.h" />
     <ClInclude Include="IMCadDocumentReactor.h" />
     <ClInclude Include="IMCadInputStream.h" />
+    <ClInclude Include="IMCadMap.h" />
     <ClInclude Include="IMCadOutputStream.h" />
     <ClInclude Include="IMCadRecord.h" />
     <ClInclude Include="local_resources.h" />

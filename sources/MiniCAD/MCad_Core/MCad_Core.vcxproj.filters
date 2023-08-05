@@ -49,9 +49,6 @@
     <Filter Include="Fichiers sources\Objects">
       <UniqueIdentifier>{0f9f61d4-d3b3-4862-ab66-22f41e80f139}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\Container">
-      <UniqueIdentifier>{126d75d5-f623-467a-b1fe-5c3e57cab7fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers d%27en-tête\ProtocolExtensions">
       <UniqueIdentifier>{53678616-82a5-4b2e-93a3-913564b6761c}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,12 @@
     </Filter>
     <Filter Include="Fichiers d%27en-tête\Tools">
       <UniqueIdentifier>{132a67db-cb29-4f78-bf49-3252b4311876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Containers">
+      <UniqueIdentifier>{982bdac0-c986-4eeb-ae29-720b463eca58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Containers">
+      <UniqueIdentifier>{126d75d5-f623-467a-b1fe-5c3e57cab7fc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +133,7 @@
       <Filter>Fichiers d%27en-tête\Objects</Filter>
     </ClInclude>
     <ClInclude Include="IMCadContainer.h">
-      <Filter>Fichiers d%27en-tête\Container</Filter>
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
     <ClInclude Include="MCadInputBinStream.h">
       <Filter>Fichiers d%27en-tête\Stream</Filter>
@@ -142,7 +145,7 @@
       <Filter>Fichiers d%27en-tête\Tools</Filter>
     </ClInclude>
     <ClInclude Include="MCadVector.h">
-      <Filter>Fichiers d%27en-tête\Container</Filter>
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
     <ClInclude Include="IMCadRecord.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="MCad_macros.h">
       <Filter>Fichiers d%27en-tête\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadMap.h">
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

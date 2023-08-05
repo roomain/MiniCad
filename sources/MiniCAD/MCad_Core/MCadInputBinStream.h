@@ -28,7 +28,7 @@ public:
 	IMCadInputStream& shift(const size_t& offset) final;
 	void atStart()final;
 	void setBuffer(const MCadBinaryBufferPtr& a_buffer);
-	[[nodiscard]] constexpr bool hasBuffer()const noexcept { return m_inputBuffer.get() != nullptr; }
+	[[nodiscard]] bool hasBuffer()const noexcept { return m_inputBuffer.get() != nullptr; }
 	//-----------------------------------------------------------------
 	IMCadInputStream& operator >> (unsigned long long& a_value) final;
 	IMCadInputStream& operator >> (long long& a_value) final;

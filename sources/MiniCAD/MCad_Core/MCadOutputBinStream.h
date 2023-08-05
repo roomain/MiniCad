@@ -26,7 +26,7 @@ public:
 	explicit MCadOutputBinStream(const MCadBinaryBufferPtr& a_buffer);
 	virtual ~MCadOutputBinStream() = default;
 	void setBuffer(const MCadBinaryBufferPtr& a_buffer);
-	[[nodiscard]] constexpr bool hasBuffer()const noexcept { return m_inputBuffer.get() != nullptr; }
+	[[nodiscard]] bool hasBuffer()const noexcept { return m_outputBuffer.get() != nullptr; }
 	IMCadOutputStream& operator << (const unsigned long long& a_value)final;
 	IMCadOutputStream& operator << (const long long& a_value)final;
 	IMCadOutputStream& operator << (const bool a_value)final;

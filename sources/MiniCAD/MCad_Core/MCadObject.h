@@ -38,13 +38,9 @@ private:
 	ObjectUID m_ObjectUID;							/*!< unique object identifier*/
 
 protected:
-	MCadObjectWPtr m_pOwner;			/*!< pointer to owner*/
-
 	static std::atomic_bool m_sEnableUIDGen;	/*!< enable idenfigier generator*/
 	static std::atomic_ullong m_UIDGen;			/*!< unique identifier generator*/
 
-	/*@brief function for owner: reaction when child will be deleted*/
-	virtual void onChildDelete(MCadObject* const a_child) = 0;
 
 	/*@brief is uid generator enabled*/
 	static bool isUIDGeneratorEnabled() { return m_sEnableUIDGen; }
@@ -53,11 +49,14 @@ protected:
 
 	void setUID(const ObjectUID& a_uid) { m_ObjectUID = a_uid; }
 
+	/*@brief assertion for undo/redo: create record*/
+	virtual void assertModification() const;
+	virtual void assertDeletetion()const;
+
 public:
 	MCadObject();
 	virtual ~MCadObject();
 	inline std::weak_ptr<MCadDocument> document()const noexcept { return m_pDoc; }
-	inline MCadObjectWPtr owner()const noexcept { return m_pOwner; }
 		
 	/*@brief get object uid*/
 	constexpr ObjectUID uid()const noexcept { return m_ObjectUID; }

@@ -6,14 +6,16 @@
 ************************************************/
 #include <vector>
 #include <memory>
+#include <map>
 #include "MCadReactive.h"
 #include "MCadUndoRedo.h"
 #include "MCad_Core_globals.h"
 
+class MCadObject;
 class IMCadDocumentReactor;
 class IMCadFileInputStream;
 class IMCadFileOutputStream;
-
+using MCadObjectWPtr = std::weak_ptr<MCadObject>;
 
 #pragma warning(push)
 #pragma warning(disable : 4275)
@@ -24,9 +26,9 @@ class MCadDocument : public MCadReactive<IMCadDocumentReactor>
 {
 	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<IMCadDocumentReactor>)
 private:
-	std::string	m_sFilePath;					/*!< file path of document*/
-	MCadUndoRedo m_undoRedo;					/*!< tool of undo redo*/
-
+	std::string	m_sFilePath;												/*!< file path of document*/
+	MCadUndoRedo m_undoRedo;												/*!< tool of undo redo*/
+	std::unordered_map<ObjectUID, MCadObjectWPtr> m_objectDatabase;
 
 public:
 	MCadDocument() = default;

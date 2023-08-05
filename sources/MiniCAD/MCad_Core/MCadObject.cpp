@@ -7,15 +7,17 @@ MCadObject::MCadObject()
 {
 	m_ObjectUID = m_sEnableUIDGen ? ++MCadObject::m_UIDGen : 0;
 	m_pDoc = MCadDocumentManager::Instance().currentDocument();
+	if (m_pDoc.lock())
+	{
+		// TODO register pointer
+	}
 }
 
 MCadObject::~MCadObject()
 {
-	// remove from owner
-	auto pOwner = m_pOwner.lock();
-	if (pOwner)
-		pOwner->onChildDelete(this);
+	assertDeletetion();
 
+	// remove from owner
 	for (const auto pReact : m_vReactors)
 		pReact->onObjectDeleted(this);
 }
@@ -23,8 +25,18 @@ MCadObject::~MCadObject()
 
 void MCadObject::erase()
 {
-	// TODO UNDO
 	m_bErased = true;
 	for (const auto pReact : m_vReactors)
 		pReact->onObjectErased(this);
+}
+
+
+void MCadObject::assertModification() const
+{
+	// todo
+}
+
+void MCadObject::assertDeletetion()const
+{
+	// todo
 }

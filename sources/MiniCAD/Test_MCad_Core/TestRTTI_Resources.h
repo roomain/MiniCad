@@ -44,3 +44,30 @@ public:
 	explicit MultiDerivativeClass() = default;
 	~MultiDerivativeClass() = default;
 };
+
+template<typename T>
+class TemplateClass
+{
+	DECLARE_RTTI(1, TemplateClass<T>)
+public:
+	explicit TemplateClass() = default;
+	virtual ~TemplateClass() = default;
+};
+
+template<typename T>
+class TemplateDerivatedClass : public OtherClass
+{
+	DECLARE_RTTI_DERIVED(1, TemplateDerivatedClass<T>, OtherClass)
+public:
+	explicit TemplateDerivatedClass() = default;
+	virtual ~TemplateDerivatedClass() = default;
+};
+
+template<typename T>
+class TemplateDerivatedClassAux : public OtherClass
+{
+	DECLARE_RTTI_DERIVED(1, TemplateDerivatedClassAux<T>, TemplateClass<T>)
+public:
+	explicit TemplateDerivatedClassAux() = default;
+	virtual ~TemplateDerivatedClassAux() = default;
+};

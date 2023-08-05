@@ -22,12 +22,11 @@ public:
 	/*@brief undo/redo action*/
 	enum class RecordAction
 	{
-		Undo_modify = 0,			/*!< object modified*/
-		Redo_modify = Undo_modify,
-		Undo_create,				/*!< object created*/
-		Redo_create = Undo_create,
-		Undo_delete,				/*!< object deleted*/
-		Redo_delete = Undo_delete
+		Record_modify = 0,			/*!< object modified*/
+		Record_create,				/*!< object created*/
+		Record_delete,				/*!< object deleted*/
+		Record_add,					/*!< (for container) object added*/
+		Record_remove				/*!< (for container) object removed*/
 	};
 
 	using RecordFilter = std::function<bool(RTTIDefinitionPtr, RecordAction)>;
@@ -38,8 +37,10 @@ private:
 	size_t m_dataOffset;	/*!< offset of recorded data in stream*/
 
 public:
-	IMCadRecord(RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, m_objectID{ a_objUID } {}
+	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, m_objectID{ a_objUID } {}
 	virtual ~IMCadRecord() = default;
+
+	[[nodiscard]] constexpr ObjectUID objectUID()const { return  m_objectID; }
 
 	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
 	/*@brief undo record return redo record*/

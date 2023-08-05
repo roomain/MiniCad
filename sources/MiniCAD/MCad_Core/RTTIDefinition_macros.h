@@ -10,8 +10,11 @@
 #include "TRTTIDefinition.h"
 #include "RTTIException.h"
 #include <source_location>
-#include "UndoRedoProtocol.h"
 
+
+/*
+* @warning The RTTI macro doesnt work with multi template!
+*/
 
 template<typename ...Types>
 class DefinitionsStub {};
