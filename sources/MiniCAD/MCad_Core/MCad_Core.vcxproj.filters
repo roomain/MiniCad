@@ -132,7 +132,7 @@
     <ClInclude Include="MCadNamedObject.h">
       <Filter>Fichiers d%27en-tête\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="IMCadContainer.h">
+    <ClInclude Include="IMCadIndexedContainer.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
     <ClInclude Include="MCadInputBinStream.h">
@@ -158,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="IMCadMap.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadRecordExtra.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

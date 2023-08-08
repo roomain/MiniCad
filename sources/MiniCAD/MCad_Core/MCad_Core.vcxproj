@@ -144,7 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="IMCadContainer.h" />
+    <ClInclude Include="IMCadIndexedContainer.h" />
     <ClInclude Include="IMCadDocumentReactor.h" />
     <ClInclude Include="IMCadInputStream.h" />
     <ClInclude Include="IMCadMap.h" />
@@ -161,6 +161,7 @@
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
+    <ClInclude Include="MCadRecordExtra.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadScoped.h" />
     <ClInclude Include="MCadVector.h" />

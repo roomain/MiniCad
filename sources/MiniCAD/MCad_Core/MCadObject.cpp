@@ -33,10 +33,16 @@ void MCadObject::erase()
 
 void MCadObject::assertModification() const
 {
-	// todo
+	if (auto pDoc = document().lock())
+	{
+		pDoc->undoRedo().currentSession().record(/**/);
+	}
 }
 
 void MCadObject::assertDeletetion()const
 {
-	// todo
+	if (auto pDoc = document().lock())
+	{
+		pDoc->undoRedo().currentSession().record(/**/);
+	}
 }

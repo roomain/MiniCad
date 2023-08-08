@@ -47,4 +47,8 @@ public:
 	bool hasUndo()const noexcept;
 	/*@brief is redo possible*/
 	bool hasRedo()const noexcept;
+	MCadRecordSession& currentSession()const
+	{
+		return *m_currentSession;
+	}
 };

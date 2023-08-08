@@ -51,6 +51,8 @@ public:
 
 	/*@brief return the extension of document file (without dot)*/
 	std::string fileExtension()const noexcept;
+
+	MCadUndoRedo& undoRedo() { return m_undoRedo; }
 };
 
 using MCadDocumentPtr = std::shared_ptr<MCadDocument>;
