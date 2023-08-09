@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <utility>
 #include "MCadRecordSession.h"
+#include "MCadRecordObject.h"
 
 
 MCadRecordSession::MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap) 
@@ -73,9 +74,11 @@ IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()()const
 
 	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
 	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
+	{
+		const size_t offset = m_stream->offset();
 		m_pObject->save(*m_stream);
-		//
-		break;
+		return std::make_unique<MCadRecordObject>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
+	}
 
 	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
 		break;
@@ -94,6 +97,25 @@ IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()()const
 	return nullptr;
 }
 
+IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::genRedoRecord(const MCadRecordObject* a_pUndoRecord) override;
+{
+	//
+	return nullptr;
+}
+
+IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::genRedoRecord(const MCadRecordContainer* a_pUndoRecord) override;
+{
+	//
+	return nullptr;
+}
+
+IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::genRedoRecord(const MCadRecorDictionary* a_pUndoRecord)
+{
+	//
+	return nullptr;
+}
+
+//--------------------------------------------------------------------------------------------
 
 void MCadRecordSession::compact()
 {
@@ -110,22 +132,30 @@ m_recordFactory{ &m_outputStream, &m_definitionByObject }
 	m_outputStream.setBuffer(m_pBinBuffer);
 }
 
-void MCadRecordSession::undo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap)
+void MCadRecordSession::undo(ObjectMap& a_realocmap)
+{
+	bool bPrepareRedo = m_lRecordRedo.empty();
+	for (const auto& record : m_lRecordUndo)
+	{
+		if (bPrepareRedo)
+		{
+			//
+		}
+		record->undo(a_realocmap, m_inputStream);
+	}
+}
+
+void MCadRecordSession::redo(ObjectMap& a_realocmap)
 {
 	// TODO
 }
 
-void MCadRecordSession::redo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap)
+void MCadRecordSession::undo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
 {
 	// TODO
 }
 
-void MCadRecordSession::undo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
-{
-	// TODO
-}
-
-void MCadRecordSession::redo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
+void MCadRecordSession::redo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
 {
 	// TODO
 }

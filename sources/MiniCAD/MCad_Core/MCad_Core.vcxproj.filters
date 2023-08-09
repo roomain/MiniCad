@@ -138,9 +138,6 @@
     <ClInclude Include="MCadInputBinStream.h">
       <Filter>Fichiers d%27en-tête\Stream</Filter>
     </ClInclude>
-    <ClInclude Include="MCadOutputBinStream.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="MCadScoped.h">
       <Filter>Fichiers d%27en-tête\Tools</Filter>
     </ClInclude>
@@ -159,7 +156,19 @@
     <ClInclude Include="MCadRecordExtra.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
-    <ClInclude Include="MCadRecords.h">
+    <ClInclude Include="MCadRecordObject.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadOutputBinStream.h">
+      <Filter>Fichiers d%27en-tête\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadRecordContainer.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadRecordDictionary.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCadRecordVisitor.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
   </ItemGroup>
@@ -195,6 +204,9 @@
       <Filter>Fichiers sources\Stream</Filter>
     </ClCompile>
     <ClCompile Include="MCadRecordSession.cpp">
+      <Filter>Fichiers sources\UndoRedo</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadRecordObject.cpp">
       <Filter>Fichiers sources\UndoRedo</Filter>
     </ClCompile>
   </ItemGroup>

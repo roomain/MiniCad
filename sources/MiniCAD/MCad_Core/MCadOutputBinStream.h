@@ -8,8 +8,8 @@
 #include "MCad_Core_globals.h"
 #include "IMCadOutputStream.h"
 #include <memory>
+#include "MCadBinaryBuffer.h"
 
-class MCadBinaryBuffer;
 using MCadBinaryBufferPtr = std::shared_ptr<MCadBinaryBuffer>;
 
 #pragma warning(push)
@@ -25,6 +25,7 @@ public:
 	MCadOutputBinStream() = default;
 	explicit MCadOutputBinStream(const MCadBinaryBufferPtr& a_buffer);
 	virtual ~MCadOutputBinStream() = default;
+	constexpr size_t offset()const { return m_outputBuffer ? m_outputBuffer->size() : 0; }
 	void setBuffer(const MCadBinaryBufferPtr& a_buffer);
 	[[nodiscard]] bool hasBuffer()const noexcept { return m_outputBuffer.get() != nullptr; }
 	IMCadOutputStream& operator << (const unsigned long long& a_value)final;

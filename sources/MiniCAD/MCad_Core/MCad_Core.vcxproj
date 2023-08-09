@@ -150,6 +150,7 @@
     <ClInclude Include="IMCadMap.h" />
     <ClInclude Include="IMCadOutputStream.h" />
     <ClInclude Include="IMCadRecord.h" />
+    <ClInclude Include="IMCadRecordVisitor.h" />
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
@@ -161,8 +162,10 @@
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
+    <ClInclude Include="MCadRecordContainer.h" />
+    <ClInclude Include="MCadRecordDictionary.h" />
     <ClInclude Include="MCadRecordExtra.h" />
-    <ClInclude Include="MCadRecords.h" />
+    <ClInclude Include="MCadRecordObject.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadScoped.h" />
     <ClInclude Include="MCadVector.h" />
@@ -183,6 +186,7 @@
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
     <ClCompile Include="MCadOutputBinStream.cpp" />
+    <ClCompile Include="MCadRecordObject.cpp" />
     <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

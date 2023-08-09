@@ -12,6 +12,8 @@
 
 using ObjectMap = std::unordered_map<ObjectUID, MCadObjectPtr>;
 
+class IMCadRecordVisitor;
+
 // record by type
 // using template class partial specialization for container
 
@@ -47,9 +49,6 @@ public:
 
 	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
 
-	/*@brief first undo record return redo record*/
-	virtual std::unique_ptr<IMCadRecord> undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream, MCadOutputBinStream& a_outputStream)const = 0;
-
 	/*@brief undo record return redo record*/
 	virtual void undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
 
@@ -61,6 +60,8 @@ public:
 
 	void erase() { m_bErased = true; }
 	constexpr bool isErased()const noexcept { return m_bErased; }
+
+	virtual std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const = 0;
 };
 
 using IMCadRecordUPtr = std::unique_ptr<IMCadRecord>;

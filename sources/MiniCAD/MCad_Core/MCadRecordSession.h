@@ -11,9 +11,11 @@
 #include "IMCadRecord.h"
 #include "MCadBinaryBuffer.h"
 #include "MCadRecordExtra.h"
+#include "IMCadRecordVisitor.h"
 
 using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 using DefinitionMap = std::unordered_map<ObjectUID, RTTIDefinitionWPtr>;
+
 
 /*@brief represents all object modification for during a command*/
 class MCadRecordSession
@@ -28,7 +30,7 @@ private:
 	MCadOutputBinStream m_outputStream;			/*!< output stream*/
 	DefinitionMap m_definitionByObject;			/*!< RTTI definition by object uid*/
 
-	class MCadRecordFactory
+	class MCadRecordFactory : public IMCadRecordVisitor
 	{
 	private:
 		const MCadObject* m_pObject;				/*!< recorded object*/
@@ -43,6 +45,11 @@ private:
 		IMCadRecordUPtr operator()(const IndexedItem& a_item)const;
 		IMCadRecordUPtr operator()(const KeyItem& a_item)const;
 		IMCadRecordUPtr operator()()const;
+
+		IMCadRecordUPtr genRedoRecord(const MCadRecordObject* a_pUndoRecord) final;
+		IMCadRecordUPtr genRedoRecord(const MCadRecordContainer* a_pUndoRecord) final;
+		IMCadRecordUPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
+
 	} m_recordFactory;
 
 	/*@brief compact records*/
@@ -56,10 +63,10 @@ public:
 	[[nodiscard]] constexpr SessionTimePoint time()const noexcept { return m_timePoint; }
 	[[nodiscard]] constexpr std::string title()const noexcept { return m_title; }
 	[[nodiscard]] size_t size()const noexcept { return m_lRecordUndo.size() + m_lRecordRedo.size(); }
-	void undo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap);
-	void redo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap);
-	void undo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
-	void redo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
+	void undo(ObjectMap& a_realocmap);
+	void redo(ObjectMap& a_realocmap);
+	void undo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
+	void redo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
 	void record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction);
 	void record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
 

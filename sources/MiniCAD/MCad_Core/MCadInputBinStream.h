@@ -7,8 +7,8 @@
 #include "MCad_Core_globals.h"
 #include "IMCadInputStream.h"
 #include <memory>
+#include "MCadBinaryBuffer.h"
 
-class MCadBinaryBuffer;
 using MCadBinaryBufferPtr = std::shared_ptr<MCadBinaryBuffer>;
 
 #pragma warning(push)
@@ -24,6 +24,7 @@ public:
 	MCadInputBinStream() = default;
 	explicit MCadInputBinStream(const MCadBinaryBufferPtr& a_buffer);
 	virtual ~MCadInputBinStream() = default;
+	constexpr size_t offset()const { return m_inputBuffer ? m_inputBuffer->size() : 0; }
 	IMCadInputStream& setPos(const size_t& offset) final;
 	IMCadInputStream& shift(const size_t& offset) final;
 	void atStart()final;
