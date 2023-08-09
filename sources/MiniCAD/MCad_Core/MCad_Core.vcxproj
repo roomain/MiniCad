@@ -162,11 +162,11 @@
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCadRecordExtra.h" />
+    <ClInclude Include="MCadRecords.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadScoped.h" />
     <ClInclude Include="MCadVector.h" />
     <ClInclude Include="MCad_Core_globals.h" />
-    <ClInclude Include="MCad_macros.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProtocolExtension.h" />
     <ClInclude Include="RTTIDefinition.h" />

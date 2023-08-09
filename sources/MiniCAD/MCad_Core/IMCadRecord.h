@@ -7,7 +7,6 @@
 #include <memory>
 #include "MCadInputBinStream.h"
 #include "MCadOutputBinStream.h"
-#include "MCadRecordExtra.h"
 #include "MCadObject.h"
 
 
@@ -32,28 +31,30 @@ public:
 
 	using RecordFilter = std::function<bool(RTTIDefinitionPtr, RecordAction)>;
 
-private:
+protected:
 	bool m_bErased = false;	/*!< indicate erase record*/
 	RecordAction m_action;	/*!< recording action*/
 	ObjectUID m_objectID;	/*!< uid of object recorded*/
-	size_t m_dataOffset;	/*!< offset of recorded data in stream*/
-	size_t m_dataSize;		/*!< datasize*/
 
 public:
-	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID, MCadOutputBinStream& a_outputStream, const RecordExtra& a_data);
+	IMCadRecord() = delete;
+	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, m_objectID{ m_objectID }
+	{}
 
-	//IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, m_objectID{ a_objUID }, m_dataOffset{ 0 }, m_dataSize{ 0 } {}
 	virtual ~IMCadRecord() = default;
 
 	[[nodiscard]] constexpr ObjectUID objectUID()const { return  m_objectID; }
 
 	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
 
-	/*@brief undo record return redo record*/
+	/*@brief first undo record return redo record*/
 	virtual std::unique_ptr<IMCadRecord> undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream, MCadOutputBinStream& a_outputStream)const = 0;
 
+	/*@brief undo record return redo record*/
+	virtual void undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
+
 	/*@brief redo record return undo record*/
-	virtual std::unique_ptr<IMCadRecord> redo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream, MCadOutputBinStream& a_outputStream)const = 0;
+	virtual void redo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
 
 	/*@brief apply filter on record*/
 	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const = 0;

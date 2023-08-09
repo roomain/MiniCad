@@ -35,7 +35,7 @@ void MCadObject::assertModification() const
 {
 	if (auto pDoc = document().lock())
 	{
-		pDoc->undoRedo().currentSession().record(/**/);
+		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
 	}
 }
 
@@ -43,6 +43,6 @@ void MCadObject::assertDeletetion()const
 {
 	if (auto pDoc = document().lock())
 	{
-		pDoc->undoRedo().currentSession().record(/**/);
+		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
 	}
 }

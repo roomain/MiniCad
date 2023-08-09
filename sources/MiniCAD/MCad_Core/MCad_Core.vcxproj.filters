@@ -153,13 +153,13 @@
     <ClInclude Include="MCadRecordSession.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
-    <ClInclude Include="MCad_macros.h">
-      <Filter>Fichiers d%27en-tête\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="IMCadMap.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
     <ClInclude Include="MCadRecordExtra.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadRecords.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
   </ItemGroup>

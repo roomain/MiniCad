@@ -13,7 +13,7 @@
 #include "MCadRecordExtra.h"
 
 using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
-
+using DefinitionMap = std::unordered_map<ObjectUID, RTTIDefinitionWPtr>;
 
 /*@brief represents all object modification for during a command*/
 class MCadRecordSession
@@ -26,9 +26,29 @@ private:
 	MCadBinaryBufferPtr m_pBinBuffer;			/*!< saving buffer*/
 	MCadInputBinStream m_inputStream;			/*!< input stream*/
 	MCadOutputBinStream m_outputStream;			/*!< output stream*/
-	std::list<ObjectUID> m_unused;				/*!< list of unsused objects*/
+	DefinitionMap m_definitionByObject;			/*!< RTTI definition by object uid*/
+
+	class MCadRecordFactory
+	{
+	private:
+		const MCadObject* m_pObject;				/*!< recorded object*/
+		IMCadRecord::RecordAction m_recordAction;	/*!< record action*/
+		MCadOutputBinStream* const m_stream;		/*!< reference to output stream of MCadRecordSession*/
+		DefinitionMap* const m_defMap;				/*!< referende to definition map of MCadRecordSession*/
+	public:
+		MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap);
+		virtual	~MCadRecordFactory() = default;
+		void setup(const MCadObject* a_pObject, IMCadRecord::RecordAction a_action);
+		// std::visitor doesn't work with &&
+		IMCadRecordUPtr operator()(const IndexedItem& a_item)const;
+		IMCadRecordUPtr operator()(const KeyItem& a_item)const;
+		IMCadRecordUPtr operator()()const;
+	} m_recordFactory;
+
 	/*@brief compact records*/
 	void compact();
+	/*@brief check if action must be recorded*/
+	bool checkRecord(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction)const;
 
 public:
 	MCadRecordSession(const std::string& a_title);
@@ -40,7 +60,7 @@ public:
 	void redo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap);
 	void undo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
 	void redo(std::unordered_map<ObjectUID, MCadObject*>& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
-
-	void record(MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
+	void record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction);
+	void record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
 
 };
