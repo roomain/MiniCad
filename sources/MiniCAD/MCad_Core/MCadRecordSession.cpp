@@ -4,19 +4,48 @@
 #include "MCadRecordObject.h"
 
 
-MCadRecordSession::MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap) 
+MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap) 
 	: m_stream{ a_stream }, m_defMap{ a_defMap }
 {
 	//
 }
 
-void MCadRecordSession::MCadRecordFactory::setup(const MCadObject* a_pObject, IMCadRecord::RecordAction a_action)
+void MCadRecordFactory::setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordAction a_action)
 {
 	m_pObject = a_pObject;
 	m_recordAction = a_action;
 }
 
-IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()(const IndexedItem& a_item)const
+IMCadRecordUPtr MCadRecordFactory::operator()(const IndexedItem& a_item)const
+{
+	switch (m_recordAction)
+	{
+	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
+		break;
+
+	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
+		break;
+
+	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
+		break;
+
+	case IMCadRecord::RecordAction::Record_add:				/*!< (for container) object added*/
+		break;
+
+	case IMCadRecord::RecordAction::Record_remove:		
+		break;
+
+	case IMCadRecord::RecordAction::Record_changed:
+		break;
+
+	default:
+		break;
+	}
+
+	return nullptr;
+}
+
+IMCadRecordUPtr MCadRecordFactory::operator()(const KeyItem& a_item)const
 {
 	switch (m_recordAction)
 	{
@@ -35,30 +64,7 @@ IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()(const IndexedIt
 	case IMCadRecord::RecordAction::Record_remove:
 		break;
 
-	default:
-		break;
-	}
-
-	return nullptr;
-}
-
-IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()(const KeyItem& a_item)const
-{
-	switch (m_recordAction)
-	{
-	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_add:				/*!< (for container) object added*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_remove:
+	case IMCadRecord::RecordAction::Record_changed:
 		break;
 
 	default:
@@ -67,7 +73,7 @@ IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()(const KeyItem& 
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()()const
+IMCadRecordUPtr MCadRecordFactory::operator()()const
 {
 	switch (m_recordAction)
 	{
@@ -76,7 +82,7 @@ IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()()const
 	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
 	{
 		const size_t offset = m_stream->offset();
-		m_pObject->save(*m_stream);
+		m_pObject.lock()->save(*m_stream);
 		return std::make_unique<MCadRecordObject>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
 	}
 
@@ -97,19 +103,19 @@ IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::operator()()const
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::genRedoRecord(const MCadRecordObject* a_pUndoRecord) override;
+IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecordObject* a_pUndoRecord)
 {
 	//
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::genRedoRecord(const MCadRecordContainer* a_pUndoRecord) override;
+IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecordContainer* a_pUndoRecord)
 {
 	//
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordSession::MCadRecordFactory::genRedoRecord(const MCadRecorDictionary* a_pUndoRecord)
+IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecorDictionary* a_pUndoRecord)
 {
 	//
 	return nullptr;
@@ -162,7 +168,7 @@ void MCadRecordSession::redo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& 
 
 
 
-bool MCadRecordSession::checkRecord(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction)const
+bool MCadRecordSession::checkRecord(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction)const
 {
 	// find object record for same objects
 	auto iter = std::ranges::find_if(m_lRecordUndo, [a_pObject](const auto& a_record)
@@ -189,9 +195,8 @@ bool MCadRecordSession::checkRecord(const MCadObject* a_pObject, const IMCadReco
 			break;
 
 		case IMCadRecord::RecordAction::Record_add:				/*!< (for container) object added*/
-			break;
-
 		case IMCadRecord::RecordAction::Record_remove:
+			bCreateRecord = true;
 			break;
 
 		default:
@@ -202,20 +207,34 @@ bool MCadRecordSession::checkRecord(const MCadObject* a_pObject, const IMCadReco
 }
 
 
-void MCadRecordSession::record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction)
+void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction)
 {
-	if (checkRecord(a_pObject, a_recordAction))
+	if (a_pObject != nullptr && checkRecord(a_pObject, a_recordAction))
 	{
-		m_recordFactory.setup(a_pObject, a_recordAction);
-		m_lRecordUndo.push_back(m_recordFactory());
+		try
+		{
+			m_recordFactory.setup(a_pObject->weak_from_this(), a_recordAction);
+			m_lRecordUndo.push_back(m_recordFactory());
+		}
+		catch (std::bad_weak_ptr&)
+		{
+			// object not treated
+		}
 	}
 }
 
-void MCadRecordSession::record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data)
+void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data)
 {	
-	if (checkRecord(a_pObject, a_recordAction))
+	if (a_pObject != nullptr && checkRecord(a_pObject, a_recordAction))
 	{
-		m_recordFactory.setup(a_pObject, a_recordAction);
-		m_lRecordUndo.push_back(std::visit(m_recordFactory, a_data));
+		try
+		{
+			m_recordFactory.setup(a_pObject->weak_from_this(), a_recordAction);
+			m_lRecordUndo.push_back(std::visit(m_recordFactory, a_data));
+		}
+		catch (std::bad_weak_ptr&)
+		{
+			// object not treated
+		}
 	}
 }

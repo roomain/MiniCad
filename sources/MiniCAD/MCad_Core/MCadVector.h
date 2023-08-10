@@ -17,7 +17,7 @@ template<typename T>
 class ContainerItem : private std::shared_ptr<T>
 {
 public:
-    using ChangeCallback = std::function<void(const ContainerItem<T>*, const ObjectUID&, const ObjectUID&)>;
+    using ChangeCallback = std::function<void(const ContainerItem<T>*, const MCadObjectPtr&, const MCadObjectPtr&)>;
 
 private:
     ChangeCallback m_callback;
@@ -118,9 +118,9 @@ public:
 
 
 template<typename Type>
-class MCadVector : private std::vector<ContainerItem<Type>>, public IMCadIndexedContainer<Type>
+class MCadVector : private std::vector<ContainerItem<Type>>, public IMCadIndexedContainer
 {
-    DECLARE_RTTI_DERIVED(1, MCadVector<Type>, IMCadIndexedContainer<Type>)
+    DECLARE_RTTI_DERIVED(1, MCadVector<Type>, IMCadIndexedContainer)
 
 private:
     using VectorBase = std::vector<ContainerItem<Type>>;
@@ -129,37 +129,45 @@ private:
 protected:
     void undoRedo_RemoveObject(const size_t& a_index)final
     {
-        //
+        if (VectorBase.size() > a_index)
+            VectorBase.erase(begin() + a_index);
     }
 
-    void undoRedo_InsertObject(std::shared_ptr<MCadObject>& a_object, const size_t& a_index)final
+    void undoRedo_InsertObject(MCadObjectPtr& a_object, const size_t& a_index)final
     {
-        //
+        if (VectorBase.size() > a_index)
+        {
+            VectorBase.insert(begin() + a_index, ContainerItem<Type>(m_itemCallback, std::static_pointer_cast<Type>(a_object)));
+        }
+        else
+        {
+            VectorBase.push_back(ContainerItem<Type>(m_itemCallback, std::static_pointer_cast<Type>(a_object)));
+        }
     }
 
-    virtual void assertItem(const ContainerItem<Type>* a_pItem, const ObjectUID& a_idBefore, const ObjectUID& a_idAfter)
+    virtual void assertItem(const ContainerItem<Type>* a_pItem, const MCadObjectPtr& a_pBefore, const MCadObjectPtr& a_pAfter)
     {
         if (m_bActiveCallback && (auto pDoc = document().lock()))
         {
             size_t index = a_pItem - VectorBase::data();
 
-            pDoc->undoRedo().currentSession().record(/**/);
+            pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::,  IndexedItem);
         }
     }
 
-    inline void assertObjectAdded(const ObjectUID& m_objAdd, const size_t& m_index)const
+    inline void assertObjectAdded(const MCadObjectPtr& a_objAdd, const size_t& a_index)
     {
         if (auto pDoc = document().lock())
         {
-            pDoc->undoRedo().currentSession().record(/**/);
+            pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_add, IndexedItem{0, a_objAdd->uid(), nullptr, a_objAdd, a_index });
         }
     }
 
-    inline void assertObjectRemoved(const ObjectUID& m_objRemoved, const size_t& m_index)const
+    inline void assertObjectRemoved(std::shared_ptr<MCadObject>& a_object, const size_t& m_index)
     {
         if (auto pDoc = document().lock())
         {
-            pDoc->undoRedo().currentSession().record(/**/);
+            pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_add, IndexedItem{ a_object->uid(), 0, a_object, nullptr, a_index });
         }
     }
 
@@ -183,7 +191,7 @@ public:
         size_t index = 0;
         for (const auto& obj : *this)
         {
-            assertObjectRemoved(obj->uid(), index);
+            assertObjectRemoved(obj, index);
             ++index;
         }
         VectorBase::clear();
@@ -193,7 +201,7 @@ public:
     MCadVector& emplace_back(Args&& ...a_args)
     {
         VectorBase::emplace_back(m_itemCallback, a_args...);
-        assertObjectAdded(VectorBase::back()->uid(), size() - 1);
+        assertObjectAdded(VectorBase::back(), size() - 1);
         return *this;
     }
 
@@ -201,14 +209,14 @@ public:
     MCadVector& push_back(const std::shared_ptr<Type>& a_pointer)
     {
         VectorBase::push_back(ContainerItem<Type>(m_itemCallback, a_pointer));
-        assertObjectAdded(VectorBase::back()->uid(), size() - 1);
+        assertObjectAdded(VectorBase::back(), size() - 1);
         return *this;
     }
 
     constexpr MCadVector& push_back(std::shared_ptr<Type>&& a_pointer)
     {
         VectorBase::push_back(ContainerItem<Type>(m_itemCallback, std::move(a_pointer)));
-        assertObjectAdded(VectorBase::back()->uid(), size() - 1);
+        assertObjectAdded(VectorBase::back(), size() - 1);
         return *this;
     }
 
@@ -232,14 +240,14 @@ public:
     iterator insert(const_iterator a_pos, const std::shared_ptr<Type>& a_object)
     {
         auto iter = VectorBase::insert(a_pos, ContainerItem<Type>(m_itemCallback, a_object)); 
-        assertObjectAdded((*iter)->uid(), iter - begin());
+        assertObjectAdded((*iter), iter - begin());
         return iter;
     }
 
     constexpr iterator insert(const_iterator a_pos, std::shared_ptr<Type>&& a_object)
     {
         auto iter = VectorBase::insert(a_pos, ContainerItem<Type>(m_itemCallback, std::move( a_object)));
-        assertObjectAdded((*iter)->uid(), std::distance(iter, begin()));
+        assertObjectAdded((*iter), std::distance(iter, begin()));
         return iter;
     }
 
@@ -251,13 +259,13 @@ public:
     MCadVector& emplace(const_iterator a_iter, Args&& ...args)
     {
         VectorBase::emplace(a_iter, m_itemCallback, std::make_shared<Type>(args...));
-        assertObjectAdded((*a_iter)->uid(), std::distance(iter, begin()));
+        assertObjectAdded((*a_iter), std::distance(iter, begin()));
         return *this;
     }
 
     iterator erase(iterator a_pos)
     {
-        assertObjectRemoved((*a_pos)->uid(), std::distance(a_pos, begin()));
+        assertObjectRemoved((*a_pos), std::distance(a_pos, begin()));
         m_bActiveCallback = false;
         auto iter =  VectorBase::erase(a_pos);
         m_bActiveCallback = true;
@@ -267,7 +275,7 @@ public:
     constexpr iterator erase(const_iterator a_pos)
     {
         m_bActiveCallback = false;
-        assertObjectRemoved((*a_pos)->uid(), std::distance(a_pos, cbegin()));
+        assertObjectRemoved((*a_pos), std::distance(a_pos, cbegin()));
         m_bActiveCallback = false;
         auto iter = VectorBase::erase(a_pos);
         m_bActiveCallback = true;
@@ -279,7 +287,7 @@ public:
         size_t index = 0;
         std::for_each(a_first, a_last - 1, [this, &index](auto&& a_obj)
             {
-                assertObjectRemoved(a_obj->uid(), index);
+                assertObjectRemoved(a_obj, index);
                 ++index;
             });
         m_bActiveCallback = false;
@@ -294,7 +302,7 @@ public:
         size_t index = 0;
         std::for_each(a_first, a_last - 1, [this](auto&& a_obj)
             {
-                assertObjectRemoved(a_obj->uid(), index);
+                assertObjectRemoved(a_obj, index);
                 ++index;
             });
         m_bActiveCallback = false;

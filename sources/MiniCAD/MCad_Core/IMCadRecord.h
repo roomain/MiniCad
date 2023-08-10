@@ -28,7 +28,8 @@ public:
 		Record_create,				/*!< object created*/
 		Record_delete,				/*!< object deleted*/
 		Record_add,					/*!< (for container) object added*/
-		Record_remove				/*!< (for container) object removed*/
+		Record_remove,				/*!< (for container) object removed*/
+		Record_changed
 	};
 
 	using RecordFilter = std::function<bool(RTTIDefinitionPtr, RecordAction)>;

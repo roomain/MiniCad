@@ -7,10 +7,6 @@ MCadObject::MCadObject()
 {
 	m_ObjectUID = m_sEnableUIDGen ? ++MCadObject::m_UIDGen : 0;
 	m_pDoc = MCadDocumentManager::Instance().currentDocument();
-	if (m_pDoc.lock())
-	{
-		// TODO register pointer
-	}
 }
 
 MCadObject::~MCadObject()
@@ -31,18 +27,15 @@ void MCadObject::erase()
 }
 
 
-void MCadObject::assertModification() const
+void MCadObject::assertModification()
 {
 	if (auto pDoc = document().lock())
-	{
 		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
-	}
 }
 
-void MCadObject::assertDeletetion()const
+void MCadObject::assertDeletetion()
 {
 	if (auto pDoc = document().lock())
-	{
 		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
-	}
+
 }

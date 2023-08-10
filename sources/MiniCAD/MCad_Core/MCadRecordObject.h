@@ -5,18 +5,18 @@
 * @author Roomain
 ************************************************/
 #include "IMCadRecord.h"
-#include "MCadRecordExtra.h"
 
 
 /*@brief record for simple object*/
 class MCadRecordObject : public IMCadRecord
 {
 private:
-	size_t m_dataOffset;	/*!< offset of recorded data in stream*/
-	size_t m_dataSize;		/*!< datasize*/
+	size_t m_dataOffset;					/*!< offset of recorded data in stream*/
+	size_t m_dataSize;						/*!< datasize*/
+	MCadObjectWPtr m_pObject;
 
 public:
-	MCadRecordObject(const RecordAction a_action, const MCadObject* a_pObject,
+	MCadRecordObject(const RecordAction a_action, const MCadObjectWPtr a_pObject,
 		const size_t& a_offset, const size_t& a_size);
 	~MCadRecordObject() = default;
 

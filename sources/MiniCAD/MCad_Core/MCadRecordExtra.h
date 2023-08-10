@@ -16,6 +16,8 @@ struct ItemChanged
 {
 	ObjectUID m_oldID;	/*!< old object id*/
 	ObjectUID m_newID;	/*!< new object id*/
+	MCadObjectWPtr m_pOld;	/*!< pointer on old object*/
+	MCadObjectWPtr m_pNew;	/*!< pointer on new object*/
 };
 
 /*@brief change on indexed item*/

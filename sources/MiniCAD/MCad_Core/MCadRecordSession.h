@@ -16,6 +16,27 @@
 using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 using DefinitionMap = std::unordered_map<ObjectUID, RTTIDefinitionWPtr>;
 
+class MCadRecordFactory : public IMCadRecordVisitor
+{
+private:
+	MCadObjectWPtr m_pObject;				/*!< recorded object*/
+	IMCadRecord::RecordAction m_recordAction;	/*!< record action*/
+	MCadOutputBinStream* const m_stream;		/*!< reference to output stream of MCadRecordSession*/
+	DefinitionMap* const m_defMap;				/*!< referende to definition map of MCadRecordSession*/
+public:
+	MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap);
+	virtual	~MCadRecordFactory() = default;
+	void setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordAction a_action);
+	// std::visitor doesn't work with &&
+	IMCadRecordUPtr operator()(const IndexedItem& a_item)const;
+	IMCadRecordUPtr operator()(const KeyItem& a_item)const;
+	IMCadRecordUPtr operator()()const;
+
+	IMCadRecordUPtr genRedoRecord(const MCadRecordObject* a_pUndoRecord) final;
+	IMCadRecordUPtr genRedoRecord(const MCadRecordContainer* a_pUndoRecord) final;
+	IMCadRecordUPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
+
+};
 
 /*@brief represents all object modification for during a command*/
 class MCadRecordSession
@@ -29,33 +50,12 @@ private:
 	MCadInputBinStream m_inputStream;			/*!< input stream*/
 	MCadOutputBinStream m_outputStream;			/*!< output stream*/
 	DefinitionMap m_definitionByObject;			/*!< RTTI definition by object uid*/
-
-	class MCadRecordFactory : public IMCadRecordVisitor
-	{
-	private:
-		const MCadObject* m_pObject;				/*!< recorded object*/
-		IMCadRecord::RecordAction m_recordAction;	/*!< record action*/
-		MCadOutputBinStream* const m_stream;		/*!< reference to output stream of MCadRecordSession*/
-		DefinitionMap* const m_defMap;				/*!< referende to definition map of MCadRecordSession*/
-	public:
-		MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap);
-		virtual	~MCadRecordFactory() = default;
-		void setup(const MCadObject* a_pObject, IMCadRecord::RecordAction a_action);
-		// std::visitor doesn't work with &&
-		IMCadRecordUPtr operator()(const IndexedItem& a_item)const;
-		IMCadRecordUPtr operator()(const KeyItem& a_item)const;
-		IMCadRecordUPtr operator()()const;
-
-		IMCadRecordUPtr genRedoRecord(const MCadRecordObject* a_pUndoRecord) final;
-		IMCadRecordUPtr genRedoRecord(const MCadRecordContainer* a_pUndoRecord) final;
-		IMCadRecordUPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
-
-	} m_recordFactory;
+	MCadRecordFactory m_recordFactory;			/*!< factory creating records*/
 
 	/*@brief compact records*/
 	void compact();
 	/*@brief check if action must be recorded*/
-	bool checkRecord(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction)const;
+	bool checkRecord(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction)const;
 
 public:
 	MCadRecordSession(const std::string& a_title);
@@ -67,7 +67,7 @@ public:
 	void redo(ObjectMap& a_realocmap);
 	void undo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
 	void redo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
-	void record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction);
-	void record(const MCadObject* a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
+	void record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction);
+	void record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
 
 };

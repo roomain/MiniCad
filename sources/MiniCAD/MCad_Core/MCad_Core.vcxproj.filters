@@ -209,6 +209,9 @@
     <ClCompile Include="MCadRecordObject.cpp">
       <Filter>Fichiers sources\UndoRedo</Filter>
     </ClCompile>
+    <ClCompile Include="MCadRecordContainer.cpp">
+      <Filter>Fichiers sources\UndoRedo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\common\MCad.rc">

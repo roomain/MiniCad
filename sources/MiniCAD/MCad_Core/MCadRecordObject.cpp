@@ -1,30 +1,11 @@
 #include "pch.h"
 #include "MCadRecordObject.h"
 
-MCadRecordObject::MCadRecordObject(const RecordAction a_action, const MCadObject* a_pObject,
+MCadRecordObject::MCadRecordObject(const RecordAction a_action, MCadObjectWPtr a_pObject,
 	const size_t& a_offset, const size_t& a_size) :
-	IMCadRecord(a_action, a_pObject->uid()), m_dataOffset{ a_offset }, m_dataSize{ a_size }
+	IMCadRecord(a_action, a_pObject.lock()->uid()), m_dataOffset{a_offset}, m_dataSize{a_size}, m_pObject{a_pObject}
 {
 	//
-}
-
-std::unique_ptr<IMCadRecord> MCadRecordObject::undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream,
-	MCadOutputBinStream& a_outputStream)const
-{
-	switch (m_action)
-	{
-	case IMCadRecord::RecordAction::Record_delete:
-	case IMCadRecord::RecordAction::Record_modify:
-		break;
-
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
-		break;
-
-	default:
-		break;
-	}
-
-	return nullptr;
 }
 
 void MCadRecordObject::undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const

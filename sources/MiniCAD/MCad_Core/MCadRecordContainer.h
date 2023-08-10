@@ -13,10 +13,15 @@ class MCadRecordContainer : public IMCadRecord
 {
 private:
 	IndexedItem m_item;
+	IMCadIndexedContainerWPtr m_pContainer;
 
 public:
 	template<typename T>
-	MCadRecordContainer(const RecordAction a_action, const IMCadIndexedContainer<T>* a_pObject, const IndexedItem& a_data);
+	MCadRecordContainer(const RecordAction a_action, const IMCadIndexedContainerWPtr& a_pObject, const IndexedItem& a_data)
+	{
+		//
+	}
+
 	~MCadRecordContainer() = default;
 	
 	virtual void undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const;

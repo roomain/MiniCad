@@ -186,6 +186,7 @@
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
     <ClCompile Include="MCadOutputBinStream.cpp" />
+    <ClCompile Include="MCadRecordContainer.cpp" />
     <ClCompile Include="MCadRecordObject.cpp" />
     <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">

@@ -20,6 +20,10 @@ class MCadRecordSession;
 using MCadObjectPtr = std::shared_ptr<MCadObject>;
 using MCadObjectWPtr = std::weak_ptr<MCadObject>;
 
+
+using const_MCadObjectPtr = std::shared_ptr<const MCadObject>;
+using const_MCadObjectWPtr = std::weak_ptr<const MCadObject>;
+
 using ObjectUID = unsigned long long;
 
 
@@ -50,8 +54,8 @@ protected:
 	void setUID(const ObjectUID& a_uid) { m_ObjectUID = a_uid; }
 
 	/*@brief assertion for undo/redo: create record*/
-	virtual void assertModification() const;
-	virtual void assertDeletetion()const;
+	virtual void assertModification();
+	virtual void assertDeletetion();
 
 public:
 	MCadObject();
