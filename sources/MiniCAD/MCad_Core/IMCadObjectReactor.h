@@ -24,8 +24,6 @@ public:
 	virtual void onObjectDeleted(MCadObject* const a_pObject) = 0;
 	/*@brief called when target object is erased*/
 	virtual void onObjectErased(MCadObject* const a_pObject) = 0;
-	/*@brief called when target object owner has changed*/
-	virtual void onOwnerChanged(MCadObject* const a_pObject, MCadObject* const a_pOldOwner, MCadObject* const a_pNewOwner) = 0;
 	/*@brief is active*/
 	virtual void enabled()const noexcept = 0;
 };

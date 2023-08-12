@@ -13,11 +13,6 @@ MCadObject::MCadObject()
 MCadObject::~MCadObject()
 {
 	assertDeletetion();
-	// TODO
-
-	// remove from owner
-	for (const auto pReact : m_vReactors)
-		pReact->onObjectDeleted(this);
 }
 
 
@@ -31,12 +26,18 @@ void MCadObject::erase()
 
 void MCadObject::assertModification()
 {
+	for (const auto pReact : m_vReactors)
+		pReact->onObjectModified(this);
+
 	if (auto pDoc = document().lock())
 		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
 }
 
 void MCadObject::assertDeletetion()
 {
+	for (const auto pReact : m_vReactors)
+		pReact->onObjectDeleted(this);
+
 	if (auto pDoc = document().lock())
 		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
 
