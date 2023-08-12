@@ -15,7 +15,7 @@ class MCadDocument;
 class MCadObject;
 class IMCadInputStream;
 class IMCadOutputStream;
-class MCadRecordSession;
+class MCadRecordObject;
 
 using MCadObjectPtr = std::shared_ptr<MCadObject>;
 using MCadObjectWPtr = std::weak_ptr<MCadObject>;
@@ -35,14 +35,14 @@ using ObjectUID = unsigned long long;
 class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public std::enable_shared_from_this<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
-		friend MCadRecordSession;
+		friend MCadRecordObject;
 private:
 	std::atomic_bool m_bErased = false;				/*!< erased flag (object is no more usable)*/
 	std::weak_ptr<MCadDocument> m_pDoc;				/*!< document container*/
 	ObjectUID m_ObjectUID;							/*!< unique object identifier*/
 
 protected:
-	static std::atomic_bool m_sEnableUIDGen;	/*!< enable idenfigier generator*/
+	static std::atomic_bool m_sEnableUIDGen;	/*!< enable identifier generator*/
 	static std::atomic_ullong m_UIDGen;			/*!< unique identifier generator*/
 
 

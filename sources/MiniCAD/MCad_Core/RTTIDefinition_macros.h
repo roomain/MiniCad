@@ -43,6 +43,7 @@ constexpr void getAndCheckDefinition(std::vector<RTTIDefinitionPtr>& a_vDef, Def
 
 /*@brief Generate static member for RTTI*/
 #define BASE_RTTI_STATIC(version, classname) \
+	friend class TRTTIDefinition<classname>; \
 private: \
 	static inline TRTTIDefinitionPtr<classname> s_definition; \
 \
@@ -117,9 +118,19 @@ public:\
 	}\
 
 //------------------------------------------------------------------------------------------------------------------------------------
+/*@brief define static ctor*/
+#define STATIC_CTOR(classname)\
+public:\
+static std::shared_ptr<classname> createObject() \
+{ \
+	if(s_definition) \
+		return s_definition->create(); \
+	return nullptr; \
+}
 
 /*@brief declare RTTI for a simple class*/
 #define DECLARE_RTTI(version, classname) \
+STATIC_CTOR(classname) \
 BASE_RTTI_STATIC(version, classname)\
 BASE_DEFINITION_MACRO(version, classname)\
 public: \
@@ -129,9 +140,9 @@ public: \
 			s_definition = std::make_shared<TRTTIDefinition<classname>>(std::string(#classname), version); \
 	}
 
-/*@brief declare RTTI for a derived class*/
-/*DECLARE_RTTI_DERIVED(version, classname, parents classes)*/
+/*@brief declare RTTI for a derived class: DECLARE_RTTI_DERIVED(version, classname, parents classes) */
 #define DECLARE_RTTI_DERIVED(version, classname, ...) \
+STATIC_CTOR(classname) \
 BASE_RTTI_STATIC(version, classname)\
 BASE_DEFINITION_MACRO(version, classname)\
 public: \
@@ -141,3 +152,4 @@ public: \
 		getAndCheckDefinition(vParentDefs, DefinitionsStub<__VA_ARGS__>());\
 		s_definition = std::make_shared< TRTTIDefinition<classname>>(std::string(#classname), version, vParentDefs); \
 	}
+

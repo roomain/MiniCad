@@ -3,23 +3,25 @@
 
 MCadRecordObject::MCadRecordObject(const RecordAction a_action, MCadObjectWPtr a_pObject,
 	const size_t& a_offset, const size_t& a_size) :
-	IMCadRecord(a_action, a_pObject.lock()->uid()), m_dataOffset{a_offset}, m_dataSize{a_size}, m_pObject{a_pObject}
+	IMCadRecord(a_action, a_pObject.lock()->uid()), m_dataOffset{a_offset}, m_dataSize{a_size}, m_pObject{a_pObject},
+	m_objDef{ a_pObject.lock()->isA() }
 {
-	//
 }
 
-void MCadRecordObject::undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const
+void MCadRecordObject::process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const
 {
 	switch (m_action)
 	{
 
-	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
+	case IMCadRecord::RecordAction::Record_delete:
+		// recreate object
 		break;
 
-	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
+	case IMCadRecord::RecordAction::Record_modify:	
+		// unmodify
 		break;
 
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
+	case IMCadRecord::RecordAction::Record_create:
 		break;
 
 	default:
@@ -27,25 +29,6 @@ void MCadRecordObject::undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputS
 	}
 }
 
-void MCadRecordObject::redo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const
-{
-	switch (m_action)
-	{
-
-	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
-		break;
-
-
-	default:
-		break;
-	}
-}
 
 bool MCadRecordObject::invokeFilter(RecordFilter& filter)const
 {

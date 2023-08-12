@@ -12,6 +12,7 @@
 
 #include "MCad_Core_globals.h"
 
+class MCadObject;
 class ProtocolExtension;
 using ProtocolExtensionPtr = std::shared_ptr<ProtocolExtension>;
 
@@ -37,6 +38,8 @@ private:
 				{return a_curdef->inheritFrom(a_pDef); }) != m_vParent.end();
 		return bFound;
 	}
+protected:
+	static void registerToDocument(const std::shared_ptr<MCadObject> a_object);
 
 public:
 	RTTIDefinition() = delete;
@@ -87,6 +90,9 @@ public:
 
 	/*@brief size of described class*/
 	[[nodiscard]] virtual size_t classSize()const noexcept = 0;
+
+	/*@brief function for create object with specific uid*/
+	[[nodiscard]] virtual std::shared_ptr<MCadObject> create(const unsigned long long& a_objectUID)const = 0;
 };
 
 using RTTIDefinitionPtr = std::shared_ptr<RTTIDefinition>;

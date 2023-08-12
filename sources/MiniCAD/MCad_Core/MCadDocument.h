@@ -24,11 +24,15 @@ using MCadObjectWPtr = std::weak_ptr<MCadObject>;
 /*@brief base class for document*/
 class MCadDocument : public MCadReactive<IMCadDocumentReactor>
 {
+	friend class RTTIDefinition;
 	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<IMCadDocumentReactor>)
 private:
 	std::string	m_sFilePath;												/*!< file path of document*/
 	MCadUndoRedo m_undoRedo;												/*!< tool of undo redo*/
 	std::unordered_map<ObjectUID, MCadObjectWPtr> m_objectDatabase;
+
+	static void registerObject(const MCadObjectPtr& a_pObject);
+	static void unregisterObject(MCadDocument* const a_document, const ObjectUID& a_uid);
 
 public:
 	MCadDocument() = default;
@@ -53,6 +57,9 @@ public:
 	std::string fileExtension()const noexcept;
 
 	MCadUndoRedo& undoRedo() { return m_undoRedo; }
+
+	MCadObjectWPtr getObject(const ObjectUID& a_uid)const;
+
 };
 
 using MCadDocumentPtr = std::shared_ptr<MCadDocument>;

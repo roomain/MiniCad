@@ -14,7 +14,6 @@
 #include "IMCadRecordVisitor.h"
 
 using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
-using DefinitionMap = std::unordered_map<ObjectUID, RTTIDefinitionWPtr>;
 
 class MCadRecordFactory : public IMCadRecordVisitor
 {
@@ -22,9 +21,8 @@ private:
 	MCadObjectWPtr m_pObject;				/*!< recorded object*/
 	IMCadRecord::RecordAction m_recordAction;	/*!< record action*/
 	MCadOutputBinStream* const m_stream;		/*!< reference to output stream of MCadRecordSession*/
-	DefinitionMap* const m_defMap;				/*!< referende to definition map of MCadRecordSession*/
 public:
-	MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap);
+	MCadRecordFactory(MCadOutputBinStream* const a_stream);
 	virtual	~MCadRecordFactory() = default;
 	void setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordAction a_action);
 	// std::visitor doesn't work with &&
@@ -49,7 +47,6 @@ private:
 	MCadBinaryBufferPtr m_pBinBuffer;			/*!< saving buffer*/
 	MCadInputBinStream m_inputStream;			/*!< input stream*/
 	MCadOutputBinStream m_outputStream;			/*!< output stream*/
-	DefinitionMap m_definitionByObject;			/*!< RTTI definition by object uid*/
 	MCadRecordFactory m_recordFactory;			/*!< factory creating records*/
 
 	/*@brief compact records*/

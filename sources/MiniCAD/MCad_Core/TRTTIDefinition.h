@@ -17,9 +17,30 @@ public:
 	[[nodiscard]] virtual size_t classSize()const noexcept override { return sizeof(DefinedClass); }
 
 	/*@brief create class*/
-	std::shared_ptr<DefinedClass> create()
+	[[nodiscard]] std::shared_ptr<MCadObject> create(const unsigned long long& a_objectUID)const final
 	{
-		return std::make_shared<DefinedClass>();
+		if constexpr(std::is_base_of_v<MCadObject, DefinedClass>  && !std::is_abstract_v<DefinedClass>)
+		{
+			MCadObject::enableUIDGenerator(false);
+			auto ptrObj =  std::make_shared<DefinedClass>();
+			ptrObj->setUID(a_objectUID);
+			MCadObject::enableUIDGenerator(true);
+			RTTIDefinition::registerToDocument(ptrObj);
+			return ptrObj;
+		}
+		return nullptr;
+	}
+
+	/*@brief create class*/
+	[[nodiscard]] std::shared_ptr<DefinedClass> create()const
+	{
+		if constexpr (std::is_base_of_v<MCadObject, DefinedClass> && !std::is_abstract_v<DefinedClass>)
+		{
+			auto ptrObj = std::make_shared<DefinedClass>();
+			RTTIDefinition::registerToDocument(ptrObj);
+			return ptrObj;
+		}
+		return nullptr;
 	}
 };
 

@@ -171,7 +171,6 @@
     <ClCompile Include="Test_MCad_Core_Stream.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
     <ClInclude Include="TestRTTI_Resources.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

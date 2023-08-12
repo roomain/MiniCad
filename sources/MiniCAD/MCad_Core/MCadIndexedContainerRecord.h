@@ -1,6 +1,6 @@
 #pragma once
 /***********************************************
-* @headerfile MCadRecordContainer.h
+* @headerfile MCadIndexedContainerRecord.h
 * @date 09/ 08 / 2023
 * @author Roomain
 ************************************************/
@@ -9,25 +9,17 @@
 #include "MCadRecordExtra.h"
 
 /*@brief record for undo/redo-able container*/
-class MCadRecordContainer : public IMCadRecord
+class MCadIndexedContainerRecord : public IMCadRecord
 {
 private:
 	IndexedItem m_item;
 	IMCadIndexedContainerWPtr m_pContainer;
 
 public:
-	template<typename T>
-	MCadRecordContainer(const RecordAction a_action, const IMCadIndexedContainerWPtr& a_pObject, const IndexedItem& a_data)
-	{
-		//
-	}
-
-	~MCadRecordContainer() = default;
+	MCadIndexedContainerRecord(const RecordAction a_action, const IMCadIndexedContainerWPtr& a_pObject, const IndexedItem& a_data);
+	~MCadIndexedContainerRecord() = default;
 	
-	virtual void undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const;
-
-	/*@brief redo record return undo record*/
-	virtual void redo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const;
+	virtual void process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const;
 
 	/*@brief apply filter on record*/
 	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const;

@@ -2,6 +2,11 @@
 #include <algorithm>
 
 
+void RTTIDefinition::registerToDocument(const std::shared_ptr<MCadObject> a_object)
+{
+	MCadDocument::registerObject(a_object);
+}
+
 RTTIDefinition::RTTIDefinition(const std::string_view& a_name, const unsigned short a_version) :
 	m_defVersion{ a_version }, m_className{ a_name } {}
 
@@ -57,3 +62,4 @@ std::shared_ptr<ProtocolExtension> RTTIDefinition::getProtocolExt(const std::sha
 	}
 	return pProtocolExt;
 }
+

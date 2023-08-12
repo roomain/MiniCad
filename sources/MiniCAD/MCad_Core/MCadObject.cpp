@@ -3,6 +3,7 @@
 std::atomic_bool MCadObject::m_sEnableUIDGen = true;
 std::atomic_ullong MCadObject::m_UIDGen = 0;
 
+
 MCadObject::MCadObject()
 {
 	m_ObjectUID = m_sEnableUIDGen ? ++MCadObject::m_UIDGen : 0;
@@ -12,6 +13,7 @@ MCadObject::MCadObject()
 MCadObject::~MCadObject()
 {
 	assertDeletetion();
+	// TODO
 
 	// remove from owner
 	for (const auto pReact : m_vReactors)

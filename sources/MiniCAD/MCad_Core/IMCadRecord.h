@@ -50,11 +50,8 @@ public:
 
 	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
 
-	/*@brief undo record return redo record*/
-	virtual void undo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
-
-	/*@brief redo record return undo record*/
-	virtual void redo(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
+	/*@brief process record*/
+	virtual void process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
 
 	/*@brief apply filter on record*/
 	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const = 0;

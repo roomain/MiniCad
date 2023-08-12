@@ -162,7 +162,7 @@
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
-    <ClInclude Include="MCadRecordContainer.h" />
+    <ClInclude Include="MCadIndexedContainerRecord.h" />
     <ClInclude Include="MCadRecordDictionary.h" />
     <ClInclude Include="MCadRecordExtra.h" />
     <ClInclude Include="MCadRecordObject.h" />
@@ -186,7 +186,7 @@
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
     <ClCompile Include="MCadOutputBinStream.cpp" />
-    <ClCompile Include="MCadRecordContainer.cpp" />
+    <ClCompile Include="MCadIndexedContainerRecord.cpp" />
     <ClCompile Include="MCadRecordObject.cpp" />
     <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">

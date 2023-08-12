@@ -4,8 +4,8 @@
 #include "MCadRecordObject.h"
 
 
-MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream, DefinitionMap* const a_defMap) 
-	: m_stream{ a_stream }, m_defMap{ a_defMap }
+MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream) 
+	: m_stream{ a_stream }
 {
 	//
 }
@@ -20,16 +20,7 @@ IMCadRecordUPtr MCadRecordFactory::operator()(const IndexedItem& a_item)const
 {
 	switch (m_recordAction)
 	{
-	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_add:				/*!< (for container) object added*/
+	case IMCadRecord::RecordAction::Record_add:
 		break;
 
 	case IMCadRecord::RecordAction::Record_remove:		
@@ -49,16 +40,7 @@ IMCadRecordUPtr MCadRecordFactory::operator()(const KeyItem& a_item)const
 {
 	switch (m_recordAction)
 	{
-	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_add:				/*!< (for container) object added*/
+	case IMCadRecord::RecordAction::Record_add:
 		break;
 
 	case IMCadRecord::RecordAction::Record_remove:
@@ -78,23 +60,16 @@ IMCadRecordUPtr MCadRecordFactory::operator()()const
 	switch (m_recordAction)
 	{
 
-	case IMCadRecord::RecordAction::Record_delete:			/*!< object deleted*/
-	case IMCadRecord::RecordAction::Record_modify:			/*!< object modified*/
+	case IMCadRecord::RecordAction::Record_delete:
+	case IMCadRecord::RecordAction::Record_modify:
 	{
 		const size_t offset = m_stream->offset();
 		m_pObject.lock()->save(*m_stream);
 		return std::make_unique<MCadRecordObject>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
 	}
 
-	case IMCadRecord::RecordAction::Record_create:			/*!< object created*/
-		break;
-
-
-	case IMCadRecord::RecordAction::Record_add:				/*!< (for container) object added*/
-		break;
-
-	case IMCadRecord::RecordAction::Record_remove:
-		break;
+	case IMCadRecord::RecordAction::Record_create:
+		return std::make_unique<MCadRecordObject>(m_recordAction, m_pObject, 0, 0);
 
 	default:
 		break;
@@ -130,7 +105,7 @@ void MCadRecordSession::compact()
 }
 
 MCadRecordSession::MCadRecordSession(const std::string& a_title) : m_title{ a_title }, 
-m_recordFactory{ &m_outputStream, &m_definitionByObject }
+m_recordFactory{ &m_outputStream }
 {
 	m_timePoint = std::chrono::system_clock::now();
 	m_pBinBuffer = std::make_shared<MCadBinaryBuffer>();
@@ -147,13 +122,16 @@ void MCadRecordSession::undo(ObjectMap& a_realocmap)
 		{
 			//
 		}
-		record->undo(a_realocmap, m_inputStream);
+		record->process(a_realocmap, m_inputStream);
 	}
+	//a_realocmap.clear();
 }
 
 void MCadRecordSession::redo(ObjectMap& a_realocmap)
 {
-	// TODO
+	for (const auto& record : m_lRecordRedo)
+		record->process(a_realocmap, m_inputStream);
+	//a_realocmap.clear();
 }
 
 void MCadRecordSession::undo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
