@@ -10,12 +10,13 @@
 #include "IMCadObjectReactor.h"
 #include "MCadReactive.h"
 #include "MCad_Core_globals.h"
+#include "defines.h"
 
 class MCadDocument;
 class MCadObject;
 class IMCadInputStream;
 class IMCadOutputStream;
-class MCadRecordObject;
+class MCadObjectRecord;
 
 using MCadObjectPtr = std::shared_ptr<MCadObject>;
 using MCadObjectWPtr = std::weak_ptr<MCadObject>;
@@ -24,7 +25,6 @@ using MCadObjectWPtr = std::weak_ptr<MCadObject>;
 using const_MCadObjectPtr = std::shared_ptr<const MCadObject>;
 using const_MCadObjectWPtr = std::weak_ptr<const MCadObject>;
 
-using ObjectUID = unsigned long long;
 
 
 #pragma warning(push)
@@ -35,7 +35,7 @@ using ObjectUID = unsigned long long;
 class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public std::enable_shared_from_this<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
-		friend MCadRecordObject;
+		friend MCadObjectRecord;
 private:
 	std::atomic_bool m_bErased = false;				/*!< erased flag (object is no more usable)*/
 	std::weak_ptr<MCadDocument> m_pDoc;				/*!< document container*/

@@ -1,6 +1,6 @@
 #pragma once
 /***********************************************
-* @headerfile MCadRecordObject.h
+* @headerfile MCadObjectRecord.h
 * @date 08 / 08 / 2023
 * @author Roomain
 ************************************************/
@@ -8,7 +8,7 @@
 
 
 /*@brief record for simple object*/
-class MCadRecordObject : public IMCadRecord
+class MCadObjectRecord : public IMCadRecord
 {
 private:
 	size_t m_dataOffset;					/*!< offset of recorded data in stream*/
@@ -17,14 +17,14 @@ private:
 	RTTIDefinitionWPtr m_objDef;			/*!< definition of recorded object*/
 
 public:
-	MCadRecordObject(const RecordAction a_action, const MCadObjectWPtr a_pObject,
+	MCadObjectRecord(const RecordAction a_action, const MCadObjectWPtr a_pObject,
 		const size_t& a_offset, const size_t& a_size);
-	~MCadRecordObject() = default;
+	~MCadObjectRecord() = default;
 
-	virtual void process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const;
+	virtual void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)final;
 
 	/*@brief apply filter on record*/
-	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const;
+	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
 	std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
 };

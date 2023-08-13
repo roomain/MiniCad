@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <utility>
 #include "MCadRecordSession.h"
-#include "MCadRecordObject.h"
+#include "MCadObjectRecord.h"
 
 
 MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream) 
@@ -65,11 +65,11 @@ IMCadRecordUPtr MCadRecordFactory::operator()()const
 	{
 		const size_t offset = m_stream->offset();
 		m_pObject.lock()->save(*m_stream);
-		return std::make_unique<MCadRecordObject>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
+		return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
 	}
 
 	case IMCadRecord::RecordAction::Record_create:
-		return std::make_unique<MCadRecordObject>(m_recordAction, m_pObject, 0, 0);
+		return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, 0, 0);
 
 	default:
 		break;
@@ -78,13 +78,33 @@ IMCadRecordUPtr MCadRecordFactory::operator()()const
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecordObject* a_pUndoRecord)
+IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndoRecord)
 {
-	//
+	switch (a_pUndoRecord->recordAction())
+	{
+
+	case IMCadRecord::RecordAction::Record_delete:
+		break;
+
+	case IMCadRecord::RecordAction::Record_modify:
+	{
+		//const size_t offset = m_stream->offset();
+		//m_pObject.lock()->save(*m_stream);
+		//return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
+	}
+	break;
+
+	case IMCadRecord::RecordAction::Record_create:
+		//return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, 0, 0);
+		break;
+
+	default:
+		break;
+	}
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecordContainer* a_pUndoRecord)
+IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord)
 {
 	//
 	return nullptr;
@@ -113,7 +133,7 @@ m_recordFactory{ &m_outputStream }
 	m_outputStream.setBuffer(m_pBinBuffer);
 }
 
-void MCadRecordSession::undo(ObjectMap& a_realocmap)
+void MCadRecordSession::undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap)
 {
 	bool bPrepareRedo = m_lRecordRedo.empty();
 	for (const auto& record : m_lRecordUndo)
@@ -122,24 +142,24 @@ void MCadRecordSession::undo(ObjectMap& a_realocmap)
 		{
 			//
 		}
-		record->process(a_realocmap, m_inputStream);
+		record->process(a_realocmap, a_realocNextMap, m_inputStream);
 	}
-	//a_realocmap.clear();
+	a_realocmap.clear();
 }
 
-void MCadRecordSession::redo(ObjectMap& a_realocmap)
+void MCadRecordSession::redo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap)
 {
 	for (const auto& record : m_lRecordRedo)
-		record->process(a_realocmap, m_inputStream);
-	//a_realocmap.clear();
+		record->process(a_realocmap, a_realocNextMap, m_inputStream);
+	a_realocmap.clear();
 }
 
-void MCadRecordSession::undo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
+void MCadRecordSession::undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun)
 {
 	// TODO
 }
 
-void MCadRecordSession::redo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun)
+void MCadRecordSession::redo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun)
 {
 	// TODO
 }

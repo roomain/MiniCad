@@ -30,8 +30,8 @@ public:
 	IMCadRecordUPtr operator()(const KeyItem& a_item)const;
 	IMCadRecordUPtr operator()()const;
 
-	IMCadRecordUPtr genRedoRecord(const MCadRecordObject* a_pUndoRecord) final;
-	IMCadRecordUPtr genRedoRecord(const MCadRecordContainer* a_pUndoRecord) final;
+	IMCadRecordUPtr genRedoRecord(const MCadObjectRecord* a_pUndoRecord) final;
+	IMCadRecordUPtr genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord) final;
 	IMCadRecordUPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
 
 };
@@ -60,10 +60,10 @@ public:
 	[[nodiscard]] constexpr SessionTimePoint time()const noexcept { return m_timePoint; }
 	[[nodiscard]] constexpr std::string title()const noexcept { return m_title; }
 	[[nodiscard]] size_t size()const noexcept { return m_lRecordUndo.size() + m_lRecordRedo.size(); }
-	void undo(ObjectMap& a_realocmap);
-	void redo(ObjectMap& a_realocmap);
-	void undo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
-	void redo(ObjectMap& a_realocmap, IMCadRecord::RecordFilter& a_filterFun);
+	void undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap);
+	void redo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap);
+	void undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun);
+	void redo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun);
 	void record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction);
 	void record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
 

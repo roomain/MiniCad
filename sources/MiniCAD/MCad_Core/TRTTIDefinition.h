@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] virtual size_t classSize()const noexcept override { return sizeof(DefinedClass); }
 
 	/*@brief create class*/
-	[[nodiscard]] std::shared_ptr<MCadObject> create(const unsigned long long& a_objectUID)const final
+	[[nodiscard]] std::shared_ptr<MCadObject> create(const ObjectUID& a_objectUID)const final
 	{
 		if constexpr(std::is_base_of_v<MCadObject, DefinedClass>  && !std::is_abstract_v<DefinedClass>)
 		{

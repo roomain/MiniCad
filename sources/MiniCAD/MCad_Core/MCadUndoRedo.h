@@ -12,7 +12,7 @@
 
 #include "MCadRecordSession.h"
 
-using ObjectMap = std::unordered_map< ObjectUID, MCadObjectPtr>;
+using ObjectRealocMap = std::unordered_map< ObjectUID, MCadObjectPtr>;
 using UndoRedoTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 using ObjectDefWPtr = std::weak_ptr<RTTIDefinition>;
 

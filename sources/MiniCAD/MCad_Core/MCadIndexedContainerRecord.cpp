@@ -9,7 +9,7 @@ MCadIndexedContainerRecord::MCadIndexedContainerRecord(const RecordAction a_acti
 	//
 }
 
-void MCadIndexedContainerRecord::process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const
+void MCadIndexedContainerRecord::process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)
 {
 	//
 }
@@ -23,6 +23,5 @@ bool MCadIndexedContainerRecord::invokeFilter(RecordFilter& filter)const
 
 std::unique_ptr<IMCadRecord> MCadIndexedContainerRecord::genReverseRecord(IMCadRecordVisitor& a_visitor)const
 {
-	//
-	return nullptr;
+	return a_visitor.genRedoRecord(this);
 }

@@ -5,12 +5,16 @@
 * @author Roomain
 ************************************************/
 #include <memory>
+#include <unordered_map>
 #include "MCadInputBinStream.h"
 #include "MCadOutputBinStream.h"
 #include "MCadObject.h"
 
+/*@brief use for realocation of deleted pointers*/
+using ObjectRealocMap = std::unordered_map<ObjectUID, MCadObjectPtr>;
 
-using ObjectMap = std::unordered_map<ObjectUID, MCadObjectPtr>;
+/*@brief use for realocated pointer from next records*/
+using ObjectNextRealocMap = std::unordered_map<ObjectUID, MCadObjectWPtr>;
 
 class IMCadRecordVisitor;
 
@@ -39,6 +43,18 @@ protected:
 	RecordAction m_action;	/*!< recording action*/
 	ObjectUID m_objectID;	/*!< uid of object recorded*/
 
+	/*@brief find realocated object*/
+	static inline [[nodiscard]] MCadObjectWPtr findRealocObject(const ObjectUID& a_uid, const ObjectRealocMap& a_realocMap, const ObjectNextRealocMap& a_realocNextMap)
+	{
+		if (a_realocMap.contains(a_uid))
+			return a_realocMap.at(a_uid);
+
+		if (a_realocNextMap.contains(a_uid))
+			return a_realocNextMap.at(a_uid);
+
+		return MCadObjectWPtr();
+	}
+
 public:
 	IMCadRecord() = delete;
 	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, m_objectID{ m_objectID }
@@ -51,7 +67,7 @@ public:
 	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
 
 	/*@brief process record*/
-	virtual void process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const = 0;
+	virtual void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream) = 0;
 
 	/*@brief apply filter on record*/
 	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const = 0;

@@ -19,10 +19,10 @@ public:
 	MCadIndexedContainerRecord(const RecordAction a_action, const IMCadIndexedContainerWPtr& a_pObject, const IndexedItem& a_data);
 	~MCadIndexedContainerRecord() = default;
 	
-	virtual void process(ObjectMap& a_realocMap, MCadInputBinStream& a_inputStream)const;
+	void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)final;
 
 	/*@brief apply filter on record*/
-	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const;
+	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
 	std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
 };

@@ -9,7 +9,7 @@
 
 
 /*@brief record for undo/redo-able dictionary*/
-class MCadRecordDictionary : public IMCadRecord
+class MCadDictionaryRecord : public IMCadRecord
 {
 	//
 };

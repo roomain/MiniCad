@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 #include <ranges>
-
+#include "defines.h"
 #include "MCad_Core_globals.h"
 
 class MCadObject;
@@ -92,7 +92,7 @@ public:
 	[[nodiscard]] virtual size_t classSize()const noexcept = 0;
 
 	/*@brief function for create object with specific uid*/
-	[[nodiscard]] virtual std::shared_ptr<MCadObject> create(const unsigned long long& a_objectUID)const = 0;
+	[[nodiscard]] virtual std::shared_ptr<MCadObject> create(const ObjectUID& a_objectUID)const = 0;
 };
 
 using RTTIDefinitionPtr = std::shared_ptr<RTTIDefinition>;

@@ -7,8 +7,8 @@
 #include <memory>
 
 class IMCadRecord;
-class MCadRecordObject;
-class MCadRecordContainer;
+class MCadObjectRecord;
+class MCadIndexedContainerRecord;
 class MCadRecorDictionary;
 using IMCadRecordUPtr = std::unique_ptr<IMCadRecord>;
 
@@ -16,7 +16,7 @@ using IMCadRecordUPtr = std::unique_ptr<IMCadRecord>;
 class IMCadRecordVisitor
 {
 public:
-	virtual IMCadRecordUPtr genRedoRecord(const MCadRecordObject* a_pUndoRecord) = 0;
-	virtual IMCadRecordUPtr genRedoRecord(const MCadRecordContainer* a_pUndoRecord) = 0;
+	virtual IMCadRecordUPtr genRedoRecord(const MCadObjectRecord* a_pUndoRecord) = 0;
+	virtual IMCadRecordUPtr genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord) = 0;
 	virtual IMCadRecordUPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) = 0;
 };
