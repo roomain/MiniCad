@@ -19,9 +19,13 @@ private:
 public:
 	MCadObjectRecord(const RecordAction a_action, const MCadObjectWPtr a_pObject,
 		const size_t& a_offset, const size_t& a_size);
+	MCadObjectRecord(const RecordAction a_action, const RTTIDefinitionWPtr a_pDef, const ObjectUID& a_uid);
 	~MCadObjectRecord() = default;
 
 	virtual void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)final;
+
+	inline MCadObjectWPtr object()const noexcept{ return m_pObject; }
+	inline RTTIDefinitionWPtr definition()const noexcept { return m_objDef; }
 
 	/*@brief apply filter on record*/
 	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;

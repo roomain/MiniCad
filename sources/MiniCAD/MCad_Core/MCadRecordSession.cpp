@@ -59,7 +59,6 @@ IMCadRecordUPtr MCadRecordFactory::operator()()const
 {
 	switch (m_recordAction)
 	{
-
 	case IMCadRecord::RecordAction::Record_delete:
 	case IMCadRecord::RecordAction::Record_modify:
 	{
@@ -82,21 +81,42 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndo
 {
 	switch (a_pUndoRecord->recordAction())
 	{
-
-	case IMCadRecord::RecordAction::Record_delete:
-		break;
+	case IMCadRecord::RecordAction::Record_delete:// objet is deleted
+		return std::make_unique<MCadObjectRecord>(IMCadRecord::RecordAction::Record_create, a_pUndoRecord->definition(), a_pUndoRecord->objectUID());
 
 	case IMCadRecord::RecordAction::Record_modify:
 	{
-		//const size_t offset = m_stream->offset();
-		//m_pObject.lock()->save(*m_stream);
-		//return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
-	}
-	break;
-
-	case IMCadRecord::RecordAction::Record_create:
-		//return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, 0, 0);
+		auto pObj = a_pUndoRecord->object().lock();
+		if (pObj)
+		{
+			const size_t offset = m_stream->offset();
+			pObj->save(*m_stream);
+			return std::make_unique<MCadObjectRecord>(IMCadRecord::RecordAction::Record_modify, pObj, offset, m_stream->offset() - offset);
+		}
+		else
+		{
+			// log
+			MCadLogger::Instance() << LogMode::LOG_ERROR << std::source_location::current() << "no pointer to create redo record";
+		}
 		break;
+	}
+
+	case IMCadRecord::RecordAction::Record_create:// object is created
+	{
+		auto pObj = a_pUndoRecord->object().lock();
+		if (pObj)
+		{
+			const size_t offset = m_stream->offset();
+			pObj->save(*m_stream);
+			return std::make_unique<MCadObjectRecord>(IMCadRecord::RecordAction::Record_delete, pObj, offset, m_stream->offset() - offset);
+		}
+		else
+		{
+			// log
+			MCadLogger::Instance() << LogMode::LOG_ERROR << std::source_location::current() << "no pointer to create redo record";
+		}
+		break;
+	}
 
 	default:
 		break;
@@ -106,13 +126,39 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndo
 
 IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord)
 {
-	//
+	switch (m_recordAction)
+	{
+	case IMCadRecord::RecordAction::Record_add:
+		break;
+
+	case IMCadRecord::RecordAction::Record_remove:
+		break;
+
+	case IMCadRecord::RecordAction::Record_changed:
+		break;
+
+	default:
+		break;
+	}
 	return nullptr;
 }
 
 IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecorDictionary* a_pUndoRecord)
 {
-	//
+	switch (m_recordAction)
+	{
+	case IMCadRecord::RecordAction::Record_add:
+		break;
+
+	case IMCadRecord::RecordAction::Record_remove:
+		break;
+
+	case IMCadRecord::RecordAction::Record_changed:
+		break;
+
+	default:
+		break;
+	}
 	return nullptr;
 }
 

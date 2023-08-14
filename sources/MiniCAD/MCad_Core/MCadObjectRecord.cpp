@@ -6,7 +6,16 @@ MCadObjectRecord::MCadObjectRecord(const RecordAction a_action, MCadObjectWPtr a
 	IMCadRecord(a_action, a_pObject.lock()->uid()), m_dataOffset{a_offset}, m_dataSize{a_size}, m_pObject{a_pObject},
 	m_objDef{ a_pObject.lock()->isA() }
 {
+	//
 }
+
+MCadObjectRecord::MCadObjectRecord(const RecordAction a_action, const RTTIDefinitionWPtr a_pDef, const ObjectUID& a_uid) :
+	IMCadRecord(a_action, a_uid), m_dataOffset{ 0 }, m_dataSize{ 0 }, m_pObject{ nullptr },
+	m_objDef{ a_pDef }
+{
+	//
+}
+
 
 void MCadObjectRecord::process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)
 {
