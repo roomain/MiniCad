@@ -185,9 +185,8 @@ void MCadRecordSession::undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& 
 	for (const auto& record : m_lRecordUndo)
 	{
 		if (bPrepareRedo)
-		{
-			//
-		}
+			m_lRecordRedo.push_back(record->genReverseRecord(m_recordFactory));
+
 		record->process(a_realocmap, a_realocNextMap, m_inputStream);
 	}
 	a_realocmap.clear();
