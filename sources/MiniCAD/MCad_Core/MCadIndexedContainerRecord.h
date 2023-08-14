@@ -21,8 +21,12 @@ public:
 	
 	void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)final;
 
+	inline [[nodiscard]] IndexedItem indexedItem()const noexcept { return m_item; }
+
+	inline [[nodiscard]] IMCadIndexedContainerWPtr container()const noexcept { return m_pContainer; }
+
 	/*@brief apply filter on record*/
 	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
-	std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
+	[[nodiscard]] std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
 };

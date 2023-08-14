@@ -24,11 +24,11 @@ public:
 
 	virtual void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream)final;
 
-	inline MCadObjectWPtr object()const noexcept{ return m_pObject; }
-	inline RTTIDefinitionWPtr definition()const noexcept { return m_objDef; }
+	inline [[nodiscard]] MCadObjectWPtr object()const noexcept{ return m_pObject; }
+	inline [[nodiscard]] RTTIDefinitionWPtr definition()const noexcept { return m_objDef; }
 
 	/*@brief apply filter on record*/
 	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
-	std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
+	[[nodiscard]] std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
 };

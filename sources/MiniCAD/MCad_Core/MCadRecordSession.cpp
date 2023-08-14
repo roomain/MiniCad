@@ -2,6 +2,7 @@
 #include <utility>
 #include "MCadRecordSession.h"
 #include "MCadObjectRecord.h"
+#include "MCadIndexedContainerRecord.h"
 
 
 MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream) 
@@ -21,13 +22,9 @@ IMCadRecordUPtr MCadRecordFactory::operator()(const IndexedItem& a_item)const
 	switch (m_recordAction)
 	{
 	case IMCadRecord::RecordAction::Record_add:
-		break;
-
-	case IMCadRecord::RecordAction::Record_remove:		
-		break;
-
+	case IMCadRecord::RecordAction::Record_remove:	
 	case IMCadRecord::RecordAction::Record_changed:
-		break;
+		return std::make_unique<MCadIndexedContainerRecord>(m_recordAction, m_pObject, a_item);
 
 	default:
 		break;
@@ -41,13 +38,10 @@ IMCadRecordUPtr MCadRecordFactory::operator()(const KeyItem& a_item)const
 	switch (m_recordAction)
 	{
 	case IMCadRecord::RecordAction::Record_add:
-		break;
 
 	case IMCadRecord::RecordAction::Record_remove:
-		break;
 
 	case IMCadRecord::RecordAction::Record_changed:
-		break;
 
 	default:
 		break;
@@ -129,13 +123,13 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadIndexedContainerRecor
 	switch (m_recordAction)
 	{
 	case IMCadRecord::RecordAction::Record_add:
-		break;
+		return std::make_unique<MCadIndexedContainerRecord>(IMCadRecord::RecordAction::Record_remove, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
 
 	case IMCadRecord::RecordAction::Record_remove:
-		break;
+		return std::make_unique<MCadIndexedContainerRecord>(IMCadRecord::RecordAction::Record_add, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
 
 	case IMCadRecord::RecordAction::Record_changed:
-		break;
+		return std::make_unique<MCadIndexedContainerRecord>(m_recordAction, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
 
 	default:
 		break;
@@ -261,7 +255,8 @@ void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::R
 		}
 		catch (std::bad_weak_ptr&)
 		{
-			// object not treated
+			// log
+			MCadLogger::Instance() << LogMode::LOG_ERROR << std::source_location::current() << "Object is not a shared pointer";
 		}
 	}
 }
@@ -277,7 +272,8 @@ void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::R
 		}
 		catch (std::bad_weak_ptr&)
 		{
-			// object not treated
+			// log
+			MCadLogger::Instance() << LogMode::LOG_ERROR << std::source_location::current() << "Object is not a shared pointer";
 		}
 	}
 }
