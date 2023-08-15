@@ -25,6 +25,7 @@ class MCAD_CORE_EXPORT MCadDocumentManager : public MCadReactive<IMCadDocManager
 {
 	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, MCadReactive<IMCadDocManagerReactor>)
 private:
+
 	std::vector<std::shared_ptr<MCadDocument>> m_vDocument;		/*!< opened documents*/
 	std::weak_ptr<MCadDocument> m_pCurrentDocument;				/*!< current document*/
 	

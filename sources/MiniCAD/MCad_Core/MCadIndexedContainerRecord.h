@@ -9,7 +9,7 @@
 #include "MCadRecordExtra.h"
 
 /*@brief record for undo/redo-able container*/
-class MCadIndexedContainerRecord : public IMCadRecord
+class  MCadIndexedContainerRecord : public IMCadRecord
 {
 private:
 	IndexedItem m_item;
@@ -28,5 +28,5 @@ public:
 	/*@brief apply filter on record*/
 	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
-	[[nodiscard]] std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
+	[[nodiscard]] std::shared_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
 };

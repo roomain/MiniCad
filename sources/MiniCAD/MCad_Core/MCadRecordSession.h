@@ -20,28 +20,28 @@ class MCadRecordFactory : public IMCadRecordVisitor
 private:
 	MCadObjectWPtr m_pObject;				/*!< recorded object*/
 	IMCadRecord::RecordAction m_recordAction;	/*!< record action*/
-	MCadOutputBinStream* const m_stream;		/*!< reference to output stream of MCadRecordSession*/
+	MCadOutputBinStream* m_stream;		/*!< reference to output stream of MCadRecordSession*/
 public:
 	MCadRecordFactory(MCadOutputBinStream* const a_stream);
 	virtual	~MCadRecordFactory() = default;
 	void setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordAction a_action);
 	// std::visitor doesn't work with &&
-	IMCadRecordUPtr operator()(const IndexedItem& a_item)const;
-	IMCadRecordUPtr operator()(const KeyItem& a_item)const;
-	IMCadRecordUPtr operator()()const;
+	IMCadRecordPtr operator()(const IndexedItem& a_item)const;
+	IMCadRecordPtr operator()(const KeyItem& a_item)const;
+	IMCadRecordPtr operator()()const;
 
-	IMCadRecordUPtr genRedoRecord(const MCadObjectRecord* a_pUndoRecord) final;
-	IMCadRecordUPtr genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord) final;
-	IMCadRecordUPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
+	IMCadRecordPtr genRedoRecord(const MCadObjectRecord* a_pUndoRecord) final;
+	IMCadRecordPtr genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord) final;
+	IMCadRecordPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
 
 };
 
 /*@brief represents all object modification for during a command*/
-class MCadRecordSession
+class  MCadRecordSession
 {
 private:
-	std::list<IMCadRecordUPtr> m_lRecordUndo;	/*!< records for undo*/
-	std::list<IMCadRecordUPtr> m_lRecordRedo;	/*!< records for redo*/
+	std::list<IMCadRecordPtr> m_lRecordUndo;	/*!< records for undo*/
+	std::list<IMCadRecordPtr> m_lRecordRedo;	/*!< records for redo*/
 	SessionTimePoint m_timePoint;				/*!< time of undo session*/
 	std::string m_title;						/*!< session title*/
 	MCadBinaryBufferPtr m_pBinBuffer;			/*!< saving buffer*/
@@ -68,3 +68,6 @@ public:
 	void record(MCadObject* const a_pObject, const IMCadRecord::RecordAction a_recordAction, const RecordExtra& a_data);
 
 };
+
+using MCadRecordSessionPtr = std::shared_ptr<MCadRecordSession>;
+using MCadRecordSessionWPtr = std::weak_ptr<MCadRecordSession>;

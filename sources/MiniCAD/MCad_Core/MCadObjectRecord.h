@@ -6,7 +6,6 @@
 ************************************************/
 #include "IMCadRecord.h"
 
-
 /*@brief record for simple object*/
 class MCadObjectRecord : public IMCadRecord
 {
@@ -30,5 +29,5 @@ public:
 	/*@brief apply filter on record*/
 	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
-	[[nodiscard]] std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
+	[[nodiscard]] std::shared_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
 };

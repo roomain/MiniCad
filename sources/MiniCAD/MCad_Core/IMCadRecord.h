@@ -39,9 +39,9 @@ public:
 	using RecordFilter = std::function<bool(RTTIDefinitionPtr, RecordAction)>;
 
 protected:
-	bool m_bErased = false;	/*!< indicate erase record*/
-	RecordAction m_action;	/*!< recording action*/
-	ObjectUID m_objectID;	/*!< uid of object recorded*/
+	bool m_bErased = false;									/*!< indicate erase record*/
+	RecordAction m_action = RecordAction::Record_create;	/*!< recording action*/
+	ObjectUID m_objectID = 0;								/*!< uid of object recorded*/
 
 	/*@brief find realocated object*/
 	static inline [[nodiscard]] MCadObjectWPtr findRealocObject(const ObjectUID& a_uid, const ObjectRealocMap& a_realocMap, const ObjectNextRealocMap& a_realocNextMap)
@@ -75,7 +75,7 @@ public:
 	void erase() { m_bErased = true; }
 	constexpr bool isErased()const noexcept { return m_bErased; }
 
-	virtual std::unique_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const = 0;
+	virtual std::shared_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const = 0;
 };
 
-using IMCadRecordUPtr = std::unique_ptr<IMCadRecord>;
+using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;

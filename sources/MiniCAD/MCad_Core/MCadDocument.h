@@ -22,7 +22,7 @@ using MCadObjectWPtr = std::weak_ptr<MCadObject>;
 #pragma warning(disable : 4251)
 
 /*@brief base class for document*/
-class MCadDocument : public MCadReactive<IMCadDocumentReactor>
+class MCAD_CORE_EXPORT MCadDocument : public MCadReactive<IMCadDocumentReactor>
 {
 	friend class RTTIDefinition;
 	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<IMCadDocumentReactor>)
@@ -37,12 +37,6 @@ private:
 public:
 	MCadDocument() = default;
 	virtual ~MCadDocument() = default;
-
-	/*@brief load file*/
-	virtual bool load(IMCadFileInputStream& stream) = 0;
-
-	/*@brief save file*/
-	virtual bool save(IMCadFileOutputStream& stream)const = 0;
 
 	/*@brief return document file full path*/
 	std::string fullpath()const noexcept;

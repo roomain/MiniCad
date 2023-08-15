@@ -10,7 +10,7 @@
 #include <iterator>
 
 /*@brief class to store binary data*/
-class MCadBinaryBuffer
+class  MCadBinaryBuffer
 {
 private:
 	static constexpr size_t MIN_SIZE = 1000;

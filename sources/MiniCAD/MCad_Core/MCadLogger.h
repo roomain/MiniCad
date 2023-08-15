@@ -11,6 +11,9 @@
 #include <source_location>
 #include "MCad_Core_globals.h"
 
+#pragma warning(push)
+#pragma warning(disable : 4251)
+
 /*@brief log mode*/
 enum class LogMode
 {
@@ -73,3 +76,5 @@ public:
 	MCadLogger& operator << (const bool a_value);
 	MCadLogger& operator << (std::source_location&& a_value);
 };
+
+#pragma warning(pop)

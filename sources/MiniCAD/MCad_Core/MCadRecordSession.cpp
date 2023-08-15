@@ -17,14 +17,14 @@ void MCadRecordFactory::setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordActio
 	m_recordAction = a_action;
 }
 
-IMCadRecordUPtr MCadRecordFactory::operator()(const IndexedItem& a_item)const
+IMCadRecordPtr MCadRecordFactory::operator()(const IndexedItem& a_item)const
 {
 	switch (m_recordAction)
 	{
 	case IMCadRecord::RecordAction::Record_add:
 	case IMCadRecord::RecordAction::Record_remove:	
 	case IMCadRecord::RecordAction::Record_changed:
-		return std::make_unique<MCadIndexedContainerRecord>(m_recordAction, m_pObject, a_item);
+		return std::make_shared<MCadIndexedContainerRecord>(m_recordAction, std::static_pointer_cast<IMCadIndexedContainer>(m_pObject.lock()), a_item);
 
 	default:
 		break;
@@ -33,7 +33,7 @@ IMCadRecordUPtr MCadRecordFactory::operator()(const IndexedItem& a_item)const
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::operator()(const KeyItem& a_item)const
+IMCadRecordPtr MCadRecordFactory::operator()(const KeyItem& a_item)const
 {
 	switch (m_recordAction)
 	{
@@ -49,7 +49,7 @@ IMCadRecordUPtr MCadRecordFactory::operator()(const KeyItem& a_item)const
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::operator()()const
+IMCadRecordPtr MCadRecordFactory::operator()()const
 {
 	switch (m_recordAction)
 	{
@@ -58,11 +58,11 @@ IMCadRecordUPtr MCadRecordFactory::operator()()const
 	{
 		const size_t offset = m_stream->offset();
 		m_pObject.lock()->save(*m_stream);
-		return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
+		return std::make_shared<MCadObjectRecord>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
 	}
 
 	case IMCadRecord::RecordAction::Record_create:
-		return std::make_unique<MCadObjectRecord>(m_recordAction, m_pObject, 0, 0);
+		return std::make_shared<MCadObjectRecord>(m_recordAction, m_pObject, 0, 0);
 
 	default:
 		break;
@@ -71,12 +71,12 @@ IMCadRecordUPtr MCadRecordFactory::operator()()const
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndoRecord)
+IMCadRecordPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndoRecord)
 {
 	switch (a_pUndoRecord->recordAction())
 	{
 	case IMCadRecord::RecordAction::Record_delete:// objet is deleted
-		return std::make_unique<MCadObjectRecord>(IMCadRecord::RecordAction::Record_create, a_pUndoRecord->definition(), a_pUndoRecord->objectUID());
+		return std::make_shared<MCadObjectRecord>(IMCadRecord::RecordAction::Record_create, a_pUndoRecord->definition(), a_pUndoRecord->objectUID());
 
 	case IMCadRecord::RecordAction::Record_modify:
 	{
@@ -85,7 +85,7 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndo
 		{
 			const size_t offset = m_stream->offset();
 			pObj->save(*m_stream);
-			return std::make_unique<MCadObjectRecord>(IMCadRecord::RecordAction::Record_modify, pObj, offset, m_stream->offset() - offset);
+			return std::make_shared<MCadObjectRecord>(IMCadRecord::RecordAction::Record_modify, pObj, offset, m_stream->offset() - offset);
 		}
 		else
 		{
@@ -102,7 +102,7 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndo
 		{
 			const size_t offset = m_stream->offset();
 			pObj->save(*m_stream);
-			return std::make_unique<MCadObjectRecord>(IMCadRecord::RecordAction::Record_delete, pObj, offset, m_stream->offset() - offset);
+			return std::make_shared<MCadObjectRecord>(IMCadRecord::RecordAction::Record_delete, pObj, offset, m_stream->offset() - offset);
 		}
 		else
 		{
@@ -118,18 +118,18 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadObjectRecord* a_pUndo
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord)
+IMCadRecordPtr MCadRecordFactory::genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord)
 {
 	switch (m_recordAction)
 	{
 	case IMCadRecord::RecordAction::Record_add:
-		return std::make_unique<MCadIndexedContainerRecord>(IMCadRecord::RecordAction::Record_remove, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
+		return std::make_shared<MCadIndexedContainerRecord>(IMCadRecord::RecordAction::Record_remove, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
 
 	case IMCadRecord::RecordAction::Record_remove:
-		return std::make_unique<MCadIndexedContainerRecord>(IMCadRecord::RecordAction::Record_add, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
+		return std::make_shared<MCadIndexedContainerRecord>(IMCadRecord::RecordAction::Record_add, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
 
 	case IMCadRecord::RecordAction::Record_changed:
-		return std::make_unique<MCadIndexedContainerRecord>(m_recordAction, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
+		return std::make_shared<MCadIndexedContainerRecord>(m_recordAction, a_pUndoRecord->container(), swapItem(a_pUndoRecord->indexedItem()));
 
 	default:
 		break;
@@ -137,7 +137,7 @@ IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadIndexedContainerRecor
 	return nullptr;
 }
 
-IMCadRecordUPtr MCadRecordFactory::genRedoRecord(const MCadRecorDictionary* a_pUndoRecord)
+IMCadRecordPtr MCadRecordFactory::genRedoRecord(const MCadRecorDictionary* a_pUndoRecord)
 {
 	switch (m_recordAction)
 	{

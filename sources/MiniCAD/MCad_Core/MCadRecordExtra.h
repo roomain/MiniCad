@@ -35,9 +35,17 @@ struct KeyItem : ItemChanged
 
 using RecordExtra = std::variant<IndexedItem, KeyItem>;
 
-inline ItemChanged swapItem(const ItemChanged& a_toSwap)
+inline IndexedItem swapItem(const IndexedItem& a_toSwap)
 {
-	ItemChanged swapped = a_toSwap;
+	IndexedItem swapped = a_toSwap;
+	std::swap(swapped.m_newID, swapped.m_oldID);
+	std::swap(swapped.m_pNew, swapped.m_pOld);
+	return swapped;
+}
+
+inline KeyItem swapItem(const KeyItem& a_toSwap)
+{
+	KeyItem swapped = a_toSwap;
 	std::swap(swapped.m_newID, swapped.m_oldID);
 	std::swap(swapped.m_pNew, swapped.m_pOld);
 	return swapped;

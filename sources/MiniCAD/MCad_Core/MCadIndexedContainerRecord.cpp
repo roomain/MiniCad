@@ -21,7 +21,7 @@ bool MCadIndexedContainerRecord::invokeFilter(RecordFilter& filter)const
 	return true;
 }
 
-std::unique_ptr<IMCadRecord> MCadIndexedContainerRecord::genReverseRecord(IMCadRecordVisitor& a_visitor)const
+std::shared_ptr<IMCadRecord> MCadIndexedContainerRecord::genReverseRecord(IMCadRecordVisitor& a_visitor)const
 {
 	return a_visitor.genRedoRecord(this);
 }

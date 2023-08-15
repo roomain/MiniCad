@@ -10,8 +10,7 @@ MCadObjectRecord::MCadObjectRecord(const RecordAction a_action, MCadObjectWPtr a
 }
 
 MCadObjectRecord::MCadObjectRecord(const RecordAction a_action, const RTTIDefinitionWPtr a_pDef, const ObjectUID& a_uid) :
-	IMCadRecord(a_action, a_uid), m_dataOffset{ 0 }, m_dataSize{ 0 }, m_pObject{ nullptr },
-	m_objDef{ a_pDef }
+	IMCadRecord(a_action, a_uid), m_dataOffset{ 0 }, m_dataSize{ 0 }, m_objDef{ a_pDef }
 {
 	//
 }
@@ -67,7 +66,7 @@ bool MCadObjectRecord::invokeFilter(RecordFilter& filter)const
 	//
 	return true;
 }
-std::unique_ptr<IMCadRecord> MCadObjectRecord::genReverseRecord(IMCadRecordVisitor& a_visitor)const
+std::shared_ptr<IMCadRecord> MCadObjectRecord::genReverseRecord(IMCadRecordVisitor& a_visitor)const
 {
 	return a_visitor.genRedoRecord(this);
 }
