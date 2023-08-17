@@ -224,6 +224,9 @@
     <ClCompile Include="MCadLogger.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="IMCadIndexedContainer.cpp">
+      <Filter>Fichiers sources\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\common\MCad.rc">

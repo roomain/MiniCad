@@ -252,7 +252,7 @@ void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::R
 	{
 		try
 		{
-			m_recordFactory.setup(a_pObject->weak_from_this(), a_recordAction);
+			m_recordFactory.setup(a_pObject->shared_from_this(), a_recordAction);
 			m_lRecordUndo.push_back(m_recordFactory());
 		}
 		catch (std::bad_weak_ptr&)
@@ -269,7 +269,7 @@ void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::R
 	{
 		try
 		{
-			m_recordFactory.setup(a_pObject->weak_from_this(), a_recordAction);
+			m_recordFactory.setup(a_pObject->shared_from_this(), a_recordAction);
 			m_lRecordUndo.push_back(std::visit(m_recordFactory, a_data));
 		}
 		catch (std::bad_weak_ptr&)

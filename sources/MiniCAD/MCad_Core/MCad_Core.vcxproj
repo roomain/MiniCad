@@ -183,6 +183,7 @@
     <ClInclude Include="MCadUndoRedo.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IMCadIndexedContainer.cpp" />
     <ClCompile Include="MCadDocument.cpp" />
     <ClCompile Include="MCadDocumentManager.cpp" />
     <ClCompile Include="MCadInputBinStream.cpp" />

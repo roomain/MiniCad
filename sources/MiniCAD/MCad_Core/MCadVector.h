@@ -28,30 +28,30 @@ public:
     template<typename ...Args>
     ContainerItem(ChangeCallback a_cb, Args&& ...a_args) : std::shared_ptr<T>(std::make_shared<T>(a_args...)), m_callback{a_cb} {}
 
-    ContainerItem(const ContainerItem<T>& other) : std::shared_ptr<T>(other)
+    ContainerItem(const ContainerItem<T>& a_other) : std::shared_ptr<T>(a_other)
     {
-        m_callback = other.m_callback;
+        m_callback = a_other.m_callback;
     }
 
-    ContainerItem(ContainerItem<T>&& other) : std::shared_ptr<T>(std::move(other))
+    ContainerItem(ContainerItem<T>&& a_other) : std::shared_ptr<T>(std::move(a_other))
     {
-        m_callback = other.m_callback;
+        m_callback = a_other.m_callback;
     }
 
-    ContainerItem(const std::shared_ptr<T>& other) : std::shared_ptr<T>(other)
-    {
-    }
-
-    ContainerItem(std::shared_ptr<T>&& other) : std::shared_ptr<T>(std::move(other))
+    ContainerItem(const std::shared_ptr<T>& a_other) : std::shared_ptr<T>(a_other)
     {
     }
 
-    ContainerItem(ChangeCallback a_cb, const std::shared_ptr<T>& other) : std::shared_ptr<T>(other)
+    ContainerItem(std::shared_ptr<T>&& a_other) : std::shared_ptr<T>(std::move(a_other))
+    {
+    }
+
+    ContainerItem(ChangeCallback a_cb, const std::shared_ptr<T>& a_other) : std::shared_ptr<T>(a_other)
     {
         m_callback = a_cb;
     }
 
-    ContainerItem(ChangeCallback a_cb, std::shared_ptr<T>&& other) : std::shared_ptr<T>(std::move(other))
+    ContainerItem(ChangeCallback a_cb, std::shared_ptr<T>&& a_other) : std::shared_ptr<T>(std::move(a_other))
     {
         m_callback = a_cb;
     }
@@ -63,35 +63,40 @@ public:
         m_callback = a_cb;
     }
 
-    ContainerItem<T>& operator = (const std::shared_ptr<T>& other)
+    ContainerItem<T>& operator = (const std::shared_ptr<T>& a_other)
     {
         if (m_callback)
-            m_callback(this, std::shared_ptr<T>::get() != nullptr ? get()->uid() : 0, other->uid());
-        std::shared_ptr<T>::operator = (other);
+            m_callback(this, *this, a_other);
+        std::shared_ptr<T>::operator = (a_other);
         return *this;
     }
 
-    ContainerItem<T>& operator = (std::shared_ptr<T>&& other)
+    ContainerItem<T>& operator = (std::shared_ptr<T>&& a_other)
     {
         if (m_callback)
-            m_callback(this, std::shared_ptr<T>::get() != nullptr ? get()->uid() : 0, other->uid());
-        std::shared_ptr<T>::operator = (other);
+            m_callback(this, *this, a_other);
+        std::shared_ptr<T>::operator = (a_other);
         return *this;
     }
 
-    ContainerItem<T>& operator = (const ContainerItem<T>& other)
+    ContainerItem<T>& operator = (const ContainerItem<T>& a_other)
     {
         if (m_callback)
-            m_callback(this, std::shared_ptr<T>::get() != nullptr ? get()->uid() : 0, other->uid());
-        std::shared_ptr<T>::operator = (other);
+            m_callback(this, *this, a_other);
+        std::shared_ptr<T>::operator = (a_other);
         return *this;
     }
 
-    ContainerItem<T>& operator = (ContainerItem<T>&& other)
+    ContainerItem<T>& operator = (ContainerItem<T>&& a_other)noexcept
     {
         if (m_callback)
-            m_callback(this, std::shared_ptr<T>::get() != nullptr ? get()->uid() : 0, other->uid());
-        std::shared_ptr<T>::operator = (other);
+            m_callback(this, *this, static_cast<const std::shared_ptr<T>>(a_other));
+        std::shared_ptr<T>::operator = (a_other);
+        return *this;
+    }
+
+    std::shared_ptr<T> toPointer()const
+    {
         return *this;
     }
 
@@ -100,6 +105,10 @@ public:
     }
 
     operator std::shared_ptr<T>& () {
+        return (std::shared_ptr<T>) * this;
+    }
+    
+    operator const std::shared_ptr<T>& ()const {
         return (std::shared_ptr<T>) * this;
     }
 
@@ -129,45 +138,28 @@ private:
 protected:
     void undoRedo_RemoveObject(const size_t& a_index)final
     {
-        if (VectorBase.size() > a_index)
-            VectorBase.erase(begin() + a_index);
+        if (VectorBase::size() > a_index)
+            VectorBase::erase(begin() + a_index);
     }
 
     void undoRedo_InsertObject(MCadObjectPtr& a_object, const size_t& a_index)final
     {
-        if (VectorBase.size() > a_index)
+        if (VectorBase::size() > a_index)
         {
-            VectorBase.insert(begin() + a_index, ContainerItem<Type>(m_itemCallback, std::static_pointer_cast<Type>(a_object)));
+            VectorBase::insert(begin() + a_index, ContainerItem<Type>(m_itemCallback, std::static_pointer_cast<Type>(a_object)));
         }
         else
         {
-            VectorBase.push_back(ContainerItem<Type>(m_itemCallback, std::static_pointer_cast<Type>(a_object)));
+            VectorBase::push_back(ContainerItem<Type>(m_itemCallback, std::static_pointer_cast<Type>(a_object)));
         }
     }
 
     virtual void assertItem(const ContainerItem<Type>* a_pItem, const MCadObjectPtr& a_pBefore, const MCadObjectPtr& a_pAfter)
     {
-        if (m_bActiveCallback && (auto pDoc = document().lock()))
+        if (m_bActiveCallback)
         {
             size_t index = a_pItem - VectorBase::data();
-
-            pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::,  IndexedItem);
-        }
-    }
-
-    inline void assertObjectAdded(const MCadObjectPtr& a_objAdd, const size_t& a_index)
-    {
-        if (auto pDoc = document().lock())
-        {
-            pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_add, IndexedItem{0, a_objAdd->uid(), nullptr, a_objAdd, a_index });
-        }
-    }
-
-    inline void assertObjectRemoved(std::shared_ptr<MCadObject>& a_object, const size_t& m_index)
-    {
-        if (auto pDoc = document().lock())
-        {
-            pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_add, IndexedItem{ a_object->uid(), 0, a_object, nullptr, a_index });
+            IMCadIndexedContainer::assertItem(a_pBefore, a_pAfter, index);
         }
     }
 
@@ -209,14 +201,15 @@ public:
     MCadVector& push_back(const std::shared_ptr<Type>& a_pointer)
     {
         VectorBase::push_back(ContainerItem<Type>(m_itemCallback, a_pointer));
-        assertObjectAdded(VectorBase::back(), size() - 1);
+        assertObjectAdded(a_pointer, size() - 1);
         return *this;
     }
 
     constexpr MCadVector& push_back(std::shared_ptr<Type>&& a_pointer)
     {
         VectorBase::push_back(ContainerItem<Type>(m_itemCallback, std::move(a_pointer)));
-        assertObjectAdded(VectorBase::back(), size() - 1);
+        ContainerItem<Type>& pt = VectorBase::back();
+        assertObjectAdded(pt.toPointer(), size() - 1);
         return *this;
     }
 
@@ -259,7 +252,7 @@ public:
     MCadVector& emplace(const_iterator a_iter, Args&& ...args)
     {
         VectorBase::emplace(a_iter, m_itemCallback, std::make_shared<Type>(args...));
-        assertObjectAdded((*a_iter), std::distance(iter, begin()));
+        assertObjectAdded((*a_iter), std::distance(a_iter, begin()));
         return *this;
     }
 
@@ -313,7 +306,7 @@ public:
 
     virtual unsigned short load(IMCadInputStream& a_stream)override
     {
-        MCadObject::load(a_stream);
+        //MCadObject::load(a_stream);
         size_t size;
         a_stream >> size;
         VectorBase::reserve(size);
@@ -322,16 +315,16 @@ public:
             // TODO
         }
         
-        return version();
+        return definition()->version();
     }
 
     /*@brief save object to stream*/
     virtual bool save(IMCadOutputStream& a_stream)const override
     {
-        MCadObject::save(a_stream);
+        //MCadObject::save(a_stream);
         a_stream << size();
-        for (const auto& obj : VectorBase)
-            a_stream << obj->uid();
+        for (const auto& obj : (const VectorBase)*this)
+            a_stream << obj.get()->uid();
         return true;
     }
 };
