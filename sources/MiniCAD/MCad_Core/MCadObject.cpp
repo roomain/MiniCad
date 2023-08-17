@@ -30,7 +30,8 @@ void MCadObject::assertModification()
 		pReact->onObjectModified(this);
 
 	if (auto pDoc = document().lock())
-		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
+		if (pDoc->undoRedo().active())
+			pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
 }
 
 void MCadObject::assertDeletetion()
@@ -39,6 +40,7 @@ void MCadObject::assertDeletetion()
 		pReact->onObjectDeleted(this);
 
 	if (auto pDoc = document().lock())
-		pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
+		if(pDoc->undoRedo().active())
+			pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
 
 }

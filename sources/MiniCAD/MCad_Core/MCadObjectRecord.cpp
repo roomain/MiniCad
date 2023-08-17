@@ -37,7 +37,7 @@ void MCadObjectRecord::process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap
 		if (!m_pObject.lock())
 			m_pObject = IMCadRecord::findRealocObject(m_objectID, a_realocMap, a_realocNextMap);
 
-		if (!m_pObject.lock())
+		if (m_pObject.lock())
 		{
 			a_inputStream.setPos(m_dataOffset);
 			m_pObject.lock()->load(a_inputStream);

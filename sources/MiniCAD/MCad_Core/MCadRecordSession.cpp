@@ -173,32 +173,34 @@ m_recordFactory{ &m_outputStream }
 	m_outputStream.setBuffer(m_pBinBuffer);
 }
 
-void MCadRecordSession::undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap)
+void MCadRecordSession::undo(ObjectNextRealocMap& a_realocNextMap)
 {
+	ObjectRealocMap realocmap;
 	bool bPrepareRedo = m_lRecordRedo.empty();
 	for (const auto& record : m_lRecordUndo)
 	{
 		if (bPrepareRedo)
 			m_lRecordRedo.push_back(record->genReverseRecord(m_recordFactory));
 
-		record->process(a_realocmap, a_realocNextMap, m_inputStream);
+		record->process(realocmap, a_realocNextMap, m_inputStream);
 	}
-	a_realocmap.clear();
+	realocmap.clear();
 }
 
-void MCadRecordSession::redo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap)
+void MCadRecordSession::redo(ObjectNextRealocMap& a_realocNextMap)
 {
+	ObjectRealocMap realocmap;
 	for (const auto& record : m_lRecordRedo)
-		record->process(a_realocmap, a_realocNextMap, m_inputStream);
-	a_realocmap.clear();
+		record->process(realocmap, a_realocNextMap, m_inputStream);
+	realocmap.clear();
 }
 
-void MCadRecordSession::undo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun)
+void MCadRecordSession::undo(ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun)
 {
 	// TODO
 }
 
-void MCadRecordSession::redo(ObjectRealocMap& a_realocmap, ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun)
+void MCadRecordSession::redo(ObjectNextRealocMap& a_realocNextMap, IMCadRecord::RecordFilter& a_filterFun)
 {
 	// TODO
 }

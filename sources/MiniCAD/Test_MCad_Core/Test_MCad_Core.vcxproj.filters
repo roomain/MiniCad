@@ -32,5 +32,8 @@
     <ClInclude Include="TestRTTI_Resources.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="TestUndoRedo_Resources.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

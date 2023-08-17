@@ -8,6 +8,16 @@ MCadDocumentManager& MCadDocumentManager::Instance()
 	return s_instance;
 }
 
+std::shared_ptr<MCadDocument> MCadDocumentManager::createDocument()
+{
+	auto pDoc = std::make_shared<MCadDocument>();
+	for (auto& pReac : m_vReactors)
+		pReac->onNewDocument(pDoc.get());
+	m_vDocument.push_back(pDoc);
+	setCurrentDocument(pDoc);
+	return pDoc;
+}
+
 std::weak_ptr<MCadDocument> MCadDocumentManager::currentDocument()
 {
 	return m_pCurrentDocument;
@@ -23,4 +33,16 @@ void MCadDocumentManager::setCurrentDocument(const std::shared_ptr<MCadDocument>
 	m_pCurrentDocument = a_pDoc;
 	for (auto& pReac : m_vReactors)
 		pReac->onCurrentDocument(a_pDoc.get());
+}
+
+void MCadDocumentManager::closeDocument(const std::shared_ptr<MCadDocument>& a_pDoc)
+{
+	auto iter = std::find(m_vDocument.begin(), m_vDocument.end(), a_pDoc);
+	if (iter != m_vDocument.end())
+		m_vDocument.erase(iter);
+}
+
+void MCadDocumentManager::closeAllDocument()
+{
+	m_vDocument.clear();
 }

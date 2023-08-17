@@ -41,6 +41,8 @@ public:
 	/*@brief document manager instance*/
 	static [[nodiscard]] MCadDocumentManager& Instance();
 
+	[[nodiscard]] std::shared_ptr<MCadDocument> createDocument();
+
 	/*@brief current document*/
 	[[nodiscard]] std::weak_ptr<MCadDocument> currentDocument();
 
@@ -49,6 +51,9 @@ public:
 
 	/*@brief set document as current*/
 	void setCurrentDocument(const std::shared_ptr<MCadDocument>& a_pDoc);
+
+	void closeDocument(const std::shared_ptr<MCadDocument>& a_pDoc);
+	void closeAllDocument();
 
 	/*@brief iterator on opened documents*/
 	using MCadDocumentIter = std::vector<std::shared_ptr<MCadDocument>>::iterator;
