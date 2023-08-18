@@ -25,8 +25,10 @@ public:
 
 	inline [[nodiscard]] IMCadIndexedContainerWPtr container()const noexcept { return m_pContainer; }
 
+	[[nodiscard]] bool itemWillDeleted()const;
+
 	/*@brief apply filter on record*/
 	[[nodiscard]] bool invokeFilter(RecordFilter& filter)const final;
 
-	[[nodiscard]] std::shared_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const final;
+	[[nodiscard]] void genReverseRecord(IMCadRecordVisitor& a_visitor, std::list<IMCadRecordPtr>& a_recList)const final;
 };

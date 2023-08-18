@@ -66,7 +66,7 @@ bool MCadObjectRecord::invokeFilter(RecordFilter& filter)const
 	//
 	return true;
 }
-std::shared_ptr<IMCadRecord> MCadObjectRecord::genReverseRecord(IMCadRecordVisitor& a_visitor)const
+void MCadObjectRecord::genReverseRecord(IMCadRecordVisitor& a_visitor, std::list<IMCadRecordPtr>& a_recList)const
 {
-	return a_visitor.genRedoRecord(this);
+	a_visitor.genRedoRecord(this, a_recList);
 }

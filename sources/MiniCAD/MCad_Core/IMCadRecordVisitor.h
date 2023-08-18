@@ -16,7 +16,7 @@ using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;
 class IMCadRecordVisitor
 {
 public:
-	virtual IMCadRecordPtr genRedoRecord(const MCadObjectRecord* a_pUndoRecord) = 0;
-	virtual IMCadRecordPtr genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord) = 0;
-	virtual IMCadRecordPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) = 0;
+	virtual void genRedoRecord(const MCadObjectRecord* a_pUndoRecord, std::list<IMCadRecordPtr>& a_recList) = 0;
+	virtual void genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord, std::list<IMCadRecordPtr>& a_recList) = 0;
+	virtual void genRedoRecord(const MCadRecorDictionary* a_pUndoRecord, std::list<IMCadRecordPtr>& a_recList) = 0;
 };

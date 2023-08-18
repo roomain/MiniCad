@@ -30,9 +30,9 @@ public:
 	IMCadRecordPtr operator()(const KeyItem& a_item)const;
 	IMCadRecordPtr operator()()const;
 
-	IMCadRecordPtr genRedoRecord(const MCadObjectRecord* a_pUndoRecord) final;
-	IMCadRecordPtr genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord) final;
-	IMCadRecordPtr genRedoRecord(const MCadRecorDictionary* a_pUndoRecord) final;
+	void genRedoRecord(const MCadObjectRecord* a_pUndoRecord, std::list<IMCadRecordPtr>& a_recList) final;
+	void genRedoRecord(const MCadIndexedContainerRecord* a_pUndoRecord, std::list<IMCadRecordPtr>& a_recList) final;
+	void genRedoRecord(const MCadRecorDictionary* a_pUndoRecord, std::list<IMCadRecordPtr>& a_recList) final;
 
 };
 

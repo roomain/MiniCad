@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include <memory>
+#include <list>
 #include <unordered_map>
 #include "MCadInputBinStream.h"
 #include "MCadOutputBinStream.h"
@@ -40,6 +41,7 @@ public:
 
 protected:
 	bool m_bErased = false;									/*!< indicate erase record*/
+	bool m_bNoReverse = false;								/*!< indicate if reverse is available*/
 	RecordAction m_action = RecordAction::Record_create;	/*!< recording action*/
 	ObjectUID m_objectID = 0;								/*!< uid of object recorded*/
 
@@ -57,14 +59,19 @@ protected:
 
 public:
 	IMCadRecord() = delete;
-	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, m_objectID{ m_objectID }
+	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, 
+		m_objectID{ a_objUID }
 	{}
 
 	virtual ~IMCadRecord() = default;
 
+	inline void enableReverse(const bool a_bAvailable) { m_bNoReverse = !a_bAvailable; }
+
 	[[nodiscard]] constexpr ObjectUID objectUID()const { return  m_objectID; }
 
 	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
+
+	[[nodiscard]] constexpr bool reverseAvailable()const noexcept { return !m_bNoReverse; }
 
 	/*@brief process record*/
 	virtual void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream) = 0;
@@ -75,7 +82,7 @@ public:
 	void erase() { m_bErased = true; }
 	constexpr bool isErased()const noexcept { return m_bErased; }
 
-	virtual std::shared_ptr<IMCadRecord> genReverseRecord(IMCadRecordVisitor& a_visitor)const = 0;
+	virtual void genReverseRecord(IMCadRecordVisitor& a_visitor, std::list<std::shared_ptr<IMCadRecord>>& a_recList)const = 0;
 };
 
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;

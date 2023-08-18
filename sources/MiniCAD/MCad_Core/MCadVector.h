@@ -123,6 +123,8 @@ public:
     }
 
     T* operator->() { return std::shared_ptr<T>::operator->(); }
+
+    [[nodiscard]] unsigned int refCount()const noexcept { return std::shared_ptr<T>::use_count(); }
 };
 
 
@@ -136,13 +138,20 @@ private:
     ContainerItem<Type>::ChangeCallback m_itemCallback;
 
 protected:
+    unsigned int itemRefCount(const size_t& a_index)const final
+    {
+        if (VectorBase::size() > a_index)
+            return VectorBase::operator[](a_index).refCount();
+        return -1;
+    }
+
     void undoRedo_RemoveObject(const size_t& a_index)final
     {
         if (VectorBase::size() > a_index)
             VectorBase::erase(begin() + a_index);
     }
 
-    void undoRedo_InsertObject(MCadObjectPtr& a_object, const size_t& a_index)final
+    void undoRedo_InsertObject(const MCadObjectPtr& a_object, const size_t& a_index)final
     {
         if (VectorBase::size() > a_index)
         {
@@ -154,7 +163,7 @@ protected:
         }
     }
 
-    virtual void assertItem(const ContainerItem<Type>* a_pItem, const MCadObjectPtr& a_pBefore, const MCadObjectPtr& a_pAfter)
+    void assertItem(const ContainerItem<Type>* a_pItem, const MCadObjectPtr& a_pBefore, const MCadObjectPtr& a_pAfter)
     {
         if (m_bActiveCallback)
         {

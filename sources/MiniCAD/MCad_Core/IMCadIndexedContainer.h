@@ -13,11 +13,16 @@
 #pragma warning(push)
 #pragma warning(disable : 4251)
 
+class MCadIndexedContainerRecord;
+
 /*@brief interface for MCad indexed containers */
 class MCAD_CORE_EXPORT IMCadIndexedContainer : public MCadObject
 {
 	DECLARE_RTTI_DERIVED(1, IMCadIndexedContainer, MCadObject)
+		friend MCadIndexedContainerRecord;
 protected:
+	virtual unsigned int itemRefCount(const size_t& a_index)const = 0;
+
 	/*@brief assertion object changed*/
 	void assertItem(const MCadObjectPtr& a_pBefore, const MCadObjectPtr& a_pAfter, const size_t& a_index);
 
@@ -29,7 +34,7 @@ protected:
 
 	/*@brief function used in undo/redo*/
 	virtual void undoRedo_RemoveObject(const size_t& a_index) = 0;
-	virtual void undoRedo_InsertObject(std::shared_ptr<MCadObject>& a_object, const size_t& a_index) = 0;
+	virtual void undoRedo_InsertObject(const std::shared_ptr<MCadObject>& a_object, const size_t& a_index) = 0;
 };
 
 using IMCadIndexedContainerWPtr = std::weak_ptr<IMCadIndexedContainer>;
