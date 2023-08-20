@@ -18,13 +18,14 @@ using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 class MCadRecordFactory : public IMCadRecordVisitor
 {
 private:
-	MCadObjectWPtr m_pObject;				/*!< recorded object*/
+	MCadObjectWPtr m_pObject;					/*!< recorded object*/
+	MCadObject* m_pRawObj;						/*!< raw pointer used temporary for deletion records*/
 	IMCadRecord::RecordAction m_recordAction;	/*!< record action*/
-	MCadOutputBinStream* m_stream;		/*!< reference to output stream of MCadRecordSession*/
+	MCadOutputBinStream* m_stream;				/*!< reference to output stream of MCadRecordSession*/
 public:
 	MCadRecordFactory(MCadOutputBinStream* const a_stream);
 	virtual	~MCadRecordFactory() = default;
-	void setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordAction a_action);
+	void setup(MCadObject* const a_pObject, IMCadRecord::RecordAction a_action);
 	// std::visitor doesn't work with &&
 	IMCadRecordPtr operator()(const IndexedItem& a_item)const;
 	IMCadRecordPtr operator()(const KeyItem& a_item)const;

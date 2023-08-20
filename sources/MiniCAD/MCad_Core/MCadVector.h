@@ -202,7 +202,8 @@ public:
     MCadVector& emplace_back(Args&& ...a_args)
     {
         VectorBase::emplace_back(m_itemCallback, a_args...);
-        assertObjectAdded(VectorBase::back(), size() - 1);
+        ContainerItem<Type>& pt = VectorBase::back();
+        assertObjectAdded(pt.toPointer(), size() - 1);
         return *this;
     }
 
@@ -311,6 +312,13 @@ public:
         auto iter = VectorBase::erase(a_first, a_last);
         m_bActiveCallback = true;
         return iter;
+    }
+
+    constexpr void pop_back()
+    {
+        ContainerItem<Type>& pt = VectorBase::back();
+        assertObjectRemoved(pt.toPointer(), VectorBase::size() - 1);
+        VectorBase::pop_back();
     }
 
     virtual unsigned short load(IMCadInputStream& a_stream)override

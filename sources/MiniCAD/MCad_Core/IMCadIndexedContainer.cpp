@@ -21,7 +21,7 @@ void IMCadIndexedContainer::assertObjectAdded(const MCadObjectPtr& a_objAdd, con
     }
 }
 
-void IMCadIndexedContainer::assertObjectRemoved(std::shared_ptr<MCadObject>& a_object, const size_t& a_index)
+void IMCadIndexedContainer::assertObjectRemoved(const std::shared_ptr<MCadObject>& a_object, const size_t& a_index)
 {
     if (auto pDoc = document().lock())
     {

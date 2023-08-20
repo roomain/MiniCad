@@ -169,9 +169,28 @@ namespace TestMCadCore
 			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Wrong vector size after push_back");
 			pWDoc.lock()->undoRedo().endUndoRecord();
 
-			pWDoc.lock()->undoRedo().undo();// Error: pb delete object not taking account
+			pWDoc.lock()->undoRedo().undo();
 			Assert::IsTrue(vector->empty(), L"Vector Not empty after undo");
 			pWDoc.lock()->undoRedo().redo();
+			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
+		}
+
+		TEST_METHOD(Test_MCadVector_DeleteObject_Redo)
+		{
+			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
+			auto vector = MCadVector<MCadTestObject>::createObject();
+			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
+			vector->push_back(MCadTestObject::createObject());
+			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Wrong vector size after push_back");
+			pWDoc.lock()->undoRedo().endUndoRecord();
+
+			pWDoc.lock()->undoRedo().startUndoRecord("Remove object");
+			vector->pop_back();
+			pWDoc.lock()->undoRedo().endUndoRecord();
+			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+
+			pWDoc.lock()->undoRedo().undo();
 			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
 		}
 	};

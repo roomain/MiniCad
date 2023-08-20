@@ -30,7 +30,7 @@ protected:
 	void assertObjectAdded(const MCadObjectPtr& a_objAdd, const size_t& a_index);
 
 	/*@brief assertion object removed*/
-	void assertObjectRemoved(std::shared_ptr<MCadObject>& a_object, const size_t& a_index);
+	void assertObjectRemoved(const std::shared_ptr<MCadObject>& a_object, const size_t& a_index);
 
 	/*@brief function used in undo/redo*/
 	virtual void undoRedo_RemoveObject(const size_t& a_index) = 0;

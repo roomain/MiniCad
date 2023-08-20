@@ -171,9 +171,6 @@
     <ClInclude Include="IMCadRecordVisitor.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
-    <ClInclude Include="MCadMemory.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="defines.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>

@@ -6,14 +6,15 @@
 
 
 MCadRecordFactory::MCadRecordFactory(MCadOutputBinStream* const a_stream) 
-	: m_stream{ a_stream }
+	: m_stream{ a_stream }, m_pRawObj{nullptr}
 {
 	//
 }
 
-void MCadRecordFactory::setup(MCadObjectWPtr a_pObject, IMCadRecord::RecordAction a_action)
+void MCadRecordFactory::setup(MCadObject* const a_pObject, IMCadRecord::RecordAction a_action)
 {
-	m_pObject = a_pObject;
+	m_pRawObj = a_pObject;
+	m_pObject = a_pObject->weak_from_this();
 	m_recordAction = a_action;
 }
 
@@ -54,6 +55,19 @@ IMCadRecordPtr MCadRecordFactory::operator()()const
 	switch (m_recordAction)
 	{
 	case IMCadRecord::RecordAction::Record_delete:
+	{
+		if (m_pRawObj)
+		{
+			const size_t offset = m_stream->offset();
+			m_pRawObj->save(*m_stream);
+			return std::make_shared<MCadObjectRecord>(m_recordAction, m_pObject, offset, m_stream->offset() - offset);
+		}
+		else
+		{
+			// log
+			MCadLogger::Instance() << LogMode::LOG_ERROR << std::source_location::current() << "no pointer to create redo record";
+		}
+	}
 	case IMCadRecord::RecordAction::Record_modify:
 	{
 		const size_t offset = m_stream->offset();
@@ -266,7 +280,8 @@ void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::R
 	{
 		try
 		{
-			m_recordFactory.setup(a_pObject->shared_from_this(), a_recordAction);
+			// on deletion can't use shared_ptr
+			m_recordFactory.setup(a_pObject, a_recordAction);
 			m_lRecordUndo.push_back(m_recordFactory());
 		}
 		catch (std::bad_weak_ptr&)
@@ -283,7 +298,7 @@ void MCadRecordSession::record(MCadObject* const a_pObject, const IMCadRecord::R
 	{
 		try
 		{
-			m_recordFactory.setup(a_pObject->shared_from_this(), a_recordAction);
+			m_recordFactory.setup(a_pObject, a_recordAction);
 			m_lRecordUndo.push_back(std::visit(m_recordFactory, a_data));
 		}
 		catch (std::bad_weak_ptr&)

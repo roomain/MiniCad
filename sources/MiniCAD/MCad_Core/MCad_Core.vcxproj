@@ -160,7 +160,6 @@
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadInputBinStream.h" />
     <ClInclude Include="MCadLogger.h" />
-    <ClInclude Include="MCadMemory.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
