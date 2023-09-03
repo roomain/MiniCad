@@ -5,84 +5,39 @@
 * @author Roomain
 ************************************************/
 #include <memory>
-#include <list>
-#include <unordered_map>
-#include "MCadInputBinStream.h"
-#include "MCadOutputBinStream.h"
-#include "MCadObject.h"
+#include "MCadRealocMemory.h"
+#include "RTTIDefinition.h"
 
-/*@brief use for realocation of deleted pointers*/
-using ObjectRealocMap = std::unordered_map<ObjectUID, MCadObjectPtr>;
+class MCadObject;
+class MCadOutputStream;
+class MCadInputStream;
 
-/*@brief use for realocated pointer from next records*/
-using ObjectNextRealocMap = std::unordered_map<ObjectUID, MCadObjectWPtr>;
-
-class IMCadRecordVisitor;
-
-// record by type
-// using template class partial specialization for container
-
-/*@brief represents an object modification during a command*/
+/*@brief Base class for recording comands*/
 class IMCadRecord
 {
-public:
-	/*@brief undo/redo action*/
-	enum class RecordAction
-	{
-		Record_modify = 0,			/*!< object modified*/
-		Record_create,				/*!< object created*/
-		Record_delete,				/*!< object deleted*/
-		Record_add,					/*!< (for container) object added*/
-		Record_remove,				/*!< (for container) object removed*/
-		Record_changed
-	};
-
-	using RecordFilter = std::function<bool(RTTIDefinitionPtr, RecordAction)>;
-
 protected:
-	bool m_bErased = false;									/*!< indicate erase record*/
-	bool m_bNoReverse = false;								/*!< indicate if reverse is available*/
-	RecordAction m_action = RecordAction::Record_create;	/*!< recording action*/
-	ObjectUID m_objectID = 0;								/*!< uid of object recorded*/
-
-	/*@brief find realocated object*/
-	static inline [[nodiscard]] MCadObjectWPtr findRealocObject(const ObjectUID& a_uid, const ObjectRealocMap& a_realocMap, const ObjectNextRealocMap& a_realocNextMap)
-	{
-		if (a_realocMap.contains(a_uid))
-			return a_realocMap.at(a_uid);
-
-		if (a_realocNextMap.contains(a_uid))
-			return a_realocNextMap.at(a_uid);
-
-		return MCadObjectWPtr();
-	}
+	bool m_bErased = false;	/*!< indicate erase record*/
+	RTTIDefinitionWPtr m_pObjectDef;	/*!< definition of recorded object*/
+	ObjectUID m_recordedObjectUID;		/*!< recorded object UID*/
 
 public:
-	IMCadRecord() = delete;
-	IMCadRecord(const RecordAction a_action, const ObjectUID& a_objUID) : m_action{ a_action }, 
-		m_objectID{ a_objUID }
-	{}
-
+	IMCadRecord(const ObjectUID& a_objUID, RTTIDefinitionWPtr& a_pDef) :
+		m_pObjectDef{ a_pDef }, m_recordedObjectUID{ a_objUID } {}
 	virtual ~IMCadRecord() = default;
+	void erase(bool a_bErase) { m_bErased = a_bErase; }
+	bool isErased()const { return m_bErased; }
+	/*@brief A reverse record can be generated*/
+	virtual bool hasReverse()const noexcept = 0;
+	/*@brief generate reverse record*/
+	virtual std::shared_ptr<IMCadRecord> generateReverse(MCadInputStream& a_stream, MCadRealocMemory& a_realocMem)const = 0;
+	/*@brief apply record for undo*/
+	virtual void apply(MCadOutputStream& a_stream, MCadRealocMemory& a_realocMem) = 0;
 
-	inline void enableReverse(const bool a_bAvailable) { m_bNoReverse = !a_bAvailable; }
-
-	[[nodiscard]] constexpr ObjectUID objectUID()const { return  m_objectID; }
-
-	[[nodiscard]] constexpr RecordAction recordAction()const noexcept { return m_action; }
-
-	[[nodiscard]] constexpr bool reverseAvailable()const noexcept { return !m_bNoReverse; }
-
-	/*@brief process record*/
-	virtual void process(ObjectRealocMap& a_realocMap, ObjectNextRealocMap& a_realocNextMap, MCadInputBinStream& a_inputStream) = 0;
-
-	/*@brief apply filter on record*/
-	virtual [[nodiscard]] bool invokeFilter(RecordFilter& filter)const = 0;
-
-	void erase() { m_bErased = true; }
-	constexpr bool isErased()const noexcept { return m_bErased; }
-
-	virtual void genReverseRecord(IMCadRecordVisitor& a_visitor, std::list<std::shared_ptr<IMCadRecord>>& a_recList)const = 0;
+	// functions used for filtering
+	/*@brief object uid concerned by this record*/
+	const ObjectUID& recordedObject()const noexcept { return m_recordedObjectUID; }
+	/*@brief definition of recorded object*/
+	RTTIDefinitionWPtr recordedObjectDefinition()const noexcept { return m_pObjectDef; }
 };
 
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;

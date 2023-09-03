@@ -10,10 +10,6 @@ MCadObject::MCadObject()
 	m_pDoc = MCadDocumentManager::Instance().currentDocument();
 }
 
-MCadObject::~MCadObject()
-{
-	assertDeletetion();
-}
 
 
 void MCadObject::erase()
@@ -24,23 +20,23 @@ void MCadObject::erase()
 }
 
 
-void MCadObject::assertModification()
-{
-	for (const auto pReact : m_vReactors)
-		pReact->onObjectModified(this);
-
-	if (auto pDoc = document().lock())
-		if (pDoc->undoRedo().active())
-			pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
-}
-
-void MCadObject::assertDeletetion()
-{
-	for (const auto pReact : m_vReactors)
-		pReact->onObjectDeleted(this);
-
-	if (auto pDoc = document().lock())
-		if(pDoc->undoRedo().active())
-			pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
-
-}
+//void MCadObject::assertModification()
+//{
+//	for (const auto pReact : m_vReactors)
+//		pReact->onObjectModified(this);
+//
+//	if (auto pDoc = document().lock())
+//		if (pDoc->undoRedo().active())
+//			pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_modify);
+//}
+//
+//void MCadObject::assertDeletetion()
+//{
+//	for (const auto pReact : m_vReactors)
+//		pReact->onObjectDeleted(this);
+//
+//	if (auto pDoc = document().lock())
+//		if(pDoc->undoRedo().active())
+//			pDoc->undoRedo().currentSession().record(this, IMCadRecord::RecordAction::Record_delete);
+//
+//}

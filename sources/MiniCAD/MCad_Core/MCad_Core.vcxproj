@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -151,7 +151,6 @@
     <ClInclude Include="IMCadMap.h" />
     <ClInclude Include="IMCadOutputStream.h" />
     <ClInclude Include="IMCadRecord.h" />
-    <ClInclude Include="IMCadRecordVisitor.h" />
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
@@ -160,16 +159,17 @@
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadInputBinStream.h" />
     <ClInclude Include="MCadLogger.h" />
+    <ClInclude Include="MCadMemory.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
+    <ClInclude Include="MCadObjectRecords.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
-    <ClInclude Include="MCadIndexedContainerRecord.h" />
-    <ClInclude Include="MCadDictionaryRecord.h" />
-    <ClInclude Include="MCadRecordExtra.h" />
-    <ClInclude Include="MCadObjectRecord.h" />
+    <ClInclude Include="MCadRealocMemory.h" />
+    <ClInclude Include="MCadRecordObject.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadScoped.h" />
+    <ClInclude Include="MCadRecordAssertion.h" />
     <ClInclude Include="MCadVector.h" />
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />
@@ -180,6 +180,8 @@
     <ClInclude Include="RTTIException_macro.h" />
     <ClInclude Include="TRTTIDefinition.h" />
     <ClInclude Include="MCadUndoRedo.h" />
+    <ClInclude Include="UndoRedoException.h" />
+    <ClInclude Include="UndoRedoExceptionDefines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IMCadIndexedContainer.cpp" />
@@ -192,6 +194,8 @@
     <ClCompile Include="MCadOutputBinStream.cpp" />
     <ClCompile Include="MCadIndexedContainerRecord.cpp" />
     <ClCompile Include="MCadObjectRecord.cpp" />
+    <ClCompile Include="MCadRealocMemory.cpp" />
+    <ClCompile Include="MCadRecordAssertion.cpp" />
     <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -202,6 +206,7 @@
     <ClCompile Include="RTTIDefinition.cpp" />
     <ClCompile Include="RTTIException.cpp" />
     <ClCompile Include="MCadUndoRedo.cpp" />
+    <ClCompile Include="UndoRedoException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\common\MCad.rc" />

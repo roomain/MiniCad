@@ -25,6 +25,7 @@ void MCadUndoRedo::startUndoRecord(const std::string& a_title)
 	}
 	m_sessionList.emplace_back(a_title);
 	m_SessionUndo = m_sessionList.end() - 1;
+	m_SessionRedo.reset();
 	
 }
 

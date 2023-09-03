@@ -10,6 +10,7 @@
 #include <string>
 #include <ranges>
 #include "defines.h"
+#include "MCadMemory.h"
 #include "MCad_Core_globals.h"
 
 class MCadObject;

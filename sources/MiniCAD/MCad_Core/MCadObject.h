@@ -4,13 +4,13 @@
 * @date 16 / 07 / 2023
 * @author Roomain
 ************************************************/
-#include <memory>
 #include <atomic>
 #include "RTTIDefinition_macros.h"
 #include "IMCadObjectReactor.h"
 #include "MCadReactive.h"
 #include "MCad_Core_globals.h"
 #include "defines.h"
+#include "MCadMemory.h"
 
 class MCadDocument;
 class MCadObject;
@@ -32,7 +32,7 @@ using const_MCadObjectWPtr = std::weak_ptr<const MCadObject>;
 #pragma warning(disable : 4251)
 
 /*@brief base MCad object*/
-class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public std::enable_shared_from_this<MCadObject>
+class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public MCadShared_ptr<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
 		friend MCadObjectRecord;
@@ -54,12 +54,12 @@ protected:
 	void setUID(const ObjectUID& a_uid) { m_ObjectUID = a_uid; }
 
 	/*@brief assertion for undo/redo: create record*/
-	virtual void assertModification();
-	virtual void assertDeletetion();
+	//virtual void assertModification();
+	//virtual void assertDeletetion();
 
 public:
 	MCadObject();
-	virtual ~MCadObject();
+	virtual ~MCadObject() = default;
 	inline std::weak_ptr<MCadDocument> document()const noexcept { return m_pDoc; }
 		
 	/*@brief get object uid*/
@@ -77,7 +77,6 @@ public:
 	void erase();
 	/*@return flag is erased*/
 	inline bool isErased()const noexcept { return m_bErased; }
-	/*@brief check if its a shared pointer*/
-	inline bool isShared()noexcept { return weak_from_this().use_count() > 0; }
+	
 };
 #pragma warning(pop)
