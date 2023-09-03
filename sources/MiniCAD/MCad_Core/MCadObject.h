@@ -18,12 +18,6 @@ class IMCadInputStream;
 class IMCadOutputStream;
 class MCadObjectRecord;
 
-using MCadObjectPtr = std::shared_ptr<MCadObject>;
-using MCadObjectWPtr = std::weak_ptr<MCadObject>;
-
-
-using const_MCadObjectPtr = std::shared_ptr<const MCadObject>;
-using const_MCadObjectWPtr = std::weak_ptr<const MCadObject>;
 
 
 
@@ -32,7 +26,7 @@ using const_MCadObjectWPtr = std::weak_ptr<const MCadObject>;
 #pragma warning(disable : 4251)
 
 /*@brief base MCad object*/
-class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public MCadShared_ptr<MCadObject>
+class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public MCadShared_from_this<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
 		friend MCadObjectRecord;

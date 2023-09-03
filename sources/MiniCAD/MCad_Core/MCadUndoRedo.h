@@ -16,7 +16,6 @@
 #pragma warning(push)
 #pragma warning(disable : 4251)
 
-using ObjectRealocMap = std::unordered_map< ObjectUID, MCadObjectPtr>;
 using UndoRedoTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 using ObjectDefWPtr = std::weak_ptr<RTTIDefinition>;
 

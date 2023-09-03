@@ -9,8 +9,8 @@
 #include "RTTIDefinition.h"
 
 class MCadObject;
-class MCadOutputStream;
-class MCadInputStream;
+class IMCadOutputStream;
+class IMCadInputStream;
 
 /*@brief Base class for recording comands*/
 class IMCadRecord
@@ -21,7 +21,7 @@ protected:
 	ObjectUID m_recordedObjectUID;		/*!< recorded object UID*/
 
 public:
-	IMCadRecord(const ObjectUID& a_objUID, RTTIDefinitionWPtr& a_pDef) :
+	IMCadRecord(const ObjectUID& a_objUID, const RTTIDefinitionWPtr& a_pDef) :
 		m_pObjectDef{ a_pDef }, m_recordedObjectUID{ a_objUID } {}
 	virtual ~IMCadRecord() = default;
 	void erase(bool a_bErase) { m_bErased = a_bErase; }
@@ -29,9 +29,9 @@ public:
 	/*@brief A reverse record can be generated*/
 	virtual bool hasReverse()const noexcept = 0;
 	/*@brief generate reverse record*/
-	virtual std::shared_ptr<IMCadRecord> generateReverse(MCadInputStream& a_stream, MCadRealocMemory& a_realocMem)const = 0;
+	virtual std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const = 0;
 	/*@brief apply record for undo*/
-	virtual void apply(MCadOutputStream& a_stream, MCadRealocMemory& a_realocMem) = 0;
+	virtual void apply(IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) = 0;
 
 	// functions used for filtering
 	/*@brief object uid concerned by this record*/

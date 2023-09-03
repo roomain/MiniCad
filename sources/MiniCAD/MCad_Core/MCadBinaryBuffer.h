@@ -81,7 +81,3 @@ public:
 		return from + sizeof(Type) * a_Size;
 	}
 };
-
-using MCadBinaryBufferPtr = std::shared_ptr<MCadBinaryBuffer>;
-using MCadBinaryBufferWPtr = std::weak_ptr<MCadBinaryBuffer>;
-using MCadBinaryBufferUPtr = std::unique_ptr<MCadBinaryBuffer>;

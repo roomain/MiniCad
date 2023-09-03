@@ -11,6 +11,7 @@
 class IMCadOutputStream
 {
 public:
+	virtual const size_t offset()const = 0;
 	virtual IMCadOutputStream& operator << (const unsigned long long&) = 0;
 	virtual IMCadOutputStream& operator << (const long long&) = 0;
 	virtual IMCadOutputStream& operator << (const bool) = 0;
@@ -25,5 +26,3 @@ public:
 	virtual IMCadOutputStream& operator << (const std::string&) = 0;
 	virtual IMCadOutputStream& operator << (const std::wstring&) = 0;
 };
-
-using IMCadOutputStreamPtr = std::shared_ptr<IMCadOutputStream>;

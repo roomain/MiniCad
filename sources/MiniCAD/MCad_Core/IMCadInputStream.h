@@ -30,5 +30,3 @@ public:
 	virtual IMCadInputStream& operator >> (std::string&) = 0;
 	virtual IMCadInputStream& operator >> (std::wstring&) = 0;
 };
-
-using IMCadInputStreamPtr = std::shared_ptr<IMCadInputStream>;
