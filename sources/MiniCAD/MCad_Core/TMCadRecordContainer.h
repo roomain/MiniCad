@@ -11,7 +11,7 @@
 #include "IMCadRecord.h"
 
 template<typename Key>
-using ContainerLnk = std::variant<std::weak_ptr<TIMCadContainer<Key>>, Reference<TIMCadContainer<Key>>>;
+using ContainerLnk = std::variant<std::weak_ptr<TIMCadContainer<Key>>, MCadReference<TIMCadContainer<Key>>>;
 
 class ContainerLnkMng
 {

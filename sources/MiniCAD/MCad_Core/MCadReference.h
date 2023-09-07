@@ -99,6 +99,11 @@ public:
         }
     }
 
+    Type* operator -> ()
+    {
+        return static_cast<Type*>(m_referenced);
+    }
+
     [[nodiscard]] bool operator == (const MCadReference<Type>& a_other) const noexcept
     {
         return m_referenced == a_other.m_referenced;
