@@ -168,6 +168,8 @@
     <ClInclude Include="MCadRealocMemory.h" />
     <ClInclude Include="MCadRecordObject.h" />
     <ClInclude Include="MCadRecordSession.h" />
+    <ClInclude Include="MCadReference.h" />
+    <ClInclude Include="MCadReferencedObject.h" />
     <ClInclude Include="MCadScoped.h" />
     <ClInclude Include="MCadRecordAssertion.h" />
     <ClInclude Include="MCadVector.h" />
@@ -178,6 +180,8 @@
     <ClInclude Include="RTTIDefinition_macros.h" />
     <ClInclude Include="RTTIException.h" />
     <ClInclude Include="RTTIException_macro.h" />
+    <ClInclude Include="TIMCadContainer.h" />
+    <ClInclude Include="TMCadRecordContainer.h" />
     <ClInclude Include="TRTTIDefinition.h" />
     <ClInclude Include="MCadUndoRedo.h" />
     <ClInclude Include="UndoRedoException.h" />

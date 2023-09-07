@@ -25,8 +25,8 @@ private:
 	SessionTimePoint m_timePoint;				/*!< time of undo session*/
 	std::string m_title;						/*!< session title*/
 	MCadBinaryBufferPtr m_pBinBuffer;			/*!< saving buffer*/
-	MCadInputBinStream m_inputStream;			/*!< input stream*/
-	MCadOutputBinStream m_outputStream;			/*!< output stream*/
+	mutable MCadInputBinStream m_inputStream;	/*!< input stream*/
+	mutable MCadOutputBinStream m_outputStream;	/*!< output stream*/
 
 	/*@brief compact records*/
 	void compact();
@@ -34,9 +34,12 @@ private:
 public:
 	MCadRecordSession(const std::string& a_title);
 	virtual ~MCadRecordSession() = default;
+	[[nodiscard]] MCadInputBinStream& inputStream( )const { return m_inputStream; }
+	[[nodiscard]] MCadOutputBinStream& outputStream( )const { return m_outputStream; }
 	[[nodiscard]] constexpr SessionTimePoint time()const noexcept { return m_timePoint; }
 	[[nodiscard]] constexpr std::string title()const noexcept { return m_title; }
 	[[nodiscard]] size_t size()const noexcept { return m_lRecordUndo.size() + m_lRecordRedo.size(); }
+	void append(const IMCadRecordPtr& a_record);
 
 };
 

@@ -189,6 +189,18 @@
     <ClInclude Include="MCadRecordObject.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
+    <ClInclude Include="TIMCadContainer.h">
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadReference.h">
+      <Filter>Fichiers d%27en-tête\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadReferencedObject.h">
+      <Filter>Fichiers d%27en-tête\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="TMCadRecordContainer.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

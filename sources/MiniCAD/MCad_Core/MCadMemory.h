@@ -74,6 +74,11 @@ public:
             throw std::bad_weak_ptr{};
         return m_Wptr;
     }
+
+    [[nodiscard]] bool isShared( )const noexcept
+    {
+        return !m_Wptr.expired( );
+    }
 };
 
 template<typename Type, typename ...Args>

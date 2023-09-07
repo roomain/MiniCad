@@ -19,3 +19,7 @@ MCadRecordSession::MCadRecordSession(const std::string& a_title) : m_title{ a_ti
 	m_outputStream.setBuffer(m_pBinBuffer);
 }
 
+void MCadRecordSession::append(const IMCadRecordPtr& a_record)
+{
+	m_lRecordUndo.emplace_back(a_record);
+}
