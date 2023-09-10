@@ -145,16 +145,15 @@
   <ItemGroup>
     <ClInclude Include="defines.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="IMCadIndexedContainer.h" />
     <ClInclude Include="IMCadDocumentReactor.h" />
     <ClInclude Include="IMCadInputStream.h" />
-    <ClInclude Include="IMCadMap.h" />
     <ClInclude Include="IMCadOutputStream.h" />
     <ClInclude Include="IMCadRecord.h" />
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
     <ClInclude Include="IMCadDocManagerReactor.h" />
+    <ClInclude Include="MCadCell.h" />
     <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadInputBinStream.h" />
@@ -162,17 +161,15 @@
     <ClInclude Include="MCadMemory.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
-    <ClInclude Include="MCadObjectRecords.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCadRealocMemory.h" />
     <ClInclude Include="MCadRecordObject.h" />
     <ClInclude Include="MCadRecordSession.h" />
-    <ClInclude Include="MCadReference.h" />
-    <ClInclude Include="MCadReferencedObject.h" />
+    <ClInclude Include="MCadRef.h" />
+    <ClInclude Include="MCadRefObject.h" />
     <ClInclude Include="MCadScoped.h" />
     <ClInclude Include="MCadRecordAssertion.h" />
-    <ClInclude Include="MCadVector.h" />
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProtocolExtension.h" />
@@ -188,7 +185,6 @@
     <ClInclude Include="UndoRedoExceptionDefines.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IMCadIndexedContainer.cpp" />
     <ClCompile Include="MCadDocument.cpp" />
     <ClCompile Include="MCadDocumentManager.cpp" />
     <ClCompile Include="MCadInputBinStream.cpp" />
@@ -196,8 +192,6 @@
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
     <ClCompile Include="MCadOutputBinStream.cpp" />
-    <ClCompile Include="MCadIndexedContainerRecord.cpp" />
-    <ClCompile Include="MCadObjectRecord.cpp" />
     <ClCompile Include="MCadRealocMemory.cpp" />
     <ClCompile Include="MCadRecordAssertion.cpp" />
     <ClCompile Include="MCadRecordObject.cpp" />

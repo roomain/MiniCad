@@ -40,6 +40,8 @@ public:
 	[[nodiscard]] constexpr std::string title()const noexcept { return m_title; }
 	[[nodiscard]] size_t size()const noexcept { return m_lRecordUndo.size() + m_lRecordRedo.size(); }
 	void append(const IMCadRecordPtr& a_record);
+	void undo(MCadRealocMemory& a_realocMemory);
+	void redo(MCadRealocMemory& a_realocMemory);
 
 };
 

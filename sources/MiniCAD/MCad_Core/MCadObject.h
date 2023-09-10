@@ -26,7 +26,8 @@ class MCadObjectRecord;
 #pragma warning(disable : 4251)
 
 /*@brief base MCad object*/
-class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, public MCadShared_from_this<MCadObject>
+class MCAD_CORE_EXPORT MCadObject : public MCadReactive<IMCadObjectReactor>, 
+	public MCadShared_from_this<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
 		friend MCadObjectRecord;

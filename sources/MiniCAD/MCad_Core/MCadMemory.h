@@ -6,6 +6,7 @@
 ************************************************/
 #include <memory>
 #include <type_traits>
+#include "MCadRecordAssertion.h"
 
 class MCadObject;
 
@@ -47,28 +48,29 @@ public:
     MCadShared_from_this(MCadShared_from_this<Type>& a_other) : m_Wptr(a_other.m_Wptr) {}
     MCadShared_from_this(MCadShared_from_this<Type>&& a_other)noexcept : m_Wptr(a_other.m_Wptr) {}
     virtual ~MCadShared_from_this() = default;
-    MCadShared_ptr<Type> shared_from_this()
+
+    [[nodiscard]] MCadShared_ptr<Type> shared_from_this()
     {
         if (!m_Wptr.lock())
             throw std::bad_weak_ptr{};
         return MCadShared_ptr<Type>(m_Wptr);
     }
 
-    MCadShared_ptr<const Type> shared_from_const_this()const
+    [[nodiscard]] MCadShared_ptr<const Type> shared_from_const_this()const
     {
         if (!m_Wptr.lock())
             throw std::bad_weak_ptr{};
         return MCadShared_ptr<const Type>(m_Wptr);
     }
 
-    std::weak_ptr<Type> weak_from_this()
+    [[nodiscard]] std::weak_ptr<Type> weak_from_this()
     {
         if (!m_Wptr.lock())
             throw std::bad_weak_ptr{};
         return m_Wptr;
     }
 
-    std::weak_ptr<const Type> weak_from_const_this()
+    [[nodiscard]] std::weak_ptr<const Type> weak_from_const_this()
     {
         if (!m_Wptr.lock())
             throw std::bad_weak_ptr{};

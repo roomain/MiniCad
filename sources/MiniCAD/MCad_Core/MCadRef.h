@@ -1,30 +1,30 @@
 #pragma once
 /***********************************************
-* @headerfile MCadReference.h
+* @headerfile MCadRef.h
 * @date 06 / 09 / 2023
 * @author Roomain
 ************************************************/
-#include "MCadReferencedObject.h"
+#include "MCadRefObject.h"
 
 /*@brief only for internal uses*/
 
 template<typename Type>
-class MCadReference
+class MCadRef
 {
-    friend MCadReferencedObject<Type>;
+    friend MCadRefObject<Type>;
 
     template<typename T>
-    friend MCadReference<T> make_ref(const T&);
+    friend MCadRef<T> make_ref(const T&);
 
 private:
-    mutable MCadReference<Type>* m_prevRef = nullptr;
-    mutable MCadReference<Type>* m_nextRef = nullptr;
-    MCadReferencedObject<Type>* m_referenced = nullptr;
+    mutable MCadRef<Type>* m_prevRef = nullptr;
+    mutable MCadRef<Type>* m_nextRef = nullptr;
+    MCadRefObject<Type>* m_referenced = nullptr;
 
-    void appendRef(Reference<Type>* const a_ref)const
+    void appendRef(MCadRef<Type>* const a_ref)const
     {
-        Reference<Type>* pCurRef = const_cast< Reference<Type>* >( this );
-        Reference<Type>* pLastRef = m_nextRef;
+        MCadRef<Type>* pCurRef = const_cast< MCadRef<Type>* >( this );
+        MCadRef<Type>* pLastRef = m_nextRef;
         while ( pLastRef )
         {
             pCurRef = pLastRef;
@@ -37,7 +37,7 @@ private:
     void unref( )
     {
         m_referenced = nullptr;
-        Reference<Type>* pLastRef = m_nextRef;
+        MCadRef<Type>* pLastRef = m_nextRef;
         while ( pLastRef )
         {
             pLastRef->m_referenced = nullptr;
@@ -45,7 +45,7 @@ private:
         }
     }
 
-    MCadReference(const Type& a_referenced) : m_referenced{ a_referenced.getRefPointer( ) }
+    MCadRef(const Type& a_referenced) : m_referenced{ a_referenced.getRefPointer( ) }
     {
         if ( m_referenced->m_referenceList == nullptr )
         {
@@ -57,7 +57,7 @@ private:
         }
     }
 
-    MCadReference(Type* const a_referenced) : m_referenced{ a_referenced->getRefPointer( ) }
+    MCadRef(Type* const a_referenced) : m_referenced{ a_referenced->getRefPointer( ) }
     {
         if ( m_referenced->m_referenceList == nullptr )
         {
@@ -70,9 +70,9 @@ private:
     }
 
 public:
-    MCadReference( ) = default;
+    MCadRef( ) = default;
 
-    MCadReference(const MCadReference<Type>& a_other) : m_referenced{ a_other.m_referenced }
+    MCadRef(const MCadRef<Type>& a_other) : m_referenced{ a_other.m_referenced }
     {
         if ( m_referenced->m_referenceList == nullptr )
         {
@@ -84,7 +84,7 @@ public:
         }
     }
 
-    ~MCadReference( )
+    ~MCadRef( )
     {
         if ( m_referenced )
         {
@@ -104,12 +104,12 @@ public:
         return static_cast<Type*>(m_referenced);
     }
 
-    [[nodiscard]] bool operator == (const MCadReference<Type>& a_other) const noexcept
+    [[nodiscard]] bool operator == (const MCadRef<Type>& a_other) const noexcept
     {
         return m_referenced == a_other.m_referenced;
     }
 
-    MCadReference<Type> operator = (const MCadReference<Type>& a_other)
+    MCadRef<Type> operator = (const MCadRef<Type>& a_other)
     {
         if ( m_referenced )
         {

@@ -6,32 +6,26 @@
 ************************************************/
 #include <variant>
 #include "MCadMemory.h"
-#include "MCadReference.h"
+#include "MCadRef.h"
 #include "TIMCadContainer.h"
 #include "IMCadRecord.h"
 
-template<typename Key>
-using ContainerLnk = std::variant<std::weak_ptr<TIMCadContainer<Key>>, MCadReference<TIMCadContainer<Key>>>;
 
-class ContainerLnkMng
+
+template<typename Key, typename ContainerLnk>
+class TMCadRecordContainerInsert : public IMCadRecord
 {
 	//
 };
 
-template<typename Key>
-class TMCadRecordContainerInsert : public IMCadRecord, private ContainerLnkMng
+template<typename Key, typename ContainerLnk>
+class TMCadRecordContainerRemoved : public IMCadRecord
 {
 	//
 };
 
-template<typename Key>
-class TMCadRecordContainerRemoved : public IMCadRecord, private ContainerLnkMng
-{
-	//
-};
-
-template<typename Key>
-class TMCadRecordContainerChanged : public IMCadRecord, private ContainerLnkMng
+template<typename Key, typename ContainerLnk>
+class TMCadRecordContainerChanged : public IMCadRecord
 {
 	//
 };

@@ -23,3 +23,13 @@ void MCadRecordSession::append(const IMCadRecordPtr& a_record)
 {
 	m_lRecordUndo.emplace_back(a_record);
 }
+
+void MCadRecordSession::undo(MCadRealocMemory& a_realocMemory)
+{
+	//
+}
+
+void MCadRecordSession::redo(MCadRealocMemory& a_realocMemory)
+{
+	//
+}
