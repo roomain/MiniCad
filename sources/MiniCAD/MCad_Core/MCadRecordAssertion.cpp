@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "MCadRecordAssertion.h"
 #include "MCadObject.h"
-#include "MCadRecordObject.h"
+#include "MCadRecords.h"
+#include <variant>
+
 
 void assertModification(MCadObject* const a_object)
 {

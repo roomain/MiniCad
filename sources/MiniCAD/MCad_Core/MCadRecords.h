@@ -5,13 +5,29 @@
 * @author Roomain
 ************************************************/
 #include "IMCadRecord.h"
+#include "TMCadObjectProxy.h"
+
+
+class IMCadObjectRecord : public IMCadRecord
+{
+
+protected:
+	using RecordObjProxy = TMCadObjectProxy<MCadObject>;
+	mutable RecordObjProxy m_objectProxy;/*!< proxy on recorded object*/
+
+public:
+	IMCadObjectRecord(MCadObject* const a_pObject);
+	virtual ~IMCadObjectRecord( ) = default;
+	const ObjectUID recordedObject( )const noexcept final { return m_objectProxy.objectUID(); }
+	RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_objectProxy.objectDef(); }
+};
+
 
 /*@brief record object modification*/
-class MCadRecordModification : public IMCadRecord
+class MCadRecordModification : public IMCadObjectRecord
 {
 private:
 	size_t m_dataOffset;				/*!< offset of recorded data*/
-	std::weak_ptr<MCadObject> m_object;	/*!< recorded object pointer*/
 	
 public:
 	MCadRecordModification(MCadObject* const a_pObject, IMCadOutputStream& a_stream);
@@ -27,6 +43,8 @@ class MCadRecordDeletion : public IMCadRecord
 {
 private:
 	size_t m_dataOffset;				/*!< offset of recorded data*/
+	ObjectUID m_objectUID;
+	std::weak_ptr<RTTIDefinition> m_pObjectDef;
 
 public:
 	MCadRecordDeletion(const MCadObject* a_pObject, IMCadOutputStream& a_stream);
@@ -34,4 +52,7 @@ public:
 	bool hasReverse()const noexcept final { return false; }
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final;
 	void apply(IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final;
+
+	const ObjectUID recordedObject( )const noexcept final { return m_objectUID; }
+	RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_pObjectDef; }
 };

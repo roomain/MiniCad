@@ -17,12 +17,9 @@ class IMCadRecord
 {
 protected:
 	bool m_bErased = false;	/*!< indicate erase record*/
-	RTTIDefinitionWPtr m_pObjectDef;	/*!< definition of recorded object*/
-	ObjectUID m_recordedObjectUID;		/*!< recorded object UID*/
 
 public:
-	IMCadRecord(const ObjectUID& a_objUID, const RTTIDefinitionWPtr& a_pDef) :
-		m_pObjectDef{ a_pDef }, m_recordedObjectUID{ a_objUID } {}
+	IMCadRecord() = default;
 	virtual ~IMCadRecord() = default;
 	void erase(bool a_bErase) { m_bErased = a_bErase; }
 	bool isErased()const { return m_bErased; }
@@ -35,9 +32,9 @@ public:
 
 	// functions used for filtering
 	/*@brief object uid concerned by this record*/
-	const ObjectUID& recordedObject()const noexcept { return m_recordedObjectUID; }
+	virtual const ObjectUID recordedObject( )const noexcept = 0;
 	/*@brief definition of recorded object*/
-	RTTIDefinitionWPtr recordedObjectDefinition()const noexcept { return m_pObjectDef; }
+	virtual RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept = 0;
 };
 
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;

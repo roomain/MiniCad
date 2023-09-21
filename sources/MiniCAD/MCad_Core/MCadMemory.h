@@ -91,3 +91,9 @@ MCadShared_ptr<Type> make_MShared(Args&& ...arg)
         pObj->m_Wptr = pObj;
     return pObj;
 }
+
+template<typename Type, typename U>
+MCadShared_ptr<Type> MStatic_pointer_cast(MCadShared_ptr<U>&& a_ptr)
+{
+    return std::static_pointer_cast< Type >( a_ptr );
+}

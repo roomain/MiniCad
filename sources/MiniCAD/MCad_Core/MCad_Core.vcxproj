@@ -161,13 +161,14 @@
     <ClInclude Include="MCadMemory.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
+    <ClInclude Include="MCadVector.h" />
+    <ClInclude Include="TMCadObjectProxy.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />
     <ClInclude Include="MCadRealocMemory.h" />
-    <ClInclude Include="MCadRecordObject.h" />
+    <ClInclude Include="MCadRecords.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadRef.h" />
-    <ClInclude Include="MCadRefObject.h" />
     <ClInclude Include="MCadScoped.h" />
     <ClInclude Include="MCadRecordAssertion.h" />
     <ClInclude Include="MCad_Core_globals.h" />
@@ -194,7 +195,7 @@
     <ClCompile Include="MCadOutputBinStream.cpp" />
     <ClCompile Include="MCadRealocMemory.cpp" />
     <ClCompile Include="MCadRecordAssertion.cpp" />
-    <ClCompile Include="MCadRecordObject.cpp" />
+    <ClCompile Include="MCadRecords.cpp" />
     <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

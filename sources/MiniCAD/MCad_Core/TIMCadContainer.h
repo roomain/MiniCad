@@ -5,34 +5,34 @@
 * @author Roomain
 ************************************************/
 #include <memory>
-#include "MCadRefObject.h"
+#include "MCadRef.h"
 #include "MCadCell.h"
 
 class IMCadRecord;
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;
 
-template<typename Key, typename ContainerLnk>
+template<typename Key>
 class TMCadRecordContainerInsert;
 
-template<typename Key, typename ContainerLnk>
+template<typename Key>
 class TMCadRecordContainerRemoved;
 
 
-template<typename Key, typename ContainerLnk>
+template<typename Key>
 class TMCadRecordContainerChanged;
 
 /*@brief base class for container having undo redo capabililty*/
 template<typename Key, typename Type>
-class TIMCadContainer : public MCadObject, public MCadRefObject<TIMCadContainer<Key>>
+class TIMCadContainer : public MCadObject
 {
-	template<typename ContainerLnk>
-	friend class TMCadRecordContainerInsert<Key, ContainerLnk>;
+	template<typename Key>
+	friend class TMCadRecordContainerInsert<Key>;
 
-	template<typename ContainerLnk>
-	friend class TMCadRecordContainerRemoved<Key, ContainerLnk>;
+	template<typename Key>
+	friend class TMCadRecordContainerRemoved<Key>;
 
-	template<typename ContainerLnk>
-	friend class TMCadRecordContainerChanged<Key, ContainerLnk>;
+	template<typename Key>
+	friend class TMCadRecordContainerChanged<Key>;
 
 protected:
 	/*@brief replace container item during record processing (=> undo/redo)*/
@@ -50,16 +50,7 @@ protected:
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                if ( isShared( ) )
-                {
-                    //
-                }
-                else
-                {
-                    //
-                }
-                // TODO
-                //session.append(std::make_shared<TMCadRecordContainerInsert>(a_object, session.outputStream( )));
+                //session.append(std::make_shared<TMCadRecordContainerInsert<Key>>(a_object, session.outputStream( )));
             }
         }
     }
