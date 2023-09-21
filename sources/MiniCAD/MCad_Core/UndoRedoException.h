@@ -28,8 +28,8 @@ private:
 public:
 	UndoRedoException(const std::source_location& a_loc, const ExceptionType a_type, const std::string_view& a_extra = "");
 	virtual ~UndoRedoException() = default;
-	const ExceptionType type()const noexcept { return m_type; }
-	std::string message()const noexcept { return m_message; }
+	[[nodiscard]] const ExceptionType type()const noexcept { return m_type; }
+	[[nodiscard]] std::string message()const noexcept override { return m_message; }
 };
 
 #define UNDO_REDO_TROW(enumerate) \

@@ -21,12 +21,12 @@ private:
 
 	struct ValidVisitor
 	{
-		bool operator ()(std::weak_ptr<Type>& a_ptr)
+		bool operator ()(const std::weak_ptr<Type>& a_ptr)const
 		{
 			return !a_ptr.expired( );
 		}
 
-		bool operator ()(MCadRef<Type>& a_ref)
+		bool operator ()(const MCadRef<Type>& a_ref)const
 		{
 			return a_ref.valid( );
 		}
@@ -34,12 +34,12 @@ private:
 
 	struct RealocableVisitor
 	{
-		bool operator ()(std::weak_ptr<Type>& a_ptr)
+		bool operator ()(const std::weak_ptr<Type>& a_ptr)const
 		{
 			return true;
 		}
 
-		bool operator ()(MCadRef<Type>& a_ref)
+		bool operator ()(const MCadRef<Type>& a_ref)const
 		{
 			return false;
 		}
@@ -47,12 +47,12 @@ private:
 
 	struct PointerVisitor
 	{
-		Type* const operator ()(std::weak_ptr<Type>& a_ptr)
+		Type* const operator ()(const std::weak_ptr<Type>& a_ptr)const
 		{
 			return a_ptr.lock( ).get( );
 		}
 
-		Type* const operator ()(MCadRef<Type>& a_ref)
+		Type* const operator ()(const MCadRef<Type>& a_ref)const
 		{
 			return a_ref.pointer( );
 		}
@@ -64,7 +64,7 @@ private:
 		ObjectUID m_objID;
 		std::weak_ptr<RTTIDefinition> m_pDef;
 
-		bool operator ()(std::weak_ptr<Type>& a_ptr)
+		bool operator ()(std::weak_ptr<Type>& a_ptr)const
 		{
 			if ( a_ptr.expired( ) )
 			{
@@ -73,7 +73,7 @@ private:
 			return !a_ptr.expired( );
 		}
 
-		bool operator ()(MCadRef<Type>& a_ref)
+		bool operator ()(const MCadRef<Type>& a_ref)const
 		{
 			return a_ref.valid( );
 		}

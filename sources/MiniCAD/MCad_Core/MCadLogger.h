@@ -43,7 +43,7 @@ struct InteralLogger
 	Log_location m_log_location = nullptr;
 };
 
-using InternaleLoggerPtr = std::shared_ptr<InteralLogger>;
+using InternalLoggerPtr = std::shared_ptr<InteralLogger>;
 
 
 
@@ -53,7 +53,7 @@ class MCAD_CORE_EXPORT MCadLogger
 private:
 	bool m_bEnable = true;					/*!< log is enable*/
 	LogMode m_mode = LogMode::LOG_INFO;		/*!< display mode*/
-	InternaleLoggerPtr m_internal;			/*!< intenal log callbacks*/
+	InternalLoggerPtr m_internal;			/*!< intenal log callbacks*/
 
 	MCadLogger() = default;
 public:
@@ -64,7 +64,7 @@ public:
 
 	~MCadLogger() = default;
 	static [[nodiscard]] MCadLogger& Instance();
-	void setInternal(InternaleLoggerPtr& a_internal);
+	void setInternal(const InternalLoggerPtr& a_internal);
 	inline [[nodiscard]] bool isEnabled()const noexcept { return m_bEnable; }
 	inline void enable(const bool a_bEnable) { m_bEnable = a_bEnable; }
 	MCadLogger& operator << (const LogMode& a_mode);

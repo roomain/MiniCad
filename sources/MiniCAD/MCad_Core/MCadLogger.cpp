@@ -6,7 +6,7 @@ MCadLogger& MCadLogger::Instance()
 	return s_instance;
 }
 
-void MCadLogger::setInternal(InternaleLoggerPtr& a_internal)
+void MCadLogger::setInternal(const InternalLoggerPtr& a_internal)
 {
 	m_internal = a_internal;
 }

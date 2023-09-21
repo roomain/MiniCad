@@ -16,7 +16,7 @@ protected:
 	mutable RecordObjProxy m_objectProxy;/*!< proxy on recorded object*/
 
 public:
-	IMCadObjectRecord(MCadObject* const a_pObject);
+	explicit IMCadObjectRecord(MCadObject* const a_pObject);
 	virtual ~IMCadObjectRecord( ) = default;
 	const ObjectUID recordedObject( )const noexcept final { return m_objectProxy.objectUID(); }
 	RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_objectProxy.objectDef(); }

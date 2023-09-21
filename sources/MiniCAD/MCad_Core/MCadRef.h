@@ -122,7 +122,7 @@ protected:
         }
     }
 
-    MCadRef(Type* const a_referenced) : m_RefObject{ a_referenced }
+    explicit MCadRef(Type* const a_referenced) : m_RefObject{ a_referenced }
     {
         if ( m_RefObject->m_referenceList == nullptr )
         {
