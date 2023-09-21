@@ -10,6 +10,7 @@
 #include "TIMCadContainer.h"
 #include "IMCadRecord.h"
 #include "TMCadObjectProxy.h"
+#include "MCadLogger.h"
 
 template<typename Key>
 using TContainerRecordProxy = TMCadObjectProxy<TIMCadContainer<Key>>;
@@ -135,7 +136,18 @@ public:
 	{
 		if ( m_Container.realocate(a_memory) )
 		{
-			m_Container->record_eraseAt(m_objectKey);
+			auto pObj = m_pNewObject.lock( );
+			if ( !pObj )
+				pObj = a_realocMem.realoc(m_newObjectUID);
+
+			if ( pObj )
+			{
+				m_Container->do_insert(m_objectKey, pObj);
+			}
+			else
+			{
+				MCadLogger::Instance( ) << LogMode::LOG_ERROR << std::source_location::current( ) << "Can't realoc object.";
+			}
 		}
 		else
 		{
@@ -196,7 +208,18 @@ public:
 	{
 		if ( m_Container.realocate(a_memory) )
 		{
-			//m_Container->record_eraseAt(m_objectKey);
+			auto pObj = m_pNewObject.lock( );
+			if ( !pObj )
+				pObj = a_realocMem.realoc(m_newObjectUID);
+
+			if ( pObj )
+			{
+				m_Container->do_replace(m_objectKey, pObj);
+			}
+			else
+			{
+				MCadLogger::Instance( ) << LogMode::LOG_ERROR << std::source_location::current( ) << "Can't realoc object.";
+			}
 		}
 		else
 		{
