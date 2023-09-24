@@ -13,7 +13,7 @@ public:
 	using MCadObject::MCadObject;
 	inline void setValue(const int a_value)
 	{
-		assertModification();
+		assertModification(this);
 		m_value = a_value;
 	}
 

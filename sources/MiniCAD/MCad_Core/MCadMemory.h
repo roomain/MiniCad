@@ -92,8 +92,17 @@ MCadShared_ptr<Type> make_MShared(Args&& ...arg)
     return pObj;
 }
 
-template<typename Type, typename U>
-MCadShared_ptr<Type> MStatic_pointer_cast(MCadShared_ptr<U>&& a_ptr)
+
+template<typename T, typename U>
+MCadShared_ptr<T> MStatic_pointer_cast(MCadShared_ptr<U>&& a_other)noexcept
 {
-    return std::static_pointer_cast< Type >( a_ptr );
+    const auto ptr = static_cast< T* >( a_other.get( ) );
+    return MCadShared_ptr<T>(std::move(a_other), ptr);
+}
+
+template<typename T, typename U>
+MCadShared_ptr<T> MStatic_pointer_cast(const MCadShared_ptr<U>& a_other)noexcept
+{
+    const auto ptr = static_cast< T* >( a_other.get( ) );
+    return MCadShared_ptr<T>(a_other, ptr);
 }

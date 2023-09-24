@@ -13,11 +13,14 @@
 #include "MCadInputBinStream.h"
 #include "MCadOutputBinStream.h"
 
+#pragma warning(push)
+#pragma warning(disable : 4251)
+
 using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
 
 /*@brief represents all object modification for during a command*/
-class  MCadRecordSession
+class MCAD_CORE_EXPORT MCadRecordSession
 {
 private:
 	std::list<IMCadRecordPtr> m_lRecordUndo;	/*!< records for undo*/
@@ -47,3 +50,5 @@ public:
 
 using MCadRecordSessionPtr = std::shared_ptr<MCadRecordSession>;
 using MCadRecordSessionWPtr = std::weak_ptr<MCadRecordSession>;
+
+#pragma warning(pop)

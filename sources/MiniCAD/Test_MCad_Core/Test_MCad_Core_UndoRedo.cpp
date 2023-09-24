@@ -22,7 +22,6 @@ namespace TestMCadCore
 			MCadReactive<IMCadDocumentReactor>::initDef();
 			MCadDocument::initDef();
 			MCadTestObject::initDef();
-			IMCadIndexedContainer::initDef();
 			MCadVector<MCadTestObject>::initDef();
 			auto pDoc = MCadDocumentManager::Instance().createDocument();
 		}
@@ -31,7 +30,6 @@ namespace TestMCadCore
 		{
 			MCadDocumentManager::Instance().closeAllDocument();
 			MCadVector<MCadTestObject>::releaseDef();
-			IMCadIndexedContainer::releaseDef();
 			MCadTestObject::releaseDef();
 			MCadDocument::releaseDef();
 			MCadReactive<IMCadDocumentReactor>::releaseDef();

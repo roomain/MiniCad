@@ -8,6 +8,7 @@
 #include "MCadMemory.h"
 #include "Defines.h"
 #include "RTTIDefinition.h"
+#include "MCad_Core_globals.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -18,7 +19,7 @@ using RealocMap = std::unordered_map<ObjectUID, MCadShared_ptr<MCadObject>>;
 using RealocWMap = std::unordered_map<ObjectUID, std::weak_ptr<MCadObject>>;
 
 /*@brief realocation memory object*/
-class MCadRealocMemory
+class MCAD_CORE_EXPORT MCadRealocMemory
 {
 private:
 	RealocWMap m_undoRedoRealoc;	/*!< realocated pointer for all sessions*/

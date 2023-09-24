@@ -20,16 +20,16 @@ template<typename Key>
 class TMCadRecordContainer : public IMCadRecord
 {
 protected:
-	TContainerRecordProxy m_Container;		/*!< container*/
-	Key m_objectKey;						/*!< contained object Key*/
-	ObjectUID m_ObjectUID;					/*!< contained object unique identifier*/
-	std::weak_ptr<MCadObject> m_pObject;	/*!< contained object weak pointer*/
+	TContainerRecordProxy<Key> m_Container;		/*!< container*/
+	Key m_objectKey;							/*!< contained object Key*/
+	ObjectUID m_ObjectUID;						/*!< contained object unique identifier*/
+	std::weak_ptr<MCadObject> m_pObject;		/*!< contained object weak pointer*/
 	
 public:
 	TMCadRecordContainer( ) = delete;
 	TMCadRecordContainer(TIMCadContainer<Key>* const a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) : m_Container{ a_container },
-		m_objectKey, { a_key }, m_pObject{ a_pObject }
+		m_objectKey{ a_key }, m_pObject{ a_pObject }
 	{
 		if ( auto pSharedObj = m_pObject.lock( ) )
 		{
@@ -41,21 +41,21 @@ public:
 		}
 	}
 
-	TMCadRecordContainer(const TContainerRecordProxy& a_container,
+	TMCadRecordContainer(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
-		m_Container{ a_container }, m_objectKey, { a_key }, m_pObject{ a_pObject }
+		m_Container{ a_container }, m_objectKey{ a_key }, m_pObject{ a_pObject }
 	{
 		//
 	}
 
 	explicit TMCadRecordContainer(const TMCadRecordContainer<Key>& a_other) : 
-		m_Container{ a_other.m_Container },	m_objectKey, { a_other.m_objectKey }, m_pObject{ a_other.m_pObject }
+		m_Container{ a_other.m_Container },	m_objectKey{ a_other.m_objectKey }, m_pObject{ a_other.m_pObject }
 	{
 		//
 	}
 
 	explicit TMCadRecordContainer(TMCadRecordContainer<Key>&& a_other)noexcept :
-		m_Container{ a_other.m_Container }, m_objectKey, { a_other.m_objectKey }, m_pObject{ a_other.m_pObject }
+		m_Container{ a_other.m_Container }, m_objectKey{ a_other.m_objectKey }, m_pObject{ a_other.m_pObject }
 	{
 		//
 	}
@@ -75,7 +75,7 @@ public:
 		//
 	}
 
-	TMCadRecordContainerInsert(const TContainerRecordProxy& a_container,
+	TMCadRecordContainerInsert(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
 		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }
 	{
@@ -87,15 +87,15 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerRemoved<Key>>(m_Container, m_objectKey, m_pObject);
+		return std::make_shared<TMCadRecordContainerRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject);
 	}
 	
 	/*@brief apply record for undo*/
-	virtual void apply([maybe_unused]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
 	{
-		if ( m_Container.realocate(a_memory) )
+		if ( this->m_Container.realocate(a_realocMem) )
 		{
-			m_Container->do_eraseAt(m_objectKey);
+			this->m_Container->do_eraseAt(this->m_objectKey);
 		}
 		else
 		{
@@ -116,7 +116,7 @@ public:
 		//
 	}
 
-	TMCadRecordContainerRemoved(const TContainerRecordProxy& a_container,
+	TMCadRecordContainerRemoved(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
 		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }
 	{
@@ -128,21 +128,21 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerRemoved<Key>>(m_Container, m_objectKey, m_pObject);
+		return std::make_shared<TMCadRecordContainerRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject);
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([ maybe_unused ]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[maybe_unused]]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
 	{
-		if ( m_Container.realocate(a_memory) )
+		if ( this->m_Container.realocate(a_realocMem) )
 		{
-			auto pObj = m_pNewObject.lock( );
+			auto pObj = this->m_pObject.lock( );
 			if ( !pObj )
-				pObj = a_realocMem.realoc(m_newObjectUID);
+				pObj = a_realocMem.realoc(this->m_ObjectUID);
 
 			if ( pObj )
 			{
-				m_Container->do_insert(m_objectKey, pObj);
+				this->m_Container->do_insert(this->m_objectKey, pObj);
 			}
 			else
 			{
@@ -180,7 +180,7 @@ public:
 		}
 	}
 
-	TMCadRecordContainerChanged(const TContainerRecordProxy& a_container,
+	TMCadRecordContainerChanged(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject,
 		const std::weak_ptr<MCadObject>& a_pNewObject) :
 		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }, m_pNewObject{ a_pNewObject }
@@ -200,21 +200,21 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerChanged<Key>>(m_Container, m_objectKey, m_pObject, m_pNewObject);
+		return std::make_shared<TMCadRecordContainerChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_pNewObject);
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([ maybe_unused ]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[ maybe_unused ]]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
 	{
-		if ( m_Container.realocate(a_memory) )
+		if ( this->m_Container.realocate(a_realocMem) )
 		{
-			auto pObj = m_pNewObject.lock( );
+			auto pObj = this->m_pNewObject.lock( );
 			if ( !pObj )
-				pObj = a_realocMem.realoc(m_newObjectUID);
+				pObj = a_realocMem.realoc(this->m_newObjectUID);
 
 			if ( pObj )
 			{
-				m_Container->do_replace(m_objectKey, pObj);
+				this->m_Container->do_replace(this->m_objectKey, pObj);
 			}
 			else
 			{

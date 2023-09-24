@@ -34,12 +34,12 @@ private:
 
 	struct RealocableVisitor
 	{
-		bool operator ()(const std::weak_ptr<Type>& a_ptr)const
+		bool operator ()([[maybe_unused]] const std::weak_ptr<Type>& a_ptr)const
 		{
 			return true;
 		}
 
-		bool operator ()(const MCadRef<Type>& a_ref)const
+		bool operator ()([[maybe_unused]] const MCadRef<Type>& a_ref)const
 		{
 			return false;
 		}
