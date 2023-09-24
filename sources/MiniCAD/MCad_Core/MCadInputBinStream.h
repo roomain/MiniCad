@@ -25,8 +25,8 @@ public:
 	explicit MCadInputBinStream(const MCadBinaryBufferPtr& a_buffer);
 	virtual ~MCadInputBinStream() = default;
 	constexpr size_t offset()const { return m_inputBuffer ? m_inputBuffer->size() : 0; }
-	IMCadInputStream& setPos(const size_t& offset) final;
-	IMCadInputStream& shift(const size_t& offset) final;
+	IMCadInputStream& setPos(const size_t& a_offset) final;
+	IMCadInputStream& shift(const size_t& a_offset) final;
 	void atStart()final;
 	void setBuffer(const MCadBinaryBufferPtr& a_buffer);
 	[[nodiscard]] bool hasBuffer()const noexcept { return m_inputBuffer.get() != nullptr; }

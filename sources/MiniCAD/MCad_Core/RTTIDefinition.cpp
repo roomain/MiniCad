@@ -44,10 +44,10 @@ bool RTTIDefinition::unregisterProtocolExt(const std::shared_ptr<RTTIDefinition>
 		});
 }
 
-std::shared_ptr<ProtocolExtension> RTTIDefinition::getProtocolExt(const std::shared_ptr<RTTIDefinition>& pDef)const
+std::shared_ptr<ProtocolExtension> RTTIDefinition::getProtocolExt(const std::shared_ptr<RTTIDefinition>& a_pDef)const
 {
 	MCadShared_ptr<ProtocolExtension> pProtocolExt;
-	auto iter = std::ranges::find_if(m_vExtensions, [&pDef](auto a_pExt) {return a_pExt->isKindOf(pDef); });
+	auto iter = std::ranges::find_if(m_vExtensions, [&a_pDef ](auto a_pExt) {return a_pExt->isKindOf(a_pDef); });
 	if (iter != m_vExtensions.end())
 	{
 		pProtocolExt = *iter;
@@ -56,7 +56,7 @@ std::shared_ptr<ProtocolExtension> RTTIDefinition::getProtocolExt(const std::sha
 	{
 		for (const auto& pCurProtocol : m_vParent)
 		{
-			pProtocolExt = pCurProtocol->getProtocolExt(pDef);
+			pProtocolExt = pCurProtocol->getProtocolExt(a_pDef);
 			if (pProtocolExt)
 				break;
 		}

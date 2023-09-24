@@ -72,13 +72,13 @@ public:
 	}
 
 	/*@brief register a protocol extension*/
-	void registerProtocolExt(const std::shared_ptr<ProtocolExtension>& protocol);
+	void registerProtocolExt(const std::shared_ptr<ProtocolExtension>& a_protocol);
 
 	/*@brief unregister protocol extension*/
-	bool unregisterProtocolExt(const std::shared_ptr<RTTIDefinition>& pDef);
+	bool unregisterProtocolExt(const std::shared_ptr<RTTIDefinition>& a_pDef);
 
 	/*@brief find  a protocol extension*/
-	[[nodiscard]] std::shared_ptr<ProtocolExtension> getProtocolExt(const std::shared_ptr<RTTIDefinition>& pDef)const;
+	[[nodiscard]] std::shared_ptr<ProtocolExtension> getProtocolExt(const std::shared_ptr<RTTIDefinition>& a_pDef)const;
 
 	/*@brief find  a protocol extension*/
 	template<typename Protocol>

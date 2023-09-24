@@ -17,11 +17,11 @@ class MCadShared_ptr : public std::shared_ptr<Type>
 public:
     using std::shared_ptr<Type>::shared_ptr;
     MCadShared_ptr(const std::shared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {};
-    MCadShared_ptr(std::shared_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {};
+    explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {};
     MCadShared_ptr(const std::weak_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {};
-    MCadShared_ptr(std::weak_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {};
+    explicit MCadShared_ptr(std::weak_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {};
     template<typename U>
-    MCadShared_ptr(std::shared_ptr<Type>&& a_other, Type* a_ptr) noexcept : std::shared_ptr<Type>(a_other, a_ptr) {};
+    explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other, Type* a_ptr) noexcept : std::shared_ptr<Type>(a_other, a_ptr) {};
     virtual ~MCadShared_ptr()
     {
         if constexpr (std::is_base_of_v<MCadObject, Type>)
@@ -46,7 +46,7 @@ private:
 public:
     constexpr MCadShared_from_this() : m_Wptr{} {}
     MCadShared_from_this(MCadShared_from_this<Type>& a_other) : m_Wptr(a_other.m_Wptr) {}
-    MCadShared_from_this(MCadShared_from_this<Type>&& a_other)noexcept : m_Wptr(a_other.m_Wptr) {}
+    explicit MCadShared_from_this(MCadShared_from_this<Type>&& a_other)noexcept : m_Wptr(a_other.m_Wptr) {}
     virtual ~MCadShared_from_this() = default;
 
     [[nodiscard]] MCadShared_ptr<Type> shared_from_this()
