@@ -24,7 +24,8 @@ protected:
 	Key m_objectKey;							/*!< contained object Key*/
 	ObjectUID m_ObjectUID;						/*!< contained object unique identifier*/
 	std::weak_ptr<MCadObject> m_pObject;		/*!< contained object weak pointer*/
-	
+	RTTIDefinitionWPtr m_pDef;					/*!< object definition*/
+
 public:
 	TMCadRecordContainer( ) = delete;
 	TMCadRecordContainer(TIMCadContainer<Key>* const a_container,
@@ -33,6 +34,7 @@ public:
 	{
 		if ( auto pSharedObj = m_pObject.lock( ) )
 		{
+			m_pDef = pSharedObj->isA( );
 			m_ObjectUID = pSharedObj->uid( );
 		}
 		else
@@ -42,8 +44,8 @@ public:
 	}
 
 	TMCadRecordContainer(const TContainerRecordProxy<Key>& a_container,
-		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
-		m_Container{ a_container }, m_objectKey{ a_key }, m_pObject{ a_pObject }
+		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, const ObjectUID& a_uid, RTTIDefinitionWPtr a_pDef) :
+		m_Container{ a_container }, m_objectKey{ a_key }, m_pObject{ a_pObject }, m_ObjectUID{ a_uid }, m_pDef{ a_pDef }
 	{
 		//
 	}
@@ -76,8 +78,8 @@ public:
 	}
 
 	TMCadRecordContainerInsert(const TContainerRecordProxy<Key>& a_container,
-		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }
+		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, const ObjectUID& a_uid, RTTIDefinitionWPtr a_pDef) :
+		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject, a_uid, a_pDef }
 	{
 		//
 	}
@@ -87,7 +89,7 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject);
+		return std::make_shared<TMCadRecordContainerRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
 	}
 	
 	/*@brief apply record for undo*/
@@ -116,9 +118,10 @@ public:
 		//
 	}
 
+
 	TMCadRecordContainerRemoved(const TContainerRecordProxy<Key>& a_container,
-		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }
+		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, const ObjectUID& a_uid, RTTIDefinitionWPtr a_pDef) :
+		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject, a_uid, a_pDef }
 	{
 		//
 	}
@@ -128,7 +131,7 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject);
+		return std::make_shared<TMCadRecordContainerInsert<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
 	}
 
 	/*@brief apply record for undo*/
@@ -138,7 +141,7 @@ public:
 		{
 			auto pObj = this->m_pObject.lock( );
 			if ( !pObj )
-				pObj = a_realocMem.realoc(this->m_ObjectUID);
+				pObj = a_realocMem.realoc(this->m_ObjectUID, this->m_pDef);
 
 			if ( pObj )
 			{
@@ -182,8 +185,8 @@ public:
 
 	TMCadRecordContainerChanged(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject,
-		const std::weak_ptr<MCadObject>& a_pNewObject) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }, m_pNewObject{ a_pNewObject }
+		const std::weak_ptr<MCadObject>& a_pNewObject, const ObjectUID& a_curUID, RTTIDefinitionWPtr a_pDef) :
+		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject, a_curUID, a_pDef }, m_pNewObject{ a_pNewObject }
 	{
 		if ( auto pObj = m_pNewObject.lock( ) )
 		{
@@ -200,7 +203,8 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_pNewObject);
+		auto pObj = this->m_pNewObject.lock( );
+		return std::make_shared<TMCadRecordContainerChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, this->m_pObject, pObj->uid(), pObj->isA());
 	}
 
 	/*@brief apply record for undo*/
@@ -208,9 +212,9 @@ public:
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
-			auto pObj = this->m_pNewObject.lock( );
+			auto pObj = this->m_pObject.lock( );
 			if ( !pObj )
-				pObj = a_realocMem.realoc(this->m_newObjectUID);
+				pObj = a_realocMem.realoc(this->m_ObjectUID, this->m_pDef);
 
 			if ( pObj )
 			{

@@ -12,6 +12,7 @@
 #include "defines.h"
 #include "MCadMemory.h"
 #include "MCad_Core_globals.h"
+#include "MCadMemory.h"
 
 class MCadObject;
 class ProtocolExtension;
@@ -40,7 +41,7 @@ private:
 		return bFound;
 	}
 protected:
-	static void registerToDocument(const std::shared_ptr<MCadObject> a_object);
+	static void registerToDocument(const MCadShared_ptr<MCadObject> a_object);
 
 public:
 	RTTIDefinition() = delete;
@@ -93,7 +94,7 @@ public:
 	[[nodiscard]] virtual size_t classSize()const noexcept = 0;
 
 	/*@brief function for create object with specific uid*/
-	[[nodiscard]] virtual std::shared_ptr<MCadObject> create(const ObjectUID& a_objectUID)const = 0;
+	[[nodiscard]] virtual MCadShared_ptr<MCadObject> create(const ObjectUID& a_objectUID)const = 0;
 };
 
 using RTTIDefinitionPtr = std::shared_ptr<RTTIDefinition>;

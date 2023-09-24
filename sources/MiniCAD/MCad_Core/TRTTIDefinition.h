@@ -17,12 +17,12 @@ public:
 	[[nodiscard]] virtual size_t classSize()const noexcept override { return sizeof(DefinedClass); }
 
 	/*@brief create class*/
-	[[nodiscard]] std::shared_ptr<MCadObject> create(const ObjectUID& a_objectUID)const final
+	[[nodiscard]] MCadShared_ptr<MCadObject> create(const ObjectUID& a_objectUID)const final
 	{
 		if constexpr(std::is_base_of_v<MCadObject, DefinedClass>  && !std::is_abstract_v<DefinedClass>)
 		{
 			MCadObject::enableUIDGenerator(false);
-			auto ptrObj =  std::make_shared<DefinedClass>();
+			auto ptrObj = make_MShared<DefinedClass>();
 			ptrObj->setUID(a_objectUID);
 			MCadObject::enableUIDGenerator(true);
 			RTTIDefinition::registerToDocument(ptrObj);
@@ -32,11 +32,11 @@ public:
 	}
 
 	/*@brief create class*/
-	[[nodiscard]] std::shared_ptr<DefinedClass> create()const
+	[[nodiscard]] MCadShared_ptr<DefinedClass> create()const
 	{
 		if constexpr (std::is_base_of_v<MCadObject, DefinedClass> && !std::is_abstract_v<DefinedClass>)
 		{
-			auto ptrObj = std::make_shared<DefinedClass>();
+			auto ptrObj = make_MShared<DefinedClass>();
 			RTTIDefinition::registerToDocument(ptrObj);
 			return ptrObj;
 		}

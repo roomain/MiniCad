@@ -121,7 +121,7 @@ public:\
 /*@brief define static ctor*/
 #define STATIC_CTOR(classname)\
 public:\
-static std::shared_ptr<classname> createObject() \
+static MCadShared_ptr<classname> createObject() \
 { \
 	if(s_definition) \
 		return s_definition->create(); \

@@ -1,8 +1,9 @@
 #include "pch.h"
 #include <algorithm>
+#include "ProtocolExtension.h"
 
 
-void RTTIDefinition::registerToDocument(const std::shared_ptr<MCadObject> a_object)
+void RTTIDefinition::registerToDocument(const MCadShared_ptr<MCadObject> a_object)
 {
 	MCadDocument::registerObject(a_object);
 }
@@ -45,7 +46,7 @@ bool RTTIDefinition::unregisterProtocolExt(const std::shared_ptr<RTTIDefinition>
 
 std::shared_ptr<ProtocolExtension> RTTIDefinition::getProtocolExt(const std::shared_ptr<RTTIDefinition>& pDef)const
 {
-	std::shared_ptr<ProtocolExtension> pProtocolExt;
+	MCadShared_ptr<ProtocolExtension> pProtocolExt;
 	auto iter = std::ranges::find_if(m_vExtensions, [&pDef](auto a_pExt) {return a_pExt->isKindOf(pDef); });
 	if (iter != m_vExtensions.end())
 	{
