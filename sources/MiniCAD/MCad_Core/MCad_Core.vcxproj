@@ -161,7 +161,7 @@
     <ClInclude Include="MCadMemory.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
-    <ClInclude Include="MCadVector.h" />
+    <ClInclude Include="TMCadVector.h" />
     <ClInclude Include="TMCadObjectProxy.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="MCadReactive.h" />

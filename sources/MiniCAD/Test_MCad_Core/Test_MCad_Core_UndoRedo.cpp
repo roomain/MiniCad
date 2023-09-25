@@ -4,7 +4,7 @@
 #include "MCadDocument.h"
 #include "IMCadDocumentReactor.h"
 #include "TestUndoRedo_Resources.h"
-#include "MCadVector.h"
+#include "TMCadVector.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -22,14 +22,14 @@ namespace TestMCadCore
 			MCadReactive<IMCadDocumentReactor>::initDef();
 			MCadDocument::initDef();
 			MCadTestObject::initDef();
-			MCadVector<MCadTestObject>::initDef();
+			TMCadVector<MCadTestObject>::initDef();
 			auto pDoc = MCadDocumentManager::Instance().createDocument();
 		}
 
 		TEST_CLASS_CLEANUP(CleanupClass)
 		{
 			MCadDocumentManager::Instance().closeAllDocument();
-			MCadVector<MCadTestObject>::releaseDef();
+			TMCadVector<MCadTestObject>::releaseDef();
 			MCadTestObject::releaseDef();
 			MCadDocument::releaseDef();
 			MCadReactive<IMCadDocumentReactor>::releaseDef();
@@ -126,10 +126,10 @@ namespace TestMCadCore
 		}
 
 		//-------------------------------------------------------------------------
-		TEST_METHOD(Test_MCadVector_createObject_Undo)
+		TEST_METHOD(Test_TMCadVector_createObject_Undo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = MCadVector<MCadTestObject>::createObject();
+			auto vector = TMCadVector<MCadTestObject>::createObject();
 			Assert::IsTrue(vector->empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
 			vector->push_back(MCadTestObject::createObject());
@@ -140,10 +140,10 @@ namespace TestMCadCore
 			Assert::IsTrue(vector->empty(), L"Vector Not empty after undo");
 		}
 
-		TEST_METHOD(Test_MCadVector_createObject_Redo)
+		TEST_METHOD(Test_TMCadVector_createObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = MCadVector<MCadTestObject>::createObject();
+			auto vector = TMCadVector<MCadTestObject>::createObject();
 			Assert::IsTrue(vector->empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
 			auto pTestObj = MCadTestObject::createObject();
@@ -157,10 +157,10 @@ namespace TestMCadCore
 			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
 		}
 
-		TEST_METHOD(Test_MCadVector_createAndDeleteObject_Redo)
+		TEST_METHOD(Test_TMCadVector_createAndDeleteObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = MCadVector<MCadTestObject>::createObject();
+			auto vector = TMCadVector<MCadTestObject>::createObject();
 			Assert::IsTrue(vector->empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
 			vector->push_back(MCadTestObject::createObject());
@@ -173,10 +173,10 @@ namespace TestMCadCore
 			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
 		}
 
-		TEST_METHOD(Test_MCadVector_DeleteObject_Redo)
+		TEST_METHOD(Test_TMCadVector_DeleteObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = MCadVector<MCadTestObject>::createObject();
+			auto vector = TMCadVector<MCadTestObject>::createObject();
 			Assert::IsTrue(vector->empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
 			vector->push_back(MCadTestObject::createObject());

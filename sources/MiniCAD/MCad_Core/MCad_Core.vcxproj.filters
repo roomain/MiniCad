@@ -192,7 +192,7 @@
     <ClInclude Include="TMCadObjectProxy.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
-    <ClInclude Include="MCadVector.h">
+    <ClInclude Include="TMCadVector.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
   </ItemGroup>
