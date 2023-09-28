@@ -8,15 +8,15 @@
 #include <vector>
 #include "MCadMemory.h"
 #include "TIMCadContainer.h"
-#include "MCadCell.h"
+#include "TMCadCell.h"
 #include "TMCadRecordContainer.h"
 
 template<typename Type> requires std::is_base_of_v<MCadObject, Type>
-class TMCadVector : public TIMCadContainer<size_t>, private std::vector<MCadCell<Type>>
+class TMCadVector : public TIMCadContainer<size_t>, private std::vector<TMCadCell<Type>>
 {
     DECLARE_RTTI_DERIVED(1, TMCadVector<Type>, MCadObject)
 private:
-    using VectorBase = std::vector<MCadCell<Type>>;
+    using VectorBase = std::vector<TMCadCell<Type>>;
     Assert_ContentChange<Type> m_onChangeContentCallback;   /*!< callback cell contant change*/
     bool m_bActiveCallback = true;                          /*!< callback enable*/
 
@@ -29,7 +29,7 @@ protected:
         }
         else
         {
-            VectorBase::push_back(MCadCell<Type>(MStatic_pointer_cast< Type >( a_object ), m_onChangeContentCallback));
+            VectorBase::push_back(TMCadCell<Type>(MStatic_pointer_cast< Type >( a_object ), m_onChangeContentCallback));
         }
     }
 
@@ -51,14 +51,14 @@ protected:
             VectorBase::erase(begin( ) + a_index);
     }
 
-    void assert_ItemChanged(const MCadCell<Type>* a_pCell, const MCadShared_ptr<Type>& a_pBefore, const MCadShared_ptr<Type>& a_pAfter)
+    void assert_ItemChanged(const TMCadCell<Type>* a_pCell, const MCadShared_ptr<Type>& a_pBefore, const MCadShared_ptr<Type>& a_pAfter)
     {
         if ( auto pDoc = document( ).lock( ) )
         {
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(std::make_shared<TMCadRecordContainerChanged<size_t>>(this, a_pCell - VectorBase::data( ), a_pBefore, a_pAfter));
+                session.append(make_MShared<TMCadRecordContainerChanged<size_t>>(this, a_pCell - VectorBase::data( ), a_pBefore, a_pAfter));
             }
         }
     }
@@ -101,39 +101,39 @@ public:
 
     constexpr TMCadVector& push_back(MCadShared_ptr<Type>&& a_pointer)
     {
-        VectorBase::push_back(MCadCell<Type>(std::move(a_pointer), m_onChangeContentCallback));
-        MCadCell<Type>& pt = VectorBase::back( );
+        VectorBase::push_back(TMCadCell<Type>(std::move(a_pointer), m_onChangeContentCallback));
+        TMCadCell<Type>& pt = VectorBase::back( );
         assert_ItemInsert(pt, size( ) - 1);
         return *this;
     }
 
-    using std::vector<MCadCell<Type>>::operator [];
-    using std::vector<MCadCell<Type>>::at;
-    using std::vector<MCadCell<Type>>::begin;
-    using std::vector<MCadCell<Type>>::end;
-    using std::vector<MCadCell<Type>>::cbegin;
-    using std::vector<MCadCell<Type>>::cend;
-    using std::vector<MCadCell<Type>>::rbegin;
-    using std::vector<MCadCell<Type>>::rend;
-    using std::vector<MCadCell<Type>>::crbegin;
-    using std::vector<MCadCell<Type>>::crend;
-    using std::vector<MCadCell<Type>>::size;
-    using std::vector<MCadCell<Type>>::reserve;
-    using std::vector<MCadCell<Type>>::empty;
+    using std::vector<TMCadCell<Type>>::operator [];
+    using std::vector<TMCadCell<Type>>::at;
+    using std::vector<TMCadCell<Type>>::begin;
+    using std::vector<TMCadCell<Type>>::end;
+    using std::vector<TMCadCell<Type>>::cbegin;
+    using std::vector<TMCadCell<Type>>::cend;
+    using std::vector<TMCadCell<Type>>::rbegin;
+    using std::vector<TMCadCell<Type>>::rend;
+    using std::vector<TMCadCell<Type>>::crbegin;
+    using std::vector<TMCadCell<Type>>::crend;
+    using std::vector<TMCadCell<Type>>::size;
+    using std::vector<TMCadCell<Type>>::reserve;
+    using std::vector<TMCadCell<Type>>::empty;
 
-    using iterator = std::vector<MCadCell<Type>>::iterator;
-    using const_iterator = std::vector<MCadCell<Type>>::const_iterator;
+    using iterator = std::vector<TMCadCell<Type>>::iterator;
+    using const_iterator = std::vector<TMCadCell<Type>>::const_iterator;
 
     iterator insert(const_iterator a_pos, const MCadShared_ptr<Type>& a_object)
     {
-        auto iter = VectorBase::insert(a_pos, MCadCell<Type>(m_onChangeContentCallback, a_object));
+        auto iter = VectorBase::insert(a_pos, TMCadCell<Type>(m_onChangeContentCallback, a_object));
         assert_ItemInsert(( *iter ), iter - begin( ));
         return iter;
     }
 
     constexpr iterator insert(const_iterator a_pos, MCadShared_ptr<Type>&& a_object)
     {
-        auto iter = VectorBase::insert(a_pos, MCadCell<Type>(m_onChangeContentCallback, std::move(a_object)));
+        auto iter = VectorBase::insert(a_pos, TMCadCell<Type>(m_onChangeContentCallback, std::move(a_object)));
         assert_ItemInsert(( *iter ), std::distance(iter, begin( )));
         return iter;
     }
@@ -141,7 +141,7 @@ public:
     template<typename ...Args>
     TMCadVector& emplace(const_iterator a_iter, Args&& ...args)
     {
-        VectorBase::emplace(a_iter, m_onChangeContentCallback, std::make_shared<Type>(args...));
+        VectorBase::emplace(a_iter, m_onChangeContentCallback, make_MShared<Type>(args...));
         assert_ItemInsert(( *a_iter ), std::distance(a_iter, begin( )));
         return *this;
     }

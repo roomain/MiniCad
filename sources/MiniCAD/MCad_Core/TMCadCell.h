@@ -1,6 +1,6 @@
 #pragma once
 /***********************************************
-* @headerfile MCadCell.h
+* @headerfile TMCadCell.h
 * @date 10 / 09 / 2023
 * @author Roomain
 ************************************************/
@@ -8,16 +8,16 @@
 #include "MCadMemory.h"
 
 template<typename Type>
-class MCadCell;
+class TMCadCell;
 
 
 /*@brief assertion when cell content is changing*/
 template<typename Type>
-using Assert_ContentChange = std::function<void(const MCadCell<Type>*, const MCadShared_ptr<Type>&, const MCadShared_ptr<Type>&)>;
+using Assert_ContentChange = std::function<void(const TMCadCell<Type>*, const MCadShared_ptr<Type>&, const MCadShared_ptr<Type>&)>;
 
 /*@brief cell of container*/
 template<typename Type>
-class MCadCell : public MCadShared_ptr<Type>
+class TMCadCell : public MCadShared_ptr<Type>
 {
 private:
 	Assert_ContentChange<Type> m_onContentChange;	/*!< content change callback*/
@@ -35,19 +35,19 @@ public:
 	{
 	}
 
-	explicit MCadCell(const Assert_ContentChange<Type>& a_assert) : m_onContentChange{ a_assert } {}
+	explicit TMCadCell(const Assert_ContentChange<Type>& a_assert) : m_onContentChange{ a_assert } {}
 
-	explicit MCadCell(const MCadShared_ptr<Type>& a_ptr, const Assert_ContentChange<Type>& a_assert) :
+	explicit TMCadCell(const MCadShared_ptr<Type>& a_ptr, const Assert_ContentChange<Type>& a_assert) :
 		MCadShared_ptr<Type>(a_ptr), m_onContentChange{ a_assert } {}
 
-	explicit MCadCell(MCadShared_ptr<Type>&& a_ptr, const Assert_ContentChange<Type>& a_assert)noexcept :
+	explicit TMCadCell(MCadShared_ptr<Type>&& a_ptr, const Assert_ContentChange<Type>& a_assert)noexcept :
 		MCadShared_ptr<Type>(std::move(a_ptr)), m_onContentChange{ a_assert } {}
 
 	template<typename ...Args>
-	MCadCell(const Assert_ContentChange<Type>& a_cb, Args&& ...a_args) :
+	TMCadCell(const Assert_ContentChange<Type>& a_cb, Args&& ...a_args) :
 		MCadShared_ptr<Type>(make_MShared<Type>(a_args...)), m_onContentChange{ a_cb } {}
 
-	MCadCell<Type>& operator = (const MCadShared_ptr<Type>& a_other)
+	TMCadCell<Type>& operator = (const MCadShared_ptr<Type>& a_other)
 	{
 		if ( this->get( ) != a_other.get( ) )
 		{
@@ -58,7 +58,7 @@ public:
 		return *this;
 	}
 
-	MCadCell<Type>& operator = (MCadShared_ptr<Type>&& a_other)
+	TMCadCell<Type>& operator = (MCadShared_ptr<Type>&& a_other)
 	{
 		if ( this->get( ) != a_other.get( ) )
 		{
@@ -69,7 +69,7 @@ public:
 		return *this;
 	}
 
-	MCadCell<Type>& operator = (const MCadCell<Type>& a_other)
+	TMCadCell<Type>& operator = (const TMCadCell<Type>& a_other)
 	{
 		if ( this->get( ) != a_other.get( ) )
 		{
@@ -80,7 +80,7 @@ public:
 		return *this;
 	}
 
-	MCadCell<Type>& operator = (MCadCell<Type>&& a_other)
+	TMCadCell<Type>& operator = (TMCadCell<Type>&& a_other)
 	{
 		if ( this->get( ) != a_other.get( ) )
 		{
@@ -91,5 +91,5 @@ public:
 		return *this;
 	}
 
-	virtual ~MCadCell( ) = default;
+	virtual ~TMCadCell( ) = default;
 };

@@ -6,7 +6,7 @@
 ************************************************/
 #include <memory>
 #include "MCadRef.h"
-#include "MCadCell.h"
+#include "TMCadCell.h"
 
 class IMCadRecord;
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;

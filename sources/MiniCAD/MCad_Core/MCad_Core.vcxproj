@@ -153,7 +153,7 @@
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
     <ClInclude Include="IMCadDocManagerReactor.h" />
-    <ClInclude Include="MCadCell.h" />
+    <ClInclude Include="TMCadCell.h" />
     <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadInputBinStream.h" />
