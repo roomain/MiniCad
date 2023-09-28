@@ -195,6 +195,9 @@
     <ClInclude Include="TMCadVector.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="TMCadMap.h">
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

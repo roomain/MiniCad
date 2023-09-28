@@ -71,9 +71,6 @@ public:
         m_onChangeContentCallback = std::bind_front(&TMCadVector<Type>::assert_ItemChanged, this);
     }
 
-    size_t size( ) const noexcept { return VectorBase::size( ); }
-    constexpr void reserve(const size_t& a_cap) { VectorBase::reserve(a_cap); }
-    bool empty( )const noexcept { return VectorBase::empty( ); }
 
     void clear( )
     {
@@ -110,28 +107,23 @@ public:
         return *this;
     }
 
-    MCadCell<Type>& operator[](const size_t& a_index)
-    {
-        return VectorBase::operator[](a_index);
-    }
-
-    const MCadCell<Type>& at(const size_t& a_index)
-    {
-        return VectorBase::at(a_index);
-    }
+    using std::vector<MCadCell<Type>>::operator [];
+    using std::vector<MCadCell<Type>>::at;
+    using std::vector<MCadCell<Type>>::begin;
+    using std::vector<MCadCell<Type>>::end;
+    using std::vector<MCadCell<Type>>::cbegin;
+    using std::vector<MCadCell<Type>>::cend;
+    using std::vector<MCadCell<Type>>::rbegin;
+    using std::vector<MCadCell<Type>>::rend;
+    using std::vector<MCadCell<Type>>::crbegin;
+    using std::vector<MCadCell<Type>>::crend;
+    using std::vector<MCadCell<Type>>::size;
+    using std::vector<MCadCell<Type>>::reserve;
+    using std::vector<MCadCell<Type>>::empty;
 
     using iterator = std::vector<MCadCell<Type>>::iterator;
-    iterator begin( ) { return VectorBase::begin( ); }
-    iterator end( ) { return VectorBase::end( ); }
-
-
-    using reverse_iterator = std::vector<MCadCell<Type>>::reverse_iterator;
-    reverse_iterator  rbegin( ) { return VectorBase::rbegin( ); }
-    reverse_iterator  rend( ) { return VectorBase::rend( ); }
-
     using const_iterator = std::vector<MCadCell<Type>>::const_iterator;
-    const_iterator cbegin( )const { return VectorBase::cbegin( ); }
-    const_iterator cend( )const { return VectorBase::cend( ); }
+
     iterator insert(const_iterator a_pos, const MCadShared_ptr<Type>& a_object)
     {
         auto iter = VectorBase::insert(a_pos, MCadCell<Type>(m_onChangeContentCallback, a_object));
@@ -145,10 +137,6 @@ public:
         assert_ItemInsert(( *iter ), std::distance(iter, begin( )));
         return iter;
     }
-
-    using const_reverse_iterator = std::vector<MCadCell<Type>>::const_reverse_iterator;
-    const_reverse_iterator crbegin( )const { return VectorBase::crbegin( ); }
-    const_reverse_iterator crend( )const { return VectorBase::crend( ); }
 
     template<typename ...Args>
     TMCadVector& emplace(const_iterator a_iter, Args&& ...args)
