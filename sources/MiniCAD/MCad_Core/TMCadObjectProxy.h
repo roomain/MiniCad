@@ -85,8 +85,12 @@ public:
 	{
 		if ( a_object )
 		{
-			m_objectUID = a_object->uid( );
-			m_pObjectDef = a_object->isA( );
+			if constexpr ( std::is_base_of_v<MCadObject, Type> )
+			{
+				m_objectUID = a_object->uid( );
+				m_pObjectDef = a_object->isA( );
+			}
+
 			if ( a_object->isShared( ) )
 			{
 				m_proxyObj = std::dynamic_pointer_cast< Type >( a_object->shared_from_this( ) );
