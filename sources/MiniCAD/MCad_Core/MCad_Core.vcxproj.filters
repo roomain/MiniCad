@@ -138,7 +138,7 @@
     <ClInclude Include="MCadInputBinStream.h">
       <Filter>Fichiers d%27en-tête\Stream</Filter>
     </ClInclude>
-    <ClInclude Include="MCadScoped.h">
+    <ClInclude Include="TMCadScoped.h">
       <Filter>Fichiers d%27en-tête\Tools</Filter>
     </ClInclude>
     <ClInclude Include="IMCadRecord.h">

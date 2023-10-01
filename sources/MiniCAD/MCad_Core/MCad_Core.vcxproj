@@ -170,7 +170,7 @@
     <ClInclude Include="MCadRecords.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadRef.h" />
-    <ClInclude Include="MCadScoped.h" />
+    <ClInclude Include="TMCadScoped.h" />
     <ClInclude Include="MCadRecordAssertion.h" />
     <ClInclude Include="MCad_Core_globals.h" />
     <ClInclude Include="pch.h" />

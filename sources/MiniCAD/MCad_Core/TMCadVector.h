@@ -14,7 +14,6 @@
 template<typename Type> requires std::is_base_of_v<MCadObject, Type>
 class TMCadVector : public TIMCadContainer<size_t>, private std::vector<TMCadCell<Type>>
 {
-    DECLARE_RTTI_DERIVED(1, TMCadVector<Type>, MCadObject)
 private:
     using VectorBase = std::vector<TMCadCell<Type>>;
     Assert_ContentChange<Type> m_onChangeContentCallback;   /*!< callback cell contant change*/

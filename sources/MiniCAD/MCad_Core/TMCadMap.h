@@ -11,9 +11,8 @@
 #include "TMCadRecordContainer.h"
 
 template<typename Key, typename Type> requires std::is_base_of_v<MCadObject, Type>
-class TMCadMap : public TIMCadContainer<size_t>, private std::map<Key, TMCadCell<Type>>
+class TMCadMap : public TIMCadContainer<Key>, private std::map<Key, TMCadCell<Type>>
 {
-    DECLARE_RTTI_DERIVED(1, TMCadMap<Key, Type>, MCadObject)
 private:
     using MapBase = std::map<Key, TMCadCell<Type>>;
     Assert_ContentChange<Type> m_onChangeContentCallback;   /*!< callback cell contant change*/
@@ -42,18 +41,61 @@ protected:
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                auto iter = find(*a_pCell);
+                auto iter = find(*a_pCell);// or create TMCadCell with key
+                // TODO Special record using find when undo/redo?
                 session.append(std::make_shared<TMCadRecordContainerChanged<Key>>(this, iter.first, a_pBefore, a_pAfter));
             }
         }
     }
+    template< class... Args >
+    TMCadCell<Type> createWithoutRecord(Args&&... args)
+    {
+        if ( auto pDoc = document( ).lock( ) )
+        {
+            //
+        }
+        else
+        {
+            //
+        }
+    }
+
 public:
     TMCadMap( )
     {
         // TODO
     }
 
-    using std::map<Key, TMCadCell<Type>>::operator [];
+
+    /*using iterator = std::map<Key, TMCadCell<Type>::iterator;
+    using const_iterator = std::map<Key, TMCadCell<Type>::const_iterator;
+
+    template< class... Args >
+    std::pair<iterator, bool> try_emplace(const Key& k, Args&&... args)
+    {        
+        // 
+    }
+        
+    template< class... Args >
+    std::pair<iterator, bool> try_emplace(Key&& k, Args&&... args)
+    {
+        //
+    }
+        
+    template< class... Args >
+    iterator try_emplace(const_iterator hint, const Key& k, Args&&... args)
+    {
+        //
+    }
+        
+    template< class... Args >
+    iterator try_emplace(const_iterator hint, Key&& k, Args&&... args)
+    {
+        //
+    }*/
+
+    using std::map<Key, TMCadCell<Type>>::operator[];
+
     using std::map<Key, TMCadCell<Type>>::at;
     using std::map<Key, TMCadCell<Type>>::begin;
     using std::map<Key, TMCadCell<Type>>::end;

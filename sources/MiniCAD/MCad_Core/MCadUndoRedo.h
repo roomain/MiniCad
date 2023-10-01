@@ -13,6 +13,7 @@
 #include "MCadRecordSession.h"
 #include "UndoRedoException.h"
 #include "MCadRealocMemory.h"
+#include "TMCadScoped.h"
 #include "MCad_Core_globals.h"
 
 #pragma warning(push)
@@ -53,6 +54,10 @@ public:
 	void undo();
 
 	[[nodiscard]] bool active()const noexcept { return m_active && m_sessionActive; }
+	[[nodiscard]] TMCadScoped<bool>&& scopedActivation( ) noexcept
+	{
+		return std::move(TMCadScoped<bool>(m_sessionActive));
+	}
 
 	/*@brief is undo possible*/
 	bool hasUndo()const noexcept;
