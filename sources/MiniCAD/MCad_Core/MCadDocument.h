@@ -15,6 +15,7 @@ class MCadObject;
 class IMCadDocumentReactor;
 class IMCadFileInputStream;
 class IMCadFileOutputStream;
+
 using MCadObjectWPtr = std::weak_ptr<MCadObject>;
 using MCadObjectPtr = MCadShared_ptr<MCadObject>;
 

@@ -18,9 +18,6 @@ class MCadObject;
 class IMCadInputStream;
 class IMCadOutputStream;
 
-
-
-
 #pragma warning(push)
 #pragma warning(disable : 4275)
 #pragma warning(disable : 4251)

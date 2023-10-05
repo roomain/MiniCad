@@ -23,14 +23,14 @@ private:
 	Assert_ContentChange<Type> m_onContentChange;	/*!< content change callback*/
 
 public:
-	MCadCell( ) = default;
+	TMCadCell( ) = default;
 
-	explicit MCadCell(MCadCell<Type>&& a_other)noexcept : MCadShared_ptr<Type>(std::move(a_other)),
+	explicit TMCadCell(TMCadCell<Type>&& a_other)noexcept : MCadShared_ptr<Type>(std::move(a_other)),
 		m_onContentChange{ a_other.m_onContentChange }
 	{
 	}
 
-	explicit MCadCell(MCadCell<Type>& a_other)noexcept : MCadShared_ptr<Type>(a_other),
+	explicit TMCadCell(TMCadCell<Type>& a_other)noexcept : MCadShared_ptr<Type>(a_other),
 		m_onContentChange{ a_other.m_onContentChange }
 	{
 	}

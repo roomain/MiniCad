@@ -18,6 +18,7 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
+#pragma warning(disable : 4172)
 
 using UndoRedoTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 using ObjectDefWPtr = std::weak_ptr<RTTIDefinition>;

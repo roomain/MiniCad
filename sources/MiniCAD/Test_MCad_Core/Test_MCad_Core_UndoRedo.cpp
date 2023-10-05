@@ -22,14 +22,12 @@ namespace TestMCadCore
 			MCadReactive<IMCadDocumentReactor>::initDef();
 			MCadDocument::initDef();
 			MCadTestObject::initDef();
-			TMCadVector<MCadTestObject>::initDef();
 			auto pDoc = MCadDocumentManager::Instance().createDocument();
 		}
 
 		TEST_CLASS_CLEANUP(CleanupClass)
 		{
 			MCadDocumentManager::Instance().closeAllDocument();
-			TMCadVector<MCadTestObject>::releaseDef();
 			MCadTestObject::releaseDef();
 			MCadDocument::releaseDef();
 			MCadReactive<IMCadDocumentReactor>::releaseDef();
@@ -129,67 +127,67 @@ namespace TestMCadCore
 		TEST_METHOD(Test_TMCadVector_createObject_Undo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = TMCadVector<MCadTestObject>::createObject();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+			TMCadVector<MCadTestObject> vector;
+			Assert::IsTrue(vector.empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
-			vector->push_back(MCadTestObject::createObject());
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Wrong vector size after push_back");
+			vector.push_back(MCadTestObject::createObject());
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Wrong vector size after push_back");
 			pWDoc.lock()->undoRedo().endUndoRecord();
 
 			pWDoc.lock()->undoRedo().undo();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty after undo");
+			Assert::IsTrue(vector.empty(), L"Vector Not empty after undo");
 		}
 
 		TEST_METHOD(Test_TMCadVector_createObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = TMCadVector<MCadTestObject>::createObject();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+			TMCadVector<MCadTestObject> vector;
+			Assert::IsTrue(vector.empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
 			auto pTestObj = MCadTestObject::createObject();
-			vector->push_back(pTestObj);
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Wrong vector size after push_back");
+			vector.push_back(pTestObj);
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Wrong vector size after push_back");
 			pWDoc.lock()->undoRedo().endUndoRecord();
 
 			pWDoc.lock()->undoRedo().undo();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty after undo"); 
+			Assert::IsTrue(vector.empty(), L"Vector Not empty after undo"); 
 			pWDoc.lock()->undoRedo().redo();
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Vector empty after redo");
 		}
 
 		TEST_METHOD(Test_TMCadVector_createAndDeleteObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = TMCadVector<MCadTestObject>::createObject();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+			TMCadVector<MCadTestObject> vector;
+			Assert::IsTrue(vector.empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
-			vector->push_back(MCadTestObject::createObject());
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Wrong vector size after push_back");
+			vector.push_back(MCadTestObject::createObject());
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Wrong vector size after push_back");
 			pWDoc.lock()->undoRedo().endUndoRecord();
 
 			pWDoc.lock()->undoRedo().undo();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty after undo");
+			Assert::IsTrue(vector.empty(), L"Vector Not empty after undo");
 			pWDoc.lock()->undoRedo().redo();
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Vector empty after redo");
 		}
 
 		TEST_METHOD(Test_TMCadVector_DeleteObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance().currentDocument();
-			auto vector = TMCadVector<MCadTestObject>::createObject();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+			TMCadVector<MCadTestObject> vector;
+			Assert::IsTrue(vector.empty(), L"Vector Not empty");
 			pWDoc.lock()->undoRedo().startUndoRecord("Create object");
-			vector->push_back(MCadTestObject::createObject());
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Wrong vector size after push_back");
+			vector.push_back(MCadTestObject::createObject());
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Wrong vector size after push_back");
 			pWDoc.lock()->undoRedo().endUndoRecord();
 
 			pWDoc.lock()->undoRedo().startUndoRecord("Remove object");
-			vector->pop_back();
+			vector.pop_back();
 			pWDoc.lock()->undoRedo().endUndoRecord();
-			Assert::IsTrue(vector->empty(), L"Vector Not empty");
+			Assert::IsTrue(vector.empty(), L"Vector Not empty");
 
 			pWDoc.lock()->undoRedo().undo();
-			Assert::AreEqual(1, static_cast<int>(vector->size()), L"Vector empty after redo");
+			Assert::AreEqual(1, static_cast<int>(vector.size()), L"Vector empty after redo");
 		}
 	};
 }

@@ -183,7 +183,7 @@
     <ClInclude Include="MCadRef.h">
       <Filter>Fichiers d%27en-tête\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="TMCadRecordContainer.h">
+    <ClInclude Include="TMCadRecordContainerCell.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
     <ClInclude Include="TMCadCell.h">
@@ -197,6 +197,12 @@
     </ClInclude>
     <ClInclude Include="TMCadMap.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="TMCadKeyCell.h">
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="TMCadRecordContainerEmptyCell.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,32 +7,54 @@
 #include <memory>
 #include "MCadRef.h"
 #include "TMCadCell.h"
+#include "MCadObject.h"
+#include "MCadDocument.h"
 
 class IMCadRecord;
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;
 
 template<typename Key>
-class TMCadRecordContainerInsert;
+class TMCadRecordContainerCellInsert;
 
 template<typename Key>
-class TMCadRecordContainerRemoved;
+class TMCadRecordContainerCellRemoved;
 
 
 template<typename Key>
-class TMCadRecordContainerChanged;
+class TMCadRecordContainerCellChanged;
+
+
+template<typename Key>
+class TMCadRecordContainerEmptyCellInsert;
+
+template<typename Key>
+class TMCadRecordContainerEmptyCellRemoved;
+
+
+template<typename Key>
+class TMCadRecordContainerEmptyCellChanged;
 
 /*@brief base class for container having undo redo capabililty*/
 template<typename Key>
-class TIMCadContainer : public MCadObject
+class TIMCadContainer : public MCadRefObject
 {
-	template<typename Key>
-	friend class TMCadRecordContainerInsert;
+    template<typename Key>
+	friend class TMCadRecordContainerCellInsert;
 
-	template<typename Key>
-	friend class TMCadRecordContainerRemoved;
+    template<typename Key>
+	friend class TMCadRecordContainerCellRemoved;
 
-	template<typename Key>
-	friend class TMCadRecordContainerChanged;
+    template<typename Key>
+	friend class TMCadRecordContainerCellChanged;
+
+    template<typename Key>
+    friend class TMCadRecordContainerEmptyCellInsert;
+
+    template<typename Key>
+    friend class TMCadRecordContainerEmptyCellRemoved;
+
+    template<typename Key>
+    friend class TMCadRecordContainerEmptyCellChanged;
 
 protected:
 	/*@brief replace container item during record processing (=> undo/redo)*/
@@ -46,27 +68,27 @@ protected:
     template<typename Type>
     void assert_ItemInsert(const MCadShared_ptr<Type>& a_pItem, const Key& a_index)
     {
-        if ( auto pDoc = document( ).lock( ) )
+        if ( auto pDoc = a_pItem->document( ).lock( ) )
         {
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(std::make_shared<TMCadRecordContainerInsert<Key>>(this, a_index, a_pItem));
-            }
-        }
-    }
-    template<typename Type>
-    void assert_ItemRemoved(const MCadShared_ptr<Type>& a_pItem, const Key a_index)
-    {
-        if ( auto pDoc = document( ).lock( ) )
-        {
-            if ( pDoc->undoRedo( ).active( ) )
-            {
-                auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(std::make_shared<TMCadRecordContainerRemoved<Key>>(this, a_index, a_pItem));
+                session.append(std::make_shared<TMCadRecordContainerCellInsert<Key>>(this, a_index, a_pItem));
             }
         }
     }
     
-
+    template<typename Type>
+    void assert_ItemRemoved(const MCadShared_ptr<Type>& a_pItem, const Key a_index)
+    {
+        if ( auto pDoc = a_pItem->document( ).lock( ) )
+        {
+            if ( pDoc->undoRedo( ).active( ) )
+            {
+                auto& session = pDoc->undoRedo( ).currentSession( );
+                session.append(std::make_shared<TMCadRecordContainerCellRemoved<Key>>(this, a_index, a_pItem));
+            }
+        }
+    }
+    
 };

@@ -1,6 +1,6 @@
 #pragma once
 /***********************************************
-* @headerfile TMCadRecordContainer.h
+* @headerfile TMCadRecordContainerCell.h
 * @date 07 / 09 / 2023
 * @author Roomain
 ************************************************/
@@ -17,7 +17,7 @@ using TContainerRecordProxy = TMCadObjectProxy<TIMCadContainer<Key>>;
 
 
 template<typename Key>
-class TMCadRecordContainer : public IMCadRecord
+class TMCadRecordContainerCell : public IMCadRecord
 {
 protected:
 	TContainerRecordProxy<Key> m_Container;		/*!< container*/
@@ -27,8 +27,8 @@ protected:
 	RTTIDefinitionWPtr m_pDef;					/*!< object definition*/
 
 public:
-	TMCadRecordContainer( ) = delete;
-	TMCadRecordContainer(TIMCadContainer<Key>* const a_container,
+	TMCadRecordContainerCell( ) = delete;
+	TMCadRecordContainerCell(TIMCadContainer<Key>* const a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) : m_Container{ a_container },
 		m_objectKey{ a_key }, m_pObject{ a_pObject }
 	{
@@ -43,20 +43,20 @@ public:
 		}
 	}
 
-	TMCadRecordContainer(const TContainerRecordProxy<Key>& a_container,
+	TMCadRecordContainerCell(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, const ObjectUID& a_uid, RTTIDefinitionWPtr a_pDef) :
 		m_Container{ a_container }, m_objectKey{ a_key }, m_pObject{ a_pObject }, m_ObjectUID{ a_uid }, m_pDef{ a_pDef }
 	{
 		//
 	}
 
-	explicit TMCadRecordContainer(const TMCadRecordContainer<Key>& a_other) : 
+	explicit TMCadRecordContainerCell(const TMCadRecordContainerCell<Key>& a_other) : 
 		m_Container{ a_other.m_Container },	m_objectKey{ a_other.m_objectKey }, m_pObject{ a_other.m_pObject }
 	{
 		//
 	}
 
-	explicit TMCadRecordContainer(TMCadRecordContainer<Key>&& a_other)noexcept :
+	explicit TMCadRecordContainerCell(TMCadRecordContainerCell<Key>&& a_other)noexcept :
 		m_Container{ a_other.m_Container }, m_objectKey{ a_other.m_objectKey }, m_pObject{ a_other.m_pObject }
 	{
 		//
@@ -67,19 +67,19 @@ public:
 };
 
 template<typename Key>
-class TMCadRecordContainerInsert : public TMCadRecordContainer<Key>
+class TMCadRecordContainerCellInsert : public TMCadRecordContainerCell<Key>
 {
 public:
-	TMCadRecordContainerInsert(TIMCadContainer<Key>* const a_container,
+	TMCadRecordContainerCellInsert(TIMCadContainer<Key>* const a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) : 
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }
+		TMCadRecordContainerCell<Key>{ a_container, a_key, a_pObject }
 	{
 		//
 	}
 
-	TMCadRecordContainerInsert(const TContainerRecordProxy<Key>& a_container,
+	TMCadRecordContainerCellInsert(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, const ObjectUID& a_uid, RTTIDefinitionWPtr a_pDef) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject, a_uid, a_pDef }
+		TMCadRecordContainerCell<Key>{ a_container, a_key, a_pObject, a_uid, a_pDef }
 	{
 		//
 	}
@@ -89,7 +89,7 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
+		return std::make_shared<TMCadRecordContainerCellRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
 	}
 	
 	/*@brief apply record for undo*/
@@ -108,20 +108,20 @@ public:
 };
 
 template<typename Key>
-class TMCadRecordContainerRemoved : public TMCadRecordContainer<Key>
+class TMCadRecordContainerCellRemoved : public TMCadRecordContainerCell<Key>
 {
 public:
-	TMCadRecordContainerRemoved(TIMCadContainer<Key>* const a_container,
+	TMCadRecordContainerCellRemoved(TIMCadContainer<Key>* const a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }
+		TMCadRecordContainerCell<Key>{ a_container, a_key, a_pObject }
 	{
 		//
 	}
 
 
-	TMCadRecordContainerRemoved(const TContainerRecordProxy<Key>& a_container,
+	TMCadRecordContainerCellRemoved(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, const ObjectUID& a_uid, RTTIDefinitionWPtr a_pDef) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject, a_uid, a_pDef }
+		TMCadRecordContainerCell<Key>{ a_container, a_key, a_pObject, a_uid, a_pDef }
 	{
 		//
 	}
@@ -131,7 +131,7 @@ public:
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		return std::make_shared<TMCadRecordContainerInsert<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
+		return std::make_shared<TMCadRecordContainerCellInsert<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
 	}
 
 	/*@brief apply record for undo*/
@@ -161,17 +161,17 @@ public:
 };
 
 template<typename Key>
-class TMCadRecordContainerChanged : public TMCadRecordContainer<Key>
+class TMCadRecordContainerCellChanged : public TMCadRecordContainerCell<Key>
 {
 private:
 	ObjectUID m_newObjectUID;				/*!< new object uid at Key*/
 	std::weak_ptr<MCadObject> m_pNewObject;	/*!< new object at Key*/
 
 public:
-	TMCadRecordContainerChanged(TIMCadContainer<Key>* const a_container,
+	TMCadRecordContainerCellChanged(TIMCadContainer<Key>* const a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject, 
 		const std::weak_ptr<MCadObject>& a_pNewObject) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject }, m_pNewObject{ a_pNewObject }
+		TMCadRecordContainerCell<Key>{ a_container, a_key, a_pObject }, m_pNewObject{ a_pNewObject }
 	{
 		if ( auto pObj = m_pNewObject.lock( ) )
 		{
@@ -183,10 +183,10 @@ public:
 		}
 	}
 
-	TMCadRecordContainerChanged(const TContainerRecordProxy<Key>& a_container,
+	TMCadRecordContainerCellChanged(const TContainerRecordProxy<Key>& a_container,
 		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject,
 		const std::weak_ptr<MCadObject>& a_pNewObject, const ObjectUID& a_curUID, RTTIDefinitionWPtr a_pDef) :
-		TMCadRecordContainer<Key>{ a_container, a_key, a_pObject, a_curUID, a_pDef }, m_pNewObject{ a_pNewObject }
+		TMCadRecordContainerCell<Key>{ a_container, a_key, a_pObject, a_curUID, a_pDef }, m_pNewObject{ a_pNewObject }
 	{
 		if ( auto pObj = m_pNewObject.lock( ) )
 		{
@@ -204,7 +204,7 @@ public:
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
 		auto pObj = this->m_pNewObject.lock( );
-		return std::make_shared<TMCadRecordContainerChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, this->m_pObject, pObj->uid(), pObj->isA());
+		return std::make_shared<TMCadRecordContainerCellChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, this->m_pObject, pObj->uid(), pObj->isA());
 	}
 
 	/*@brief apply record for undo*/

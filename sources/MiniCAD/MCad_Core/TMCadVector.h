@@ -9,7 +9,7 @@
 #include "MCadMemory.h"
 #include "TIMCadContainer.h"
 #include "TMCadCell.h"
-#include "TMCadRecordContainer.h"
+#include "TMCadRecordContainerCell.h"
 
 template<typename Type> requires std::is_base_of_v<MCadObject, Type>
 class TMCadVector : public TIMCadContainer<size_t>, private std::vector<TMCadCell<Type>>
@@ -36,11 +36,11 @@ protected:
     {
         if ( VectorBase::size( ) > a_key )
         {
-            VectorBase::insert(begin( ) + a_key, MCadCell<Type>(MStatic_pointer_cast< Type >( a_object ), m_onChangeContentCallback));
+            VectorBase::insert(begin( ) + a_key, TMCadCell<Type>(MStatic_pointer_cast< Type >( a_object ), m_onChangeContentCallback));
         }
         else
         {
-            VectorBase::push_back(MCadCell<Type>(MStatic_pointer_cast< Type >( a_object ), m_onChangeContentCallback));
+            VectorBase::push_back(TMCadCell<Type>(MStatic_pointer_cast< Type >( a_object ), m_onChangeContentCallback));
         }
     }
 
@@ -52,12 +52,22 @@ protected:
 
     void assert_ItemChanged(const TMCadCell<Type>* a_pCell, const MCadShared_ptr<Type>& a_pBefore, const MCadShared_ptr<Type>& a_pAfter)
     {
-        if ( auto pDoc = document( ).lock( ) )
+        MCadDocumentPtr pDoc;
+        if ( a_pBefore )
+        {
+            pDoc = a_pBefore->document( ).lock( );
+        }
+        else if ( a_pAfter )
+        {
+            pDoc = a_pAfter->document( ).lock( );
+        }
+
+        if ( pDoc)
         {
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(make_MShared<TMCadRecordContainerChanged<size_t>>(this, a_pCell - VectorBase::data( ), a_pBefore, a_pAfter));
+                session.append(std::make_shared<TMCadRecordContainerCellChanged<size_t>>(this, a_pCell - VectorBase::data( ), a_pBefore, a_pAfter));
             }
         }
     }
@@ -66,7 +76,7 @@ public:
     {
         m_onChangeContentCallback = std::bind_front(&TMCadVector<Type>::assert_ItemChanged, this);
     }
-    explicit TMCadVector(const size_t& size) : std::vector<MCadCell<Type>>(size) {
+    explicit TMCadVector(const size_t& size) : std::vector<TMCadCell<Type>>(size) {
         m_onChangeContentCallback = std::bind_front(&TMCadVector<Type>::assert_ItemChanged, this);
     }
 
@@ -86,7 +96,7 @@ public:
     TMCadVector& emplace_back(Args&& ...a_args)
     {
         VectorBase::emplace_back(m_onChangeContentCallback, a_args...);
-        MCadCell<Type>& pt = VectorBase::back( );
+        TMCadCell<Type>& pt = VectorBase::back( );
         assert_ItemInsert(pt, size( ) - 1);
         return *this;
     }
@@ -148,19 +158,18 @@ public:
     iterator erase(iterator a_pos)
     {
         assert_ItemRemoved(( *a_pos ), std::distance(a_pos, begin( )));
-        m_bActiveCallback = false;
+        TMCadScoped<bool> scoped(m_bActiveCallback);
+        scoped = false;
         auto iter = VectorBase::erase(a_pos);
-        m_bActiveCallback = true;
         return iter;
     }
 
     constexpr iterator erase(const_iterator a_pos)
     {
-        m_bActiveCallback = false;
+        TMCadScoped<bool> scoped(m_bActiveCallback);
+        scoped = false;
         assert_ItemRemoved(( *a_pos ), std::distance(a_pos, cbegin( )));
-        m_bActiveCallback = false;
         auto iter = VectorBase::erase(a_pos);
-        m_bActiveCallback = true;
         return iter;
     }
 
@@ -172,53 +181,31 @@ public:
                 assert_ItemRemoved(a_obj, index);
                 ++index;
             });
-        m_bActiveCallback = false;
+        TMCadScoped<bool> scoped(m_bActiveCallback);
+        scoped = false;
         auto iter = VectorBase::erase(a_first, a_last);
-        m_bActiveCallback = true;
         return iter;
     }
 
     constexpr iterator erase(const_iterator a_first, const_iterator a_last)
     {
-        m_bActiveCallback = false;
+        TMCadScoped<bool> scoped(m_bActiveCallback);
+        scoped = false;
         size_t index = 0;
         std::for_each(a_first, a_last - 1, [ this ] (auto&& a_obj)
             {
                 assert_ItemRemoved(a_obj, index);
                 ++index;
             });
-        m_bActiveCallback = false;
         auto iter = VectorBase::erase(a_first, a_last);
-        m_bActiveCallback = true;
         return iter;
     }
 
     constexpr void pop_back( )
     {
-        MCadCell<Type>& pt = VectorBase::back( );
+        TMCadCell<Type>& pt = VectorBase::back( );
         assert_ItemRemoved(pt, VectorBase::size( ) - 1);
         VectorBase::pop_back( );
     }
 
-    virtual unsigned short load(IMCadInputStream& a_stream)override
-    {
-        size_t size;
-        a_stream >> size;
-        VectorBase::reserve(size);
-        for ( size_t i = 0; i < size; ++i )
-        {
-            // TODO
-        }
-
-        return isA( )->version( );
-    }
-
-    /*@brief save object to stream*/
-    virtual bool save(IMCadOutputStream& a_stream)const override
-    {
-        a_stream << size( );
-        for ( const auto& obj : ( const VectorBase ) *this )
-            a_stream << obj.get( )->uid( );
-        return true;
-    }
 };

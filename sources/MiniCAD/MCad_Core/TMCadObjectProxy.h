@@ -66,11 +66,14 @@ private:
 
 		bool operator ()(std::weak_ptr<Type>& a_ptr)const
 		{
-			if ( a_ptr.expired( ) )
+			if constexpr ( std::is_base_of_v<MCadObject, Type> )
 			{
-				a_ptr = MStatic_pointer_cast< Type >( m_memory->realoc(m_objID, m_pDef) );
+				if ( a_ptr.expired( ) )
+				{
+					a_ptr = MStatic_pointer_cast< Type >( m_memory->realoc(m_objID, m_pDef) );
+				}
+				return !a_ptr.expired( );
 			}
-			return !a_ptr.expired( );
 		}
 
 		bool operator ()(const MCadRef<Type>& a_ref)const
@@ -89,11 +92,14 @@ public:
 			{
 				m_objectUID = a_object->uid( );
 				m_pObjectDef = a_object->isA( );
-			}
-
-			if ( a_object->isShared( ) )
-			{
-				m_proxyObj = std::dynamic_pointer_cast< Type >( a_object->shared_from_this( ) );
+				if ( a_object->isShared( ) )
+				{
+					m_proxyObj = std::dynamic_pointer_cast< Type >( a_object->shared_from_this( ) );
+				}
+				else
+				{
+					m_proxyObj = make_ref<Type>(*a_object);
+				}
 			}
 			else
 			{

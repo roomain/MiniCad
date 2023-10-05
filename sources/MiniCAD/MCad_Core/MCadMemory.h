@@ -83,11 +83,32 @@ public:
     }
 };
 
+template<typename Type>
+struct is_enable_shared
+{
+private:
+    using TrueType = char;
+    using FalseType = short;
+
+    // template used for compile time evaluation
+    template<typename C>
+    static TrueType& is_enable(decltype( &C::isShared ));
+
+    template<typename C>
+    static FalseType& is_enable(...);
+
+public:
+    enum { value = sizeof(is_enable<Type>(0)) == sizeof(TrueType) };
+};
+
+template<typename Type>
+constexpr auto is_enable_shared_v = is_enable_shared<Type>::value;
+
 template<typename Type, typename ...Args>
 MCadShared_ptr<Type> make_MShared(Args&& ...arg)
 {
     MCadShared_ptr<Type> pObj = std::make_shared<Type>(arg...);
-    if constexpr (std::is_member_function_pointer_v<decltype(&Type::weak_from_this)>)
+    if constexpr ( is_enable_shared_v<Type>)
         pObj->m_Wptr = pObj;
     return pObj;
 }
