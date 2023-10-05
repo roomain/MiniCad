@@ -169,8 +169,8 @@ public:
 
     TMCadKeyCell<Key, Type>& operator[](const Key& a_key)
     {
-        std::pair<iterator, bool> pair = MapBase::try_emplace(a_key, a_key, m_itemCallback);
-        if ( pair.second )
+        auto [iter, ok] pair = MapBase::try_emplace(a_key, a_key, m_itemCallback);
+        if ( ok )
         {
             // item empty
             this->assert_EmptyItemInsert(a_key);
