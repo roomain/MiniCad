@@ -87,7 +87,6 @@ public:
         m_onChangeContentCallback = std::bind_front(&TMCadMap<Key, Type, Compare>::assert_ItemChanged, this);
     }
 
-
     using iterator = std::map <Key, TMCadKeyCell<Key, Type>, Compare>::iterator;
     using const_iterator = std::map < Key, TMCadKeyCell<Key, Type>, Compare>::const_iterator;
 
@@ -104,7 +103,7 @@ public:
             }
             else
             {
-                this->assert_ItemAdd(*iter, a_key);
+                this->assert_ItemInsert(*iter, a_key);
             }
         }
         return pair;
@@ -123,7 +122,7 @@ public:
             }
             else
             {
-                this->assert_ItemAdd(*iter, a_key);
+                this->assert_ItemInsert(*iter, a_key);
             }
         }
         return pair;
@@ -142,7 +141,7 @@ public:
             }
             else
             {
-                this->assert_ItemAdd(*iter, a_key);
+                this->assert_ItemInsert(*iter, a_key);
             }
         }
         return pair;
@@ -161,7 +160,7 @@ public:
             }
             else
             {
-                this->assert_ItemAdd(*iter, a_key);
+                this->assert_ItemInsert(*iter, a_key);
             }
         }
         return pair;
