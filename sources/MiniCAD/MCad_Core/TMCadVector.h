@@ -54,17 +54,7 @@ protected:
 
     void assert_ItemChanged(const TMCadCell<Type>* a_pCell, const MCadShared_ptr<Type>& a_pBefore, const MCadShared_ptr<Type>& a_pAfter)
     {
-        MCadDocumentPtr pDoc;
-        if ( a_pBefore )
-        {
-            pDoc = a_pBefore->document( ).lock( );
-        }
-        else if ( a_pAfter )
-        {
-            pDoc = a_pAfter->document( ).lock( );
-        }
-
-        if ( pDoc)
+        if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
         {
             if ( pDoc->undoRedo( ).active( ) )
             {

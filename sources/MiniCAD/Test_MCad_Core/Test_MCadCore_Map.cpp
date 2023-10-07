@@ -66,10 +66,10 @@ namespace TestMCadCore
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("Test_Add");
 			map [ "test" ] = ptr;
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
-			Assert::AreEqual(1, static_cast< int >( map.size( ) ), L"Wrong size");
+			Assert::AreEqual(1, static_cast< int >( map.size( ) ), L"Wrong size end");
 			Assert::IsTrue(pWDoc.lock( )->undoRedo( ).hasUndo( ), L"No undo");
 			pWDoc.lock( )->undoRedo( ).undo( );
-			Assert::AreEqual(0, static_cast< int >( map.size( ) ), L"Wrong size");
+			Assert::AreEqual(0, static_cast< int >( map.size( ) ), L"Wrong size undo");
 		}
 
 		TEST_METHOD(Test_undo_redo_add)
@@ -118,7 +118,7 @@ namespace TestMCadCore
 			Assert::IsTrue(pWDoc.lock( )->undoRedo( ).hasUndo( ), L"No undo");
 
 			pWDoc.lock( )->undoRedo( ).undo( );
-			Assert::IsTrue(map.at("test") == ptr, L"Not same pointer");
+			Assert::IsTrue(map.at("test") == ptr, L"Not same pointer 1");
 		}
 
 		TEST_METHOD(Test_undo_redo_change_stack)

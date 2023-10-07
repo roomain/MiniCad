@@ -21,7 +21,7 @@ MCadRecordSession::MCadRecordSession(const std::string& a_title) : m_title{ a_ti
 
 void MCadRecordSession::append(const IMCadRecordPtr& a_record)
 {
-	m_lRecordUndo.emplace_back(a_record);
+	m_lRecordUndo.emplace_front(a_record);
 }
 
 void MCadRecordSession::undo(MCadRealocMemory& a_realocMemory)

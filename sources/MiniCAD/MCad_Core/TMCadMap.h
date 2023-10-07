@@ -38,17 +38,7 @@ protected:
 
 	void assert_ItemChanged(const TMCadKeyCell<Key, Type>* a_pItem, const MCadShared_ptr<Type>& a_pBefore, const MCadShared_ptr<Type>& a_pAfter)
 	{
-		MCadDocumentPtr pDoc;
-		if ( a_pBefore )
-		{
-			pDoc = a_pBefore->document( ).lock( );
-		}
-		else if ( a_pAfter )
-		{
-			pDoc = a_pAfter->document( ).lock( );
-		}
-
-		if ( pDoc )
+		if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock() )
 		{
 			if ( pDoc->undoRedo( ).active( ) )
 			{
@@ -57,7 +47,7 @@ protected:
 				{
 					session.append(std::make_shared<TMCadRecordContainerCellChanged<Key>>(this,
 						a_pItem->key( ),
-						a_pAfter, a_pBefore));
+						a_pBefore, a_pAfter));
 				}
 				else
 				{

@@ -74,7 +74,7 @@ protected:
     template<typename Type>
     void assert_ItemInsert(const MCadShared_ptr<Type>& a_pItem, const Key& a_index)
     {
-        if ( auto pDoc = a_pItem->document( ).lock( ) )
+        if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
         {
             if ( pDoc->undoRedo( ).active( ) )
             {
@@ -94,7 +94,7 @@ protected:
     template<typename Type>
     void assert_ItemRemoved(const MCadShared_ptr<Type>& a_pItem, const Key a_index)
     {
-        if ( auto pDoc = a_pItem->document( ).lock( ) )
+        if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
         {
             if ( pDoc->undoRedo( ).active( ) )
             {
