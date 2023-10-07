@@ -6,6 +6,7 @@
 ************************************************/
 #include <map>
 #include "MCadMemory.h"
+#include "MCadObject.h"
 #include "TIMCadContainer.h"
 #include "TMCadKeyCell.h"
 #include "TMCadRecordContainerEmptyCell.h"
@@ -16,41 +17,51 @@ template<typename Key, typename Type,
 {
 private:
 	using MapBase = std::map<Key, TMCadKeyCell<Key, Type>, Compare>;
-	Assert_ContentChange<Type> m_onChangeContentCallback;   /*!< callback cell contant change*/
+	ChangeAssertionKey<Key, Type> m_onChangeContentCallback;   /*!< callback cell contant change*/
 	bool m_bActiveCallback = true;                          /*!< callback enable*/
 
 protected:
 	void do_replace(const Key& a_key, const MCadObjectPtr& a_object)final
 	{
-		MapBase::operator[](a_key) = a_object;
+		MapBase::operator[](a_key) = MStatic_pointer_cast< Type >( a_object );
 	}
 
 	void do_insert(const Key& a_key, const MCadObjectPtr& a_object)final
 	{
-		MapBase::operator[](a_key) = a_object;
+		MapBase::operator[](a_key) = MStatic_pointer_cast< Type >( a_object );
 	}
 
 	void do_eraseAt(const Key& a_index) final
 	{
-		MapBase::remove(a_index);
+		MapBase::erase(a_index);
 	}
 
-	void assert_ItemChanged(const TMCadKeyCell<Key, Type>* a_pItem, const MShared_ptr<Type>& a_pBefore, const MShared_ptr<Type>& a_pAfter)
+	void assert_ItemChanged(const TMCadKeyCell<Key, Type>* a_pItem, const MCadShared_ptr<Type>& a_pBefore, const MCadShared_ptr<Type>& a_pAfter)
 	{
-		if ( auto pDoc = document( ).lock( ) )
+		MCadDocumentPtr pDoc;
+		if ( a_pBefore )
+		{
+			pDoc = a_pBefore->document( ).lock( );
+		}
+		else if ( a_pAfter )
+		{
+			pDoc = a_pAfter->document( ).lock( );
+		}
+
+		if ( pDoc )
 		{
 			if ( pDoc->undoRedo( ).active( ) )
 			{
 				auto& session = pDoc->undoRedo( ).currentSession( );
 				if ( a_pBefore )
 				{
-					curSession.addRecord(std::make_shared<TMCadRecordContainerCellChanged<Key>>(TRecordObjectProxy<TIContainer<Key>>(this),
+					session.append(std::make_shared<TMCadRecordContainerCellChanged<Key>>(this,
 						a_pItem->key( ),
 						a_pAfter, a_pBefore));
 				}
 				else
 				{
-					curSession.addRecord(std::make_shared<TMCadRecordContainerEmptyCellChanged<Key>>(TRecordObjectProxy<TIContainer<Key>>(this),
+					session.append(std::make_shared<TMCadRecordContainerEmptyCellChanged<Key>>(this,
 						a_pItem->key( ),
 						a_pAfter));
 				}
@@ -69,79 +80,47 @@ public:
 	template< class... Args >
 	std::pair<iterator, bool> try_emplace(const Key& a_key, Args&&... args)
 	{
-		auto [iter, ok] = MapBase::try_emplace(a_key, a_key, m_itemCallback);
-		if ( ok )
-		{
-			if ( *iter )
-			{
-				// item empty
-				this->assert_EmptyCreate(a_key);
-			}
-			else
-			{
-				this->assert_ItemInsert(*iter, a_key);
-			}
-		}
+		auto pair = MapBase::try_emplace(a_key, a_key, m_onChangeContentCallback);
+		if ( pair.second )
+			this->assert_ItemInsert(pair.first->second, a_key);
 		return pair;
 	}
 
 	template< class... Args >
 	std::pair<iterator, bool> try_emplace(Key&& a_key, Args&&... args)
 	{
-		auto [iter, ok] = MapBase::try_emplace(std::move(a_key), a_key, m_itemCallback);
-		if ( ok )
-		{
-			if ( *iter )
-			{
-				// item empty
-				this->assert_EmptyCreate(a_key);
-			}
-			else
-			{
-				this->assert_ItemInsert(*iter, a_key);
-			}
-		}
+		auto pair = MapBase::try_emplace(std::move(a_key), a_key, m_onChangeContentCallback);
+		if ( pair.second )
+			this->assert_ItemInsert(pair.first->second, a_key);
 		return pair;
 	}
 
 	template< class... Args >
 	std::pair<iterator, bool> emplace(const Key& a_key, Args&&... args)
 	{
-		auto [iter, ok] = MapBase::emplace(a_key, a_key, m_itemCallback);
-		if ( ok )
-		{
-			if ( *iter )
-			{
-				// item empty
-				this->assert_EmptyCreate(a_key);
-			}
-			else
-			{
-				this->assert_ItemInsert(*iter, a_key);
-			}
-		}
+		auto pair = MapBase::emplace(a_key, a_key, m_onChangeContentCallback);
+		if ( pair.second )
+			this->assert_ItemInsert(pair.first->second, a_key);
 		return pair;
 	}
 
 	template< class... Args >
 	std::pair<iterator, bool> emplace(Key&& a_key, Args&&... args)
 	{
-		auto [iter, ok] = MapBase::emplace(std::move(a_key), a_key, m_itemCallback);
-		if ( ok )
-		{
-			this->assert_ItemInsert(*iter, a_key);
-		}
+		auto pair = MapBase::emplace(std::move(a_key), a_key, m_onChangeContentCallback);
+		if ( pair.second )
+			this->assert_ItemInsert(pair.first->second, a_key);
 		return pair;
 	}
 
 
 	TMCadKeyCell<Key, Type>& operator[](const Key& a_key)
 	{
-		auto [iter, ok] pair = MapBase::try_emplace(a_key, a_key, m_itemCallback);
+		auto [iter, ok] = MapBase::try_emplace(a_key, a_key, m_onChangeContentCallback);
 		if ( ok )
 		{
 			// item empty
-			this->assert_ItemInsert(*iter, a_key);
+			this->assert_ItemInsert(iter->second, a_key);
 		}
 		return iter->second;
 	}
