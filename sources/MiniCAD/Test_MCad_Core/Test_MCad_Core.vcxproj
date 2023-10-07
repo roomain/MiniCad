@@ -164,6 +164,7 @@
     <ClCompile Include="Test_MCad_Core_RTTI.cpp" />
     <ClCompile Include="Test_MCad_Core_Stream.cpp" />
     <ClCompile Include="Test_MCad_Core_UndoRedo.cpp" />
+    <ClCompile Include="Test_MCad_Core_Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestRTTI_Resources.h" />

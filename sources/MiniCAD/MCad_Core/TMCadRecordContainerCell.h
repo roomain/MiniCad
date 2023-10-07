@@ -62,8 +62,8 @@ public:
 		//
 	}
 
-	const ObjectUID recordedObject( )const noexcept final { return m_Container.objectUID( ); }
-	RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_Container.objectDef( ); }
+	const ObjectUID recordedObject( )const noexcept final { return m_ObjectUID; }
+	RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_pDef; }
 };
 
 template<typename Key>

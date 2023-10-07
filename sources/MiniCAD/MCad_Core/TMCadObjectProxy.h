@@ -72,8 +72,8 @@ private:
 				{
 					a_ptr = MStatic_pointer_cast< Type >( m_memory->realoc(m_objID, m_pDef) );
 				}
-				return !a_ptr.expired( );
 			}
+			return !a_ptr.expired( );
 		}
 
 		bool operator ()(const MCadRef<Type>& a_ref)const

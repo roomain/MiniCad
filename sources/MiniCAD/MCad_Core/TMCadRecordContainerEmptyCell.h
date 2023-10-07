@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include <variant>
+#include "IMCadRecord.h"
 #include "TMCadRecordContainerCell.h"
 
 
@@ -43,12 +44,8 @@ public:
 		//
 	}
 
-	/*@brief generate reverse record*/
-	virtual std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, 
-		MCadRealocMemory& a_realocMem)const override
-	{
-		return nullptr;
-	}
+	virtual [[nodiscard]]  bool hasReverse( )const noexcept override { return true; }
+	[[nodiscard]] RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept override { return RTTIDefinitionWPtr(); }
 };
 
 template<typename Key>
@@ -56,8 +53,8 @@ class TMCadRecordContainerEmptyCellInsert : public TMCadRecordContainerEmptyCell
 {
 public:
 	TMCadRecordContainerEmptyCellInsert(TIMCadContainer<Key>* const a_container,
-		const Key& a_key, const std::weak_ptr<MCadObject>& a_pObject) :
-		TMCadRecordContainerEmptyCell<Key>{ a_container, a_key, a_pObject }
+		const Key& a_key) :
+		TMCadRecordContainerEmptyCell<Key>{ a_container, a_key }
 	{
 		//
 	}
@@ -68,9 +65,6 @@ public:
 	{
 		//
 	}
-
-	bool hasReverse( )const noexcept { return false; }
-
 
 	/*@brief apply record for undo*/
 	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
@@ -85,6 +79,13 @@ public:
 		}
 	}
 
+	/*@brief generate reverse record*/
+	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	{
+		return std::make_shared<TMCadRecordContainerEmptyCellRemoved<Key>>(this->m_Container, this->m_objectKey);
+	}
+
+	[[nodiscard]] const ObjectUID recordedObject( )const noexcept final { return 0; }
 };
 
 template<typename Key>
@@ -106,8 +107,6 @@ public:
 		//
 	}
 
-	bool hasReverse( )const noexcept { return false; }
-
 
 	/*@brief apply record for undo*/
 	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
@@ -122,7 +121,17 @@ public:
 		}
 	}
 
+	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	{
+		return std::make_shared<TMCadRecordContainerEmptyCellInsert<Key>>(this->m_Container, this->m_objectKey);
+	}
+
+	virtual [[nodiscard]] const ObjectUID recordedObject( )const noexcept final { return 0; }
+
 };
+
+template<typename Key>
+class TMCadRecordContainerToEmptyCellChanged;
 
 template<typename Key>
 class TMCadRecordContainerEmptyCellChanged : public TMCadRecordContainerEmptyCell<Key>
@@ -130,6 +139,7 @@ class TMCadRecordContainerEmptyCellChanged : public TMCadRecordContainerEmptyCel
 private:
 	ObjectUID m_newObjectUID;				/*!< new object uid at Key*/
 	std::weak_ptr<MCadObject> m_pNewObject;	/*!< new object at Key*/
+	RTTIDefinitionWPtr m_pDef;				/*!< object definition*/
 
 public:
 	TMCadRecordContainerEmptyCellChanged(TIMCadContainer<Key>* const a_container,
@@ -139,6 +149,7 @@ public:
 	{
 		if ( auto pObj = m_pNewObject.lock( ) )
 		{
+			m_pDef = pObj->isA( );
 			m_newObjectUID = pObj->uid( );
 		}
 		else
@@ -154,6 +165,7 @@ public:
 	{
 		if ( auto pObj = m_pNewObject.lock( ) )
 		{
+			m_pDef = pObj->isA( );
 			m_newObjectUID = pObj->uid( );
 		}
 		else
@@ -162,13 +174,11 @@ public:
 		}
 	}
 
-	bool hasReverse( )const noexcept { return true; }
 
 	/*@brief generate reverse record*/
 	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
 	{
-		auto pObj = this->m_pNewObject.lock( );
-		return std::make_shared<TMCadRecordContainerEmptyCellChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, this->m_pObject, pObj->uid( ), pObj->isA( ));
+		return std::make_shared<TMCadRecordContainerToEmptyCellChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, m_newObjectUID, m_pDef);
 	}
 
 	/*@brief apply record for undo*/
@@ -176,12 +186,71 @@ public:
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
-			m_proxy->record_replace(m_objectKey, nullptr);
+			this->m_Container->do_replace(this->m_objectKey, nullptr);
 		}
 		else
 		{
 			UNDO_REDO_TROW(UndoRedoException::ExceptionType::Except_Deleted)
 		}
 	}
+
+	[[nodiscard]] const ObjectUID recordedObject( )const noexcept final { return this->m_newObjectUID; }
+	[[nodiscard]] RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_pDef; }
+};
+
+
+template<typename Key>
+class TMCadRecordContainerToEmptyCellChanged : public TMCadRecordContainerEmptyCell<Key>
+{
+private:
+	ObjectUID m_newObjectUID;				/*!< new object uid at Key*/
+	std::weak_ptr<MCadObject> m_pNewObject;	/*!< new object at Key*/
+	RTTIDefinitionWPtr m_pDef;				/*!< object definition*/
+
+public:
+	TMCadRecordContainerToEmptyCellChanged(const TContainerRecordProxy<Key>& a_container,
+		const Key& a_key,
+		const std::weak_ptr<MCadObject>& a_pNewObject, const ObjectUID& a_uid, const RTTIDefinitionWPtr& a_pDef) :
+		TMCadRecordContainerEmptyCell<Key>{ a_container, a_key }, m_pNewObject{ a_pNewObject },
+		m_newObjectUID{ a_uid }, m_pDef{ a_pDef }
+	{
+		//
+	}
+
+	virtual [[nodiscard]] bool hasReverse( )const noexcept override { return false; }
+
+	/*@brief generate reverse record*/
+	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	{
+		return nullptr;
+	}
+
+	/*@brief apply record for undo*/
+	virtual void apply([[ maybe_unused ]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	{
+		if ( this->m_Container.realocate(a_realocMem) )
+		{
+			auto pObj = this->m_pNewObject.lock( );
+			if ( !pObj )
+				pObj = a_realocMem.realoc(this->m_newObjectUID, this->m_pDef);
+
+			if ( pObj )
+			{
+				this->m_Container->do_replace(this->m_objectKey, pObj);
+			}
+			else
+			{
+				MCadLogger::Instance( ) << LogMode::LOG_ERROR << std::source_location::current( ) << "Can't realoc object.";
+			}
+		}
+		else
+		{
+			UNDO_REDO_TROW(UndoRedoException::ExceptionType::Except_Deleted)
+		}
+	}
+
+
+	[[nodiscard]] const ObjectUID recordedObject( )const noexcept final { return this->m_newObjectUID; }
+	[[nodiscard]] RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept final { return m_pDef; }
 
 };

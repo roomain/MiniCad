@@ -6,10 +6,12 @@
 ************************************************/
 #include <algorithm>
 #include <vector>
+#include <execution>
 #include "MCadMemory.h"
 #include "TIMCadContainer.h"
 #include "TMCadCell.h"
 #include "TMCadRecordContainerCell.h"
+#include "TMCadRecordContainerEmptyCell.h"
 
 template<typename Type> requires std::is_base_of_v<MCadObject, Type>
 class TMCadVector : public TIMCadContainer<size_t>, private std::vector<TMCadCell<Type>>
@@ -67,7 +69,17 @@ protected:
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(std::make_shared<TMCadRecordContainerCellChanged<size_t>>(this, a_pCell - VectorBase::data( ), a_pBefore, a_pAfter));
+                if ( a_pBefore )
+                {
+                    session.append(std::make_shared<TMCadRecordContainerCellChanged<size_t>>(this, 
+                        a_pCell - VectorBase::data( ), a_pBefore, a_pAfter));
+                }
+                else
+                {
+                    session.append(std::make_shared<TMCadRecordContainerEmptyCellChanged<size_t>>(this,
+                        a_pCell - VectorBase::data( ),
+                        a_pAfter));
+                }
             }
         }
     }
@@ -78,6 +90,11 @@ public:
     }
     explicit TMCadVector(const size_t& size) : std::vector<TMCadCell<Type>>(size) {
         m_onChangeContentCallback = std::bind_front(&TMCadVector<Type>::assert_ItemChanged, this);
+        std::for_each(std::execution::par, VectorBase::begin( ), VectorBase::end( ),
+            [ this ] (auto& a_cell)
+            {
+                a_cell.setChangeCallback(m_onChangeContentCallback);
+            });
     }
 
 
@@ -127,8 +144,9 @@ public:
     using std::vector<TMCadCell<Type>>::crbegin;
     using std::vector<TMCadCell<Type>>::crend;
     using std::vector<TMCadCell<Type>>::size;
-    using std::vector<TMCadCell<Type>>::reserve;
     using std::vector<TMCadCell<Type>>::empty;
+    using std::vector<TMCadCell<Type>>::reserve;
+
 
     using iterator = std::vector<TMCadCell<Type>>::iterator;
     using const_iterator = std::vector<TMCadCell<Type>>::const_iterator;

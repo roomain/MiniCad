@@ -27,6 +27,9 @@
     <ClCompile Include="Test_MCad_Core_UndoRedo.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Test_MCad_Core_Vector.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestRTTI_Resources.h">

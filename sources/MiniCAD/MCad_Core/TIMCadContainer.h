@@ -34,6 +34,9 @@ class TMCadRecordContainerEmptyCellRemoved;
 template<typename Key>
 class TMCadRecordContainerEmptyCellChanged;
 
+template<typename Key>
+class TMCadRecordContainerToEmptyCellChanged;
+
 /*@brief base class for container having undo redo capabililty*/
 template<typename Key>
 class TIMCadContainer : public MCadRefObject
@@ -56,6 +59,9 @@ class TIMCadContainer : public MCadRefObject
     template<typename Key>
     friend class TMCadRecordContainerEmptyCellChanged;
 
+    template<typename Key>
+    friend class TMCadRecordContainerToEmptyCellChanged;
+
 protected:
 	/*@brief replace container item during record processing (=> undo/redo)*/
 	virtual void do_replace(const Key& a_key, const MCadObjectPtr& a_record) = 0;
@@ -73,7 +79,14 @@ protected:
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(std::make_shared<TMCadRecordContainerCellInsert<Key>>(this, a_index, a_pItem));
+                if ( a_pItem )
+                {
+                    session.append(std::make_shared<TMCadRecordContainerCellInsert<Key>>(this, a_index, a_pItem));
+                }
+                else
+                {
+                    session.append(std::make_shared<TMCadRecordContainerEmptyCellInsert<Key>>(this, a_index));
+                }
             }
         }
     }
@@ -86,7 +99,14 @@ protected:
             if ( pDoc->undoRedo( ).active( ) )
             {
                 auto& session = pDoc->undoRedo( ).currentSession( );
-                session.append(std::make_shared<TMCadRecordContainerCellRemoved<Key>>(this, a_index, a_pItem));
+                if ( a_pItem )
+                {
+                    session.append(std::make_shared<TMCadRecordContainerCellRemoved<Key>>(this, a_index, a_pItem));
+                }
+                else
+                {
+                    session.append(std::make_shared<TMCadRecordContainerEmptyCellRemoved<Key>>(this, a_index));
+                }
             }
         }
     }

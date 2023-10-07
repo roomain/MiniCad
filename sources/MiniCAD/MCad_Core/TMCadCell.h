@@ -25,6 +25,12 @@ private:
 public:
 	TMCadCell( ) = default;
 
+
+	void setChangeCallback(const Assert_ContentChange<Type>& a_assertCB)
+	{
+		m_onContentChange = a_assertCB;
+	}
+
 	explicit TMCadCell(TMCadCell<Type>&& a_other)noexcept : MCadShared_ptr<Type>(std::move(a_other)),
 		m_onContentChange{ a_other.m_onContentChange }
 	{

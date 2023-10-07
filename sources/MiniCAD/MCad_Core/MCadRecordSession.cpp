@@ -30,7 +30,7 @@ void MCadRecordSession::undo(MCadRealocMemory& a_realocMemory)
 	for ( auto&& pRecord : m_lRecordUndo )
 	{
 		if ( bGenRedoRecord && pRecord->hasReverse( ) && !pRecord->isErased( ) )
-			m_lRecordRedo.push_back(pRecord->generateReverse(m_outputStream, a_realocMemory));
+			m_lRecordRedo.push_front(pRecord->generateReverse(m_outputStream, a_realocMemory));
 
 		if( !pRecord->isErased() )
 			pRecord->apply(m_inputStream, a_realocMemory);
