@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test_MCad_Core", "Test_MCad_Core\Test_MCad_Core.vcxproj", "{7AF209BA-8C16-4BBD-8099-C70ED3B9F08B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCad_Formula", "MCad_Formula\MCad_Formula.vcxproj", "{F30E165A-3765-4697-9C15-14EB57B50C2F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22A892E6-95EB-4609-9CCA-5AB5AAF9462E} = {22A892E6-95EB-4609-9CCA-5AB5AAF9462E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
