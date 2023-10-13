@@ -16,6 +16,9 @@
     <Filter Include="Fichiers d%27en-tête\operators">
       <UniqueIdentifier>{b2fc5ddc-62af-479f-8d60-802d9f1ac567}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\tools">
+      <UniqueIdentifier>{a291ae90-8f28-4ffe-b5bb-6cbd4871c53b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="MCadVArithmeticOperators.h">
       <Filter>Fichiers d%27en-tête\operators</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadTypeToString.h">
+      <Filter>Fichiers d%27en-tête\tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

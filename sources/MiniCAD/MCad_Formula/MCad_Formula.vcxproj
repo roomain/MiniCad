@@ -153,6 +153,7 @@
     <ClInclude Include="MCadArithmeticOperators.h" />
     <ClInclude Include="MCadOperator.h" />
     <ClInclude Include="MCadTrigonometricOperators.h" />
+    <ClInclude Include="MCadTypeToString.h" />
     <ClInclude Include="MCadVArithmeticOperators.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
