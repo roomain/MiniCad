@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\operators">
+      <UniqueIdentifier>{b2fc5ddc-62af-479f-8d60-802d9f1ac567}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -21,14 +24,23 @@
     <ClInclude Include="pch.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="MCadOperator.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="local_resources.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="FormulaException_macro.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadOperator.h">
+      <Filter>Fichiers d%27en-tête\operators</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadArithmeticOperators.h">
+      <Filter>Fichiers d%27en-tête\operators</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadTrigonometricOperators.h">
+      <Filter>Fichiers d%27en-tête\operators</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadVArithmeticOperators.h">
+      <Filter>Fichiers d%27en-tête\operators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

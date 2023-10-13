@@ -113,7 +113,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Core;D:\Libraries\glm;$(SolutionDir)..\common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Core;$(SolutionDir)..\..\..\..\Libraries\glm;$(SolutionDir)..\common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,7 +134,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Core;D:\Libraries\glm;$(SolutionDir)..\common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Core;$(SolutionDir)..\..\..\..\Libraries\glm;$(SolutionDir)..\common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,7 +150,10 @@
     <ClInclude Include="FormulaException_macro.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="local_resources.h" />
+    <ClInclude Include="MCadArithmeticOperators.h" />
     <ClInclude Include="MCadOperator.h" />
+    <ClInclude Include="MCadTrigonometricOperators.h" />
+    <ClInclude Include="MCadVArithmeticOperators.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
