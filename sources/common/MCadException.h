@@ -7,7 +7,6 @@
 #include <exception>
 #include <string>
 #include <source_location>
-#include "MCad_Core_globals.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4275)
