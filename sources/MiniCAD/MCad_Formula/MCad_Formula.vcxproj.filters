@@ -48,6 +48,12 @@
     <ClInclude Include="MCadTypeToString.h">
       <Filter>Fichiers d%27en-tête\tools</Filter>
     </ClInclude>
+    <ClInclude Include="McadFormulaException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="MCad_Formula_globals.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

@@ -108,7 +108,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;MCADFORMULA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MCAD_FORMULA_LIB;_DEBUG;MCADFORMULA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;MCADFORMULA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MCAD_FORMULA_LIB;NDEBUG;MCADFORMULA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -151,10 +151,12 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="local_resources.h" />
     <ClInclude Include="MCadArithmeticOperators.h" />
+    <ClInclude Include="McadFormulaException.h" />
     <ClInclude Include="MCadOperator.h" />
     <ClInclude Include="MCadTrigonometricOperators.h" />
     <ClInclude Include="MCadTypeToString.h" />
     <ClInclude Include="MCadVArithmeticOperators.h" />
+    <ClInclude Include="MCad_Formula_globals.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

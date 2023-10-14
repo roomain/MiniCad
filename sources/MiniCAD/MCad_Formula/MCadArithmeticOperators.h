@@ -40,7 +40,8 @@ struct UnaryLessOperator : MCadOperator
 		return -a_value;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -110,7 +111,8 @@ struct LessOperator : MCadOperator
 		return a_first - a_second;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -179,7 +181,8 @@ struct AddOperator : MCadOperator
 		return a_first + a_second;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -325,7 +328,8 @@ struct MultOperator : MCadOperator
 		return static_cast< double >( a_second ) * a_first;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -424,7 +428,8 @@ struct DivideOperator : MCadOperator
 		return static_cast< double >( a_second ) / a_first;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -447,7 +452,8 @@ struct EuclidianDivideOperator : MCadOperator
 		return static_cast< int >( a_first ) / a_second;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -460,7 +466,8 @@ struct ModuleOperator : MCadOperator
 		return a_first % a_second;
 	}
 
-	MCadValue operator()(...)const
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}

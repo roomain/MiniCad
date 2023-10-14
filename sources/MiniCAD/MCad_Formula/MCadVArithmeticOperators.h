@@ -10,7 +10,9 @@
 struct DotOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -19,7 +21,9 @@ struct DotOperator : MCadOperator
 struct CrossOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -29,7 +33,9 @@ struct CrossOperator : MCadOperator
 struct NormalOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}

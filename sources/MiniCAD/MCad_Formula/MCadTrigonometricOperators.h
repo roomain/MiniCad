@@ -9,7 +9,9 @@
 struct CosOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -18,7 +20,9 @@ struct CosOperator : MCadOperator
 struct SinOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -27,7 +31,9 @@ struct SinOperator : MCadOperator
 struct TanOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -37,7 +43,9 @@ struct TanOperator : MCadOperator
 struct ACosOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -46,7 +54,9 @@ struct ACosOperator : MCadOperator
 struct ASinOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
@@ -55,7 +65,9 @@ struct ASinOperator : MCadOperator
 struct ATanOperator : MCadOperator
 {
 	//
-	MCadValue operator()(...)const
+
+	template<typename ...Types>
+	MCadValue operator()(const Types&... a_values)const
 	{
 		throw;
 	}
