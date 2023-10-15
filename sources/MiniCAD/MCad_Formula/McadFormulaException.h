@@ -7,6 +7,7 @@
 #include <exception>
 #include <string>
 #include "MCadException.h"
+#include "MCadTypeToString.h"
 #include "MCad_Formula_globals.h"
 
 #pragma warning(push)
@@ -32,10 +33,11 @@ public:
 	MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const std::string_view& a_extra, const Args&&... a_arg):
 		MCadException(a_loc, a_extra), m_exceptType{a_Type}
 	{
-		// TODO
+		m_extra += " " + printTypes(a_arg...);
+		m_extra = m_extra.substr(0, m_extra.size( ) - 1);
 	}
 	virtual ~MCadFormulaException( ) = default;
-	[[nodiscard]] ExceptType type( )const noexcept;
+	[[nodiscard]] ExceptType type( )const noexcept { return m_exceptType; }
 	[[nodiscard]] std::string message( )const noexcept override;
 	[[deprecated]] const char* what( )const override;
 

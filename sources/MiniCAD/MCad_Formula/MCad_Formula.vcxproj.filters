@@ -54,9 +54,18 @@
     <ClInclude Include="MCad_Formula_globals.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="MCadFormulaEvaluator.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadFormulaRegEx.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadFormulaException.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

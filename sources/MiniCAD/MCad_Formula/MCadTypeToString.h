@@ -42,8 +42,7 @@ struct MCadTypeToString
 
 	std::string operator()(...)const
 	{
-		// TODO
-		throw;
+		return "Unknown type";
 	}
 };
 
@@ -61,16 +60,15 @@ template<>
 	return std::visit(GMCadTypeToString, a_value);
 }
 
-/*
-void printTypes()
+
+[[nodiscard]] std::string printTypes()
 {
-	std::cout << "That's all folks!" << std::endl;
+	return "";
 }
 
 template<typename Type, typename ...Others>
-void printTypes(const Type& a_first, const Others&... a_others)
+[[nodiscard]] std::string printTypes(const Type& a_first, const Others&... a_others)
 {
-	std::cout << typeid(a_first).name() << std::endl;
-	printTypes(a_others...);
+	std::string sType = typeToString(a_first) + ", " + typeToString(a_others...);
+	return sType;
 }
-*/
