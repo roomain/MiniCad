@@ -74,9 +74,6 @@
     <ClCompile Include="MCadFormulaException.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="MCadFormulaOperatorNode.cpp">
-      <Filter>Fichiers sources\operators</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\common\MCad.rc">

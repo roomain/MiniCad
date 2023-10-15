@@ -9,7 +9,7 @@
 
 
 
-struct UnaryLessOperator : MCadOperator
+struct UnaryMinusOperator : MCadOperator
 {
 	MCadValue operator()(const float a_value)const
 	{
@@ -49,7 +49,7 @@ struct UnaryLessOperator : MCadOperator
 };
 
 
-struct LessOperator : MCadOperator
+struct MinusOperator : MCadOperator
 {
 	MCadValue operator()(const float a_first, const int a_second)const
 	{
