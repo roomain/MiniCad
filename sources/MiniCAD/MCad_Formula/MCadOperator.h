@@ -6,9 +6,6 @@
 ************************************************/
 #include "MCadValue.h"
 
-template<class... Ts> struct Operator : Ts... { using Ts::operator()...; };
-
-
 struct MCadOperator
 {	
 	unsigned int m_position = -1;	/*!< position in string formula*/

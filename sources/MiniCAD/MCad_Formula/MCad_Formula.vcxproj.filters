@@ -19,6 +19,9 @@
     <Filter Include="Fichiers d%27en-tête\tools">
       <UniqueIdentifier>{a291ae90-8f28-4ffe-b5bb-6cbd4871c53b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\operators">
+      <UniqueIdentifier>{7a46ae8d-56db-4b55-8ede-6c4021444669}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -60,6 +63,9 @@
     <ClInclude Include="MCadFormulaRegEx.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="MCadFormulaOperatorNode.h">
+      <Filter>Fichiers d%27en-tête\operators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -67,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="MCadFormulaException.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadFormulaOperatorNode.cpp">
+      <Filter>Fichiers sources\operators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

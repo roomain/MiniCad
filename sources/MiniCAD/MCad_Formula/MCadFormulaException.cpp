@@ -2,8 +2,8 @@
 #include <format>
 #include "MCadFormulaException.h"
 
-MCadFormulaException::MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const std::string_view& a_extra) :
-	MCadException(a_loc, a_extra), m_exceptType{ a_Type }
+MCadFormulaException::MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const const int a_location) :
+	MCadException(a_loc, ""), m_formulaLocation{a_location}, m_exceptType{a_Type}
 {
 	//
 }

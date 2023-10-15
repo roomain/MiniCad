@@ -153,6 +153,7 @@
     <ClInclude Include="MCadArithmeticOperators.h" />
     <ClInclude Include="McadFormulaException.h" />
     <ClInclude Include="MCadFormulaEvaluator.h" />
+    <ClInclude Include="MCadFormulaOperatorNode.h" />
     <ClInclude Include="MCadFormulaRegEx.h" />
     <ClInclude Include="MCadOperator.h" />
     <ClInclude Include="MCadTrigonometricOperators.h" />
@@ -163,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MCadFormulaException.cpp" />
+    <ClCompile Include="MCadFormulaOperatorNode.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

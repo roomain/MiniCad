@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include "MCadOperator.h"
+#include "McadFormulaException.h"
 
 
 struct DotOperator : MCadOperator
@@ -14,7 +15,7 @@ struct DotOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -25,7 +26,7 @@ struct CrossOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -37,6 +38,6 @@ struct NormalOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };

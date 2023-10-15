@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include "MCadOperator.h"
+#include "McadFormulaException.h"
 
 
 
@@ -43,7 +44,7 @@ struct UnaryLessOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -114,7 +115,7 @@ struct LessOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -184,7 +185,7 @@ struct AddOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -331,7 +332,7 @@ struct MultOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -431,7 +432,7 @@ struct DivideOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -455,7 +456,7 @@ struct EuclidianDivideOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
 
@@ -469,6 +470,6 @@ struct ModuleOperator : MCadOperator
 	template<typename ...Types>
 	MCadValue operator()(const Types&... a_values)const
 	{
-		throw;
+		throw McadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_type, std::source_location::current(), m_position,  a_values...);
 	}
 };
