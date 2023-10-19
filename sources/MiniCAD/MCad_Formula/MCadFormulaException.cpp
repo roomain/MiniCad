@@ -2,7 +2,7 @@
 #include <format>
 #include "MCadFormulaException.h"
 
-MCadFormulaException::MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const const int a_location) :
+MCadFormulaException::MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const int a_location) :
 	MCadException(a_loc, ""), m_formulaLocation{a_location}, m_exceptType{a_Type}
 {
 	//
@@ -16,13 +16,13 @@ std::string MCadFormulaException::message( )const noexcept
 	std::string message;
 	switch ( m_exceptType )
 	{
-#define RTTI_EXCEPTION(ExType, Message)\
+#define FORMULA_EXCEPT(ExType, Message)\
 	case Type::ExType: \
 		message = std::format("{} {}", std::string_view(#Message), m_extra);\
 		break;
 
 #include "FormulaException_macro.h"
-#undef RTTI_EXCEPTION
+#undef FORMULA_EXCEPT
 	default:
 		message = std::format("Unknown error {}", m_extra);
 
@@ -36,13 +36,13 @@ const char* MCadFormulaException::what( )const
 	std::string message;
 	switch ( m_exceptType )
 	{
-#define RTTI_EXCEPTION(ExType, Message)\
+#define FORMULA_EXCEPT(ExType, Message)\
 	case Type::ExType: \
 		message = std::format("{} {}", std::string_view(#Message), m_extra);\
 		break;
 
 #include "FormulaException_macro.h"
-#undef RTTI_EXCEPTION
+#undef FORMULA_EXCEPT
 	default:
 		message = std::format("Unknown error {}", m_extra);
 	}

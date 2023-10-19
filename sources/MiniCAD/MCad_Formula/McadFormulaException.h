@@ -29,11 +29,11 @@ public:
 	MCadFormulaException( ) = delete;
 	MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const int a_location);
 
-	template<typename ...Args>
-	MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const int a_location, const Args&&... a_arg):
+	template<typename FirstType, typename ...Args>
+	MCadFormulaException(ExceptType a_Type, const std::source_location& a_loc, const int a_location, FirstType&& a_firstType,  Args&&... a_arg):
 		MCadException(a_loc, ""), m_formulaLocation{ a_location }, m_exceptType { a_Type	}
 	{
-		m_extra += " " + printTypes(a_arg...);
+		m_extra += " " + printTypes(a_firstType, a_arg...);
 		m_extra = m_extra.substr(0, m_extra.size( ) - 1);
 	}
 	virtual ~MCadFormulaException( ) = default;

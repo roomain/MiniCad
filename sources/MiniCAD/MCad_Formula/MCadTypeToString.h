@@ -55,13 +55,13 @@ template<typename Type>
 }
 
 template<>
-[[nodiscard]] std::string typeToString(const MCadValue& a_value)
+[[nodiscard]] inline std::string typeToString(const MCadValue& a_value)
 {
 	return std::visit(GMCadTypeToString, a_value);
 }
 
 
-[[nodiscard]] std::string printTypes()
+[[nodiscard]] constexpr std::string printTypes()
 {
 	return "";
 }

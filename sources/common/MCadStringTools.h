@@ -6,6 +6,7 @@
 ************************************************/
 #include <string>
 #include <vector>
+#include <ranges>
 
 /*@brief Provides tools for parsing string*/
 constexpr std::string left(const std::string_view& a_toParse ,const int a_iSize)
@@ -22,14 +23,14 @@ constexpr std::string right(const std::string_view& a_toParse ,const int a_iSize
 /*@brief functions wich extract data from parsed string*/
 constexpr void ltrim(std::string &a_string) 
 {
-    a_string.erase(a_string.begin(), std::find_if(a_string.begin(), a_string.end(), [](unsigned char a_char) {
+    a_string.erase(a_string.begin(), std::ranges::find_if(a_string.begin(), a_string.end(), [](unsigned char a_char) {
         return !std::isspace(a_char);
     }));
 }
 
 constexpr void rtrim(std::string &a_string) 
 {
-    a_string.erase(std::find_if(a_string.rbegin(), a_string.rend(), [](unsigned char a_char) {
+    a_string.erase(std::ranges::find_if(a_string.rbegin(), a_string.rend(), [](unsigned char a_char) {
         return !std::isspace(a_char);
     }).base(), a_string.end());
 }
