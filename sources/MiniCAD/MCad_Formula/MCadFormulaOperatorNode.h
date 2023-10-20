@@ -36,6 +36,59 @@ enum class OperatorType
 	Op_Function			/*!< for advanded use (TODO)*/
 };
 
+template<OperatorType Type>
+[[nodiscard]] static bool isUnary()
+{
+	switch ( Type )
+	{
+	case OperatorType::Op_Minus:
+	case OperatorType::Op_Norm:
+	case OperatorType::Op_Cos:
+	case OperatorType::Op_Sin:
+	case OperatorType::Op_Tan:
+	case OperatorType::Op_Acos:
+	case OperatorType::Op_Asin:
+	case OperatorType::Op_Atan:
+		return true;
+
+	default:
+		return false
+	}
+	return false;
+}
+
+template<OperatorType Type>
+[[nodiscard]] static int operatorPriority( )
+{
+	switch ( Type )
+	{
+	case OperatorType::Op_Add:
+	case OperatorType::Op_Minus:
+		return 0;
+	case OperatorType::Op_Mult:
+	case OperatorType::Op_Div:
+	case OperatorType::Op_EuclidDiv:
+	case OperatorType::Op_Modul:
+	case OperatorType::Op_Cross:
+	case OperatorType::Op_Dot:
+		return 1;
+	case OperatorType::Op_Norm:
+	case OperatorType::Op_Cos:
+	case OperatorType::Op_Sin:
+	case OperatorType::Op_Tan:
+	case OperatorType::Op_Acos:
+	case OperatorType::Op_Asin:
+	case OperatorType::Op_Atan:
+	case OperatorType::Op_Function:
+		return 2;
+
+	default:
+		return false
+	}
+	return false;
+}
+
+
 class IMCadFormulaNode : public MCadTreeNode
 {
 private:
@@ -49,6 +102,27 @@ public:
 };
 
 using IMCadFormulaNodePtr = std::shared_ptr<IMCadFormulaNode>;
+
+/*@brief represents a transition between 2 nodes*/
+struct MCadFormulaNodeTransition
+{
+	IMCadFormulaNodePtr m_parent;	/*!< parent node*/
+	IMCadFormulaNodePtr m_child;	/*!< child node*/
+};
+
+using TransitionPredicate = std::function<bool(const IMCadFormulaNodePtr&)>;
+
+MCadFormulaNodeTransition findTransition(IMCadFormulaNodePtr& a_startNode, TransitionPredicate a_predicate)
+{
+	MCadFormulaNodeTransition transition{ .m_parent = a_startNode };
+	while ( transition.m_parent && !a_predicate(transition.m_parent) )
+	{
+		transition.m_child = transition.m_parent;
+		transition.m_parent = std::static_pointer_cast<IMCadFormulaNode>(transition.m_parent->parent().lock());
+	}
+	return transition;
+}
+
 
 template<OperatorType Type>
 class MCadFormulaOperatorNode : public IMCadFormulaNode
@@ -75,31 +149,13 @@ private:
 public:
 	MCadFormulaOperatorNode( ) = delete;
 	MCadFormulaOperatorNode(const int a_priority, const int a_formulaIndex) : 
-		IMCadFormulaOperatorNode(a_priority),
+		IMCadFormulaOperatorNode(a_priority + operatorPriority<Type>()),
 		m_formulaIndex{ a_formulaIndex }
 	{
 		//
 	}
 
-	[[nodiscard]] bool isUnary( )const noexcept
-	{
-		switch ( Type )
-		{
-		case OperatorType::Op_Minus:
-		case OperatorType::Op_Norm:
-		case OperatorType::Op_Cos:
-		case OperatorType::Op_Sin:
-		case OperatorType::Op_Tan:
-		case OperatorType::Op_Acos:
-		case OperatorType::Op_Asin:
-		case OperatorType::Op_Atan:
-			return true;
-
-		default:
-			return false
-		}
-		return false;
-	}
+	
 
 	[[nodiscard]] MCadValue compute()const final
 	{
@@ -188,3 +244,4 @@ public:
 };
 
 using MCadFormulaValueNodePtr = std::shared_ptr<MCadFormulaValueNode>;
+

@@ -69,6 +69,11 @@ public:
         if(a_parent)
             a_parent->appendChild_internal(this);
     }
+
+    MCadTreeNodeWPtr parent()const
+    {
+        return m_parent;
+    }
         
     void attachToParent(const MCadTreeNodePtr& a_parent)
     {

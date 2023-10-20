@@ -6,6 +6,8 @@
 ************************************************/
 #include <string>
 #include <regex>
+#include <vector>
+#include <functional>
 #include <glm/glm.hpp>
 #include "MCadStringTools.h"
 
@@ -128,7 +130,6 @@ inline static glm::vec<VecSize, double, glm::defaultp> getRelative(const std::st
     return getVector<VecSize>(a_toParse.substr(1, a_toParse.size( ) - 1), a_decimalSeparator, a_valueSeparator);
 }
 
-
 struct PolarCoord
 {
     double m_angle;     /*!< polar angle*/
@@ -136,15 +137,17 @@ struct PolarCoord
 };
 
 /*@brief Get polar value*/
-inline static PolarCoord getPolar(const std::string_view& a_toParse, const char a_decimalSeparator)
-{
-    std::vector<std::string> vdata;
-    split(a_toParse, MCadFormulaRegEx::PolarSeparator, vdata);
-    return PolarCoord{ getDouble(vdata[0], a_decimalSeparator), getDouble(vdata[1], a_decimalSeparator) };
-}
+PolarCoord getPolar(const std::string_view& a_toParse, const char a_decimalSeparator);
 
 /*@brief Get relative polar value*/
-inline static PolarCoord getRelativePolar(const std::string_view& a_toParse, const char a_decimalSeparator)
+PolarCoord getRelativePolar(const std::string_view& a_toParse, const char a_decimalSeparator);
+
+struct RegExReactor
 {
-    return getPolar(a_toParse.substr(1, a_toParse.size( ) - 1), a_decimalSeparator);
-}
+    std::regex m_regularExp;
+    std::function<void(const std::string_view&)> m_reaction;
+};
+
+using VRegExReactor = std::vector<RegExReactor>;
+
+bool parseAndReact(const std::string& a_toParse, const VRegExReactor& a_vReactor);

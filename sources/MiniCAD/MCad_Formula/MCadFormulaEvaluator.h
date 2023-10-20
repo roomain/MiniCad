@@ -20,7 +20,7 @@ class MCAD_FORMULA_EXPORT MCadFormulaEvaluator
 {
 protected:
 	static char m_decimalSeparator;		/*!< decimal separator*/
-	static char m_valueSeparator;		/*!< value separator for vector*/	
+	static char m_valueSeparator;		/*!< value separator for vector*/
 	static MCadFormulaRegEx m_parser;	/*!< regex parsing*/
 
 	// operator token
@@ -32,18 +32,6 @@ protected:
 	static constexpr char Token_Op_Mult = '*';
 	static constexpr char Token_Op_Div = '/';
 	static constexpr char Token_Op_Modul = '%';
-
-	enum class OperatorPriority : int
-	{
-		OP_ADD	 = 1,	/*!< operator add*/
-		OP_MINUS = 1,	/*!< operator minus*/
-		OP_MULT	 = 2,	/*!< operator mult*/
-		OP_DIV	 = 2,	/*!< operator div (euclidian and normal)*/
-		OP_CROSS = 2,	/*!< operator cross prod*/
-		OP_DOT	 = 2,	/*!< operator dot prod*/
-		OP_REV	 = 3,	/*!< operator reverse */
-		OP_FUNCT = 4	/*!< operator function*/
-	};
 
 	struct FormulaData
 	{
@@ -86,8 +74,11 @@ protected:
 		// check if last token is not a variable
 		if ( !a_formulaData.m_lastVariable )
 		{
-			a_formulaData.m_formulaParsingLocation += static_cast<int>(match.str().size()) - 1;
+			a_formulaData.m_formulaParsingLocation += static_cast< int >( match.str( ).size( ) ) - 1;
 			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getVector<Size>(match.str( ), m_decimalSeparator, m_valueSeparator));
+
+			if ( a_formulaData.m_lastOperator )
+				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
 		}
 		else
 		{
@@ -100,19 +91,18 @@ protected:
 	static void parseFormula(const std::string_view& a_formula, FormulaData& a_data);
 
 	template<OperatorType Type>
-	void createOperatorNode(FormulaData& a_data)
+	static void createOperatorNode(FormulaData& a_data)
 	{
-		auto pOperator = std::make_shared< MCadFormulaOperatorNode<Type>>(a_data.m_currentPriorityOffset,
-				a_data.m_formulaParsingLocation);
-
-		if ( pOperator->isUnary( ) && a_data.m_lastVariable && (Type != OperatorType::Op_Minus) )
+		if ( isUnary<Type>( ) && a_data.m_lastVariable && ( Type != OperatorType::Op_Minus ) )
 		{
 			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_IllFormed,
 			std::source_location::current( ), a_data.m_formulaParsingLocation);
 		}
 
+		auto pOperator = std::make_shared< MCadFormulaOperatorNode<Type>>(a_data.m_currentPriorityOffset,
+				a_data.m_formulaParsingLocation);
 
-		if ( !a_data.m_formulaRootNode)
+		if ( !a_data.m_formulaRootNode )
 		{
 			// first node
 			a_data.m_formulaRootNode = pOperator;
@@ -120,11 +110,33 @@ protected:
 			if ( a_data.m_lastVariable )
 				pOperator->appendChild(a_data.m_lastVariable);
 		}
+		else if ( a_data.m_lastOperator )
+		{
+			// find higher operator
+			const int priority = pOperator->priority( );
+			auto transitionPriority = findTransition(a_data.m_lastOperator,
+				[ priority ] (const IMCadFormulaNodePtr& a_node)
+				{
+					return a_node->priority( ) > priority;
+				});
+
+			if ( transitionPriority.m_child )
+			{
+				pOperator->appendChild(transitionPriority.m_child);
+				transitionPriority.m_parent->appendChild(pOperator);
+			}
+			else
+			{
+				// last operator has alread higher priority
+				a_data.m_lastOperator->appendChild(pOperator);
+			}
+		}
 		else
 		{
-			//
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_ParseError,
+			std::source_location::current( ), a_data.m_formulaParsingLocation);
 		}
-
+		a_data.m_lastOperator = pOperator;
 		a_data.m_lastVariable.reset( );
 	}
 
