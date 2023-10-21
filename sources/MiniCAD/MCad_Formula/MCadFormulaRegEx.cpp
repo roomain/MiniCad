@@ -16,14 +16,13 @@ PolarCoord getRelativePolar(const std::string_view& a_toParse, const char a_deci
 
 bool parseAndReact(const std::string& a_toParse, const VRegExReactor& a_vReactor)
 {
-    bool bRet = false;
     for ( auto&& regReac : a_vReactor )
     {
         if (std::regex_match(a_toParse, regReac.m_regularExp))
         {
             regReac.m_reaction(a_toParse);
-            break;
+            return true;
         }
     }
-    return bRet;
+    return false;
 }

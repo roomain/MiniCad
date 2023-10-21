@@ -88,6 +88,9 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 	const int formulaLenght = static_cast<int>(a_formula.size());
 	a_data.m_currentPriorityOffset = 0;
 	a_data.m_formulaParsingLocation = 0;
+
+	VRegExReactor parser;
+
 	while ( a_data.m_formulaParsingLocation < formulaLenght )
 	{
 		bool bAllowInvert = true; // allow negative value
