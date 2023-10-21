@@ -100,9 +100,9 @@ public:
         return m_children[a_index];
     }
 
-    [[nodiscard]] MCadTreeNodePtr at(const size_t& a_index)
+    [[nodiscard]] MCadTreeNodePtr at(const size_t& a_index)const
     {
-        return m_children[a_index];
+        return m_children.at(a_index);
     }
 
     MCadTree_Iterator begin(){return m_children.begin();}

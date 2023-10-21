@@ -1,95 +1,79 @@
 #include "pch.h"
 #include "MCadFormulaEvaluator.h"
 
-char MCadFormulaEvaluator::m_decimalSeparator = '.';
-char MCadFormulaEvaluator::m_valueSeparator = ',';
-MCadFormulaRegEx MCadFormulaEvaluator::m_parser;
 
-bool MCadFormulaEvaluator::checkDouble(const std::string& a_formula, FormulaData& a_formulaData)
+MCadFormulaEvaluator::MCadFormulaEvaluator( )
 {
-	std::smatch match;
-	bool bRet = std::regex_search(a_formula, match, m_parser.m_doubleRegex);
-	if ( bRet )
-	{
-		// check if last token is not a variable
-		if ( !a_formulaData.m_lastVariable )
-		{
-			a_formulaData.m_formulaParsingLocation += static_cast< int >( match.str( ).size( ) ) - 1;
-			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getDouble(match.str( ), m_decimalSeparator));
-
-			if ( a_formulaData.m_lastOperator )
-				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
-		}
-		else
-		{
-			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
-				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
-		}
-	}
-	return bRet;
+	initialize(m_decimalSeparator, m_valueSeparator, m_parser);
+	//m_regexReact.emplace_back(m_parser.m_doubleRegex, [this])
 }
 
-bool MCadFormulaEvaluator::checkInt(const std::string& a_formula, FormulaData& a_formulaData)
+void MCadFormulaEvaluator::processDouble(const std::string_view& a_value, FormulaData& a_formulaData)
 {
-	std::smatch match;
-	bool bRet = std::regex_search(a_formula, match, m_parser.m_intRegex);
-	if ( bRet )
+	// check if last token is not a variable
+	if ( !a_formulaData.m_lastVariable )
 	{
-		// check if last token is not a variable
-		if ( !a_formulaData.m_lastVariable )
-		{
-			a_formulaData.m_formulaParsingLocation += static_cast< int >( match.str( ).size( ) ) - 1;
-			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(std::atoi(match.str().c_str()));
+		a_formulaData.m_formulaParsingLocation += static_cast< int >( a_value.size( ) ) - 1;
+		a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getDouble(a_value, m_decimalSeparator));
 
-			if ( a_formulaData.m_lastOperator )
-				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
-		}
-		else
-		{
-			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
-				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
-		}
+		if ( a_formulaData.m_lastOperator )
+			a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
 	}
-	return bRet;
+	else
+	{
+		throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
+			std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+	}
 }
 
-bool MCadFormulaEvaluator::checkVariable(const std::string& a_formula, const MCadVariableDatabase& a_database, FormulaData& a_formulaData)
+void MCadFormulaEvaluator::processInt(const std::string_view& a_value, FormulaData& a_formulaData)
 {
-	std::smatch match;
-	bool bRet = std::regex_search(a_formula, match, m_parser.m_variableRegex);
-	if ( bRet )
+	// check if last token is not a variable
+	if ( !a_formulaData.m_lastVariable )
 	{
-		// check if last token is not a variable
-		if ( !a_formulaData.m_lastVariable )
+		a_formulaData.m_formulaParsingLocation += static_cast< int >( a_value.size( ) ) - 1;
+		a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(std::atoi(a_value.data( )));
+
+		if ( a_formulaData.m_lastOperator )
+			a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
+	}
+	else
+	{
+		throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
+			std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+	}
+}
+
+void MCadFormulaEvaluator::processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData)
+{
+	// check if last token is not a variable
+	if ( !a_formulaData.m_lastVariable )
+	{
+		auto iter = a_database.find(std::string(a_value));
+		if ( iter == a_database.end( ) )
 		{
-			auto iter = a_database.find(match.str( ));
-			if ( iter == a_database.end() )
-			{
-				throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_UnknownVariable,
-				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
-			}
-			else
-			{
-				a_formulaData.m_formulaParsingLocation += static_cast< int >( match.str( ).size( ) ) - 1;
-				a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(iter->second);
-			}
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_UnknownVariable,
+			std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
 		}
 		else
 		{
-			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
-				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_value.size( ) ) - 1;
+			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(iter->second);
 		}
 	}
-	return bRet;
+	else
+	{
+		throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
+			std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+	}
 }
 
 void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, FormulaData& a_data)
 {
-	const int formulaLenght = static_cast<int>(a_formula.size());
+	const auto formulaLenght = static_cast<int>(a_formula.size());
 	a_data.m_currentPriorityOffset = 0;
 	a_data.m_formulaParsingLocation = 0;
 
-	VRegExReactor parser;
 
 	while ( a_data.m_formulaParsingLocation < formulaLenght )
 	{
