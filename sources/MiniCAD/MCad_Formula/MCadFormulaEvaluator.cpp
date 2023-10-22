@@ -4,8 +4,20 @@
 
 MCadFormulaEvaluator::MCadFormulaEvaluator( )
 {
+	using namespace std::placeholders;
 	initialize(m_decimalSeparator, m_valueSeparator, m_parser);
-	//m_regexReact.emplace_back(m_parser.m_doubleRegex, [this])
+
+	m_regexReact.emplace_back(m_parser.m_doubleRegex, std::bind_front(&MCadFormulaEvaluator::processDouble, this));
+	m_regexReact.emplace_back(m_parser.m_intRegex, std::bind_front(&MCadFormulaEvaluator::processInt, this));
+	m_regexReact.emplace_back(m_parser.m_vec2DRegex, std::bind_front(&MCadFormulaEvaluator::processVector<2>, this));
+	m_regexReact.emplace_back(m_parser.m_vec3DRegex, std::bind_front(&MCadFormulaEvaluator::processVector<3>, this));
+	m_regexReact.emplace_back(m_parser.m_vec4DRegex, std::bind_front(&MCadFormulaEvaluator::processVector<4>, this));
+
+
+	m_regexReact.emplace_back(m_parser.m_relCartesian2D, std::bind_front(&MCadFormulaEvaluator::processRelativeVector<2>, this));
+	m_regexReact.emplace_back(m_parser.m_relCartesian3D, std::bind_front(&MCadFormulaEvaluator::processRelativeVector<3>, this));
+	// TODO
+
 }
 
 void MCadFormulaEvaluator::processDouble(const std::string_view& a_value, FormulaData& a_formulaData)
@@ -134,6 +146,12 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 			break;
 		}
 
+		int matchLen = 0;
+		if ( !parseAndReact(std::string(a_formula), m_regexReact, matchLen, a_data) )
+		{
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_UnknownVariable,
+				std::source_location::current( ), a_data.m_formulaParsingLocation);
+		}
 
 		++a_data.m_formulaParsingLocation;
 	}

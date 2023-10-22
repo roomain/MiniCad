@@ -12,6 +12,10 @@
 #include "MCad_Formula_globals.h"
 #include "MCadFormulaException.h"
 
+
+#pragma warning(push)
+#pragma warning(disable : 4251)
+
 using MCadVariableDatabase = std::unordered_map<std::string, MCadValue>;
 
 
@@ -19,10 +23,20 @@ using MCadVariableDatabase = std::unordered_map<std::string, MCadValue>;
 class MCAD_FORMULA_EXPORT MCadFormulaEvaluator
 {
 private:
-	char m_decimalSeparator = '.';		/*!< decimal separator*/
-	char m_valueSeparator = ',';		/*!< value separator for vector*/
-	MCadFormulaRegEx m_parser;			/*!< regex parsing*/
-	//VRegExReactor m_regexReact;			/*!< action per regular expression*/
+	struct FormulaData
+	{
+		int m_formulaParsingLocation;					/*!< current location in formula*/
+		int m_currentPriorityOffset;					/*!< priority offset due to parenthesis*/
+		MCadFormulaValueNodePtr m_lastVariable;			/*!< last parsed variable node*/
+		OperatorType m_lastOperatorType;				/*!< last operator type*/
+		IMCadFormulaNodePtr m_lastOperator;				/*!< last parsed operator node*/
+		IMCadFormulaNodePtr m_formulaRootNode;			/*!< formula root node*/
+	};
+
+	char m_decimalSeparator = '.';					/*!< decimal separator*/
+	char m_valueSeparator = ',';					/*!< value separator for vector*/
+	MCadFormulaRegEx m_parser;						/*!< regex parsing*/
+	VRegExReactor<FormulaData&> m_regexReact;		/*!< action per regular expression*/
 
 	// operator token
 	static constexpr char Token_Space = ' ';
@@ -34,15 +48,6 @@ private:
 	static constexpr char Token_Op_Div = '/';
 	static constexpr char Token_Op_Modul = '%';
 
-	struct FormulaData
-	{
-		int m_formulaParsingLocation;					/*!< current location in formula*/
-		int m_currentPriorityOffset;					/*!< priority offset due to parenthesis*/
-		MCadFormulaValueNodePtr m_lastVariable;			/*!< last parsed variable node*/
-		OperatorType m_lastOperatorType;				/*!< last operator type*/
-		IMCadFormulaNodePtr m_lastOperator;				/*!< last parsed operator node*/
-		IMCadFormulaNodePtr m_formulaRootNode;			/*!< formula root node*/
-	};
 
 	void processDouble(const std::string_view& a_value, FormulaData& a_formulaData);
 	void processInt(const std::string_view& a_value, FormulaData& a_formulaData);
@@ -55,6 +60,25 @@ private:
 		{
 			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_formula.size() ) - 1;
 			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getVector<Size>(a_formula, m_decimalSeparator, m_valueSeparator));
+
+			if ( a_formulaData.m_lastOperator )
+				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
+		}
+		else
+		{
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
+				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+		}
+	}
+
+
+	template<int Size>
+	void processRelativeVector(const std::string_view& a_formula, FormulaData& a_formulaData)
+	{
+		if ( !a_formulaData.m_lastVariable )
+		{
+			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_formula.size( ) ) - 1;
+			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getRelative<Size>(a_formula, m_decimalSeparator, m_valueSeparator));
 
 			if ( a_formulaData.m_lastOperator )
 				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
@@ -163,3 +187,6 @@ public:
 	virtual ~MCadFormulaEvaluator( ) = default;
 	void parseFormula(const std::string_view& a_formula, FormulaData& a_data);
 };
+
+
+#pragma warning(pop)

@@ -161,8 +161,8 @@ bool parseAndReact(const std::string& a_toParse, const VRegExReactor<Args...>& a
         std::smatch match;
         if ( std::regex_search(a_toParse, match, regReac.m_regularExp) && match.prefix( ).length( ) == 0 )
         {
-            a_matchLen = match.length( );
-            regReac.m_reaction(match.str(), a_arguments);
+            a_matchLen = static_cast<int>(match.length());
+            regReac.m_reaction(match.str(), a_arguments...);
             return true;
         }
     }
