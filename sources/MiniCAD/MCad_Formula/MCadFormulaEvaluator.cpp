@@ -16,6 +16,42 @@ MCadFormulaEvaluator::MCadFormulaEvaluator( )
 
 	m_regexReact.emplace_back(m_parser.m_relCartesian2D, std::bind_front(&MCadFormulaEvaluator::processRelativeVector<2>, this));
 	m_regexReact.emplace_back(m_parser.m_relCartesian3D, std::bind_front(&MCadFormulaEvaluator::processRelativeVector<3>, this));
+	m_regexReact.emplace_back(m_parser.m_cos, [] (const std::string_view&, FormulaData& a_formula)
+		{
+			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Cos>(a_formula);
+			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("cos(").length( ));
+		}
+	);
+	m_regexReact.emplace_back(m_parser.m_sin, [] (const std::string_view&, FormulaData& a_formula)
+		{
+			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Sin>(a_formula);
+			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("sin(").length( ));
+		}
+	);
+	m_regexReact.emplace_back(m_parser.m_tan, [] (const std::string_view&, FormulaData& a_formula)
+		{
+			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Tan>(a_formula);
+			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("tan(").length( ));
+		}
+	);
+	m_regexReact.emplace_back(m_parser.m_acos, [] (const std::string_view&, FormulaData& a_formula)
+		{
+			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Acos>(a_formula);
+			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("acos(").length( ));
+		}
+	);
+	m_regexReact.emplace_back(m_parser.m_asin, [] (const std::string_view&, FormulaData& a_formula)
+		{
+			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Asin>(a_formula);
+			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("asin(").length( ));
+		}
+	);
+	m_regexReact.emplace_back(m_parser.m_atan, [] (const std::string_view&, FormulaData& a_formula)
+		{
+			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Atan>(a_formula);
+			a_formula.m_formulaParsingLocation += static_cast<int>(std::string_view("atan(").length( ));
+		}
+	);
 	// TODO
 
 }
@@ -91,6 +127,7 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 	{
 		bool bAllowInvert = true; // allow negative value
 
+		int matchLen = 1;
 		// check simple operators
 		switch ( a_formula [ a_data.m_formulaParsingLocation ] )
 		{
@@ -143,16 +180,22 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 			break;
 
 		default:
+			if ( !parseAndReact(std::string(a_formula), m_regexReact, matchLen, a_data) )
+			{
+				throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_UnknownVariable,
+					std::source_location::current( ), a_data.m_formulaParsingLocation);
+			}
 			break;
 		}
 
-		int matchLen = 0;
-		if ( !parseAndReact(std::string(a_formula), m_regexReact, matchLen, a_data) )
-		{
-			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_UnknownVariable,
-				std::source_location::current( ), a_data.m_formulaParsingLocation);
-		}
-
-		++a_data.m_formulaParsingLocation;
+		if( matchLen == 0)
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_IllFormed,
+					std::source_location::current( ), a_data.m_formulaParsingLocation);
+		
+		a_data.m_formulaParsingLocation += matchLen;
 	}
+
+	if( a_data.m_currentPriorityOffset != 0 )
+		throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingClose,
+				std::source_location::current( ), a_data.m_formulaParsingLocation);
 }
