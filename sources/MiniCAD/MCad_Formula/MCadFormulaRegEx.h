@@ -69,6 +69,15 @@ struct MCadFormulaRegEx
     std::regex m_relCartesian2D{ "^$" };    /*!< relative cartesian 2d regex*/
     std::regex m_relPolar{ "^$" };          /*!< relative polar regex*/
 
+    // trigo regex and functions
+    std::regex m_cos{ R"(cos\()" };                             /*!<cos regex*/
+    std::regex m_sin{ R"(sin\()" };                             /*!<sin regex*/
+    std::regex m_tan{ R"(tan\()" };                             /*!<tan regex*/
+    std::regex m_acos{ R"(acos\()" };                           /*!<acos regex*/
+    std::regex m_asin{ R"(asin\()" };                           /*!<asin regex*/
+    std::regex m_atan{ R"(atan\()" };                           /*!<atan regex*/
+    std::regex m_function{ R"([a-zA-Z]+(_ | [a-zA-Z])*\()" };   /*!<function regex*/
+
     static constexpr char PolarSeparator = '<';
 };
 
