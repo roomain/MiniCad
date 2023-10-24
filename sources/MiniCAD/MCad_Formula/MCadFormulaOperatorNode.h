@@ -52,7 +52,7 @@ template<OperatorType Type>
 		return true;
 
 	default:
-		return false
+		return false;
 	}
 	return false;
 }
@@ -83,7 +83,7 @@ template<OperatorType Type>
 		return 2;
 
 	default:
-		return false
+		return false;
 	}
 	return false;
 }
@@ -96,7 +96,8 @@ private:
 
 public:
 	IMCadFormulaNode() = delete;
-	IMCadFormulaNode(const int a_priority) : m_nodePriority{ a_priority } {}
+	virtual ~IMCadFormulaNode( ) = default;
+	explicit IMCadFormulaNode(const int a_priority) : m_nodePriority{ a_priority } {}
 	[[nodiscard]] int priority()const { return m_nodePriority; }
 	virtual [[nodiscard]] MCadValue compute()const = 0;
 };
@@ -112,7 +113,7 @@ struct MCadFormulaNodeTransition
 
 using TransitionPredicate = std::function<bool(const IMCadFormulaNodePtr&)>;
 
-MCadFormulaNodeTransition findTransition(IMCadFormulaNodePtr& a_startNode, TransitionPredicate a_predicate)
+MCadFormulaNodeTransition findTransition(const IMCadFormulaNodePtr& a_startNode, const TransitionPredicate& a_predicate)
 {
 	MCadFormulaNodeTransition transition{ .m_parent = a_startNode };
 	while ( transition.m_parent && !a_predicate(transition.m_parent) )
@@ -149,29 +150,13 @@ private:
 public:
 	MCadFormulaOperatorNode( ) = delete;
 	MCadFormulaOperatorNode(const int a_priority, const int a_formulaIndex) : 
-		IMCadFormulaOperatorNode(a_priority + operatorPriority<Type>()),
+		IMCadFormulaNode(a_priority + operatorPriority<Type>()),
 		m_formulaIndex{ a_formulaIndex }
 	{
 		//
 	}
 
-	
-
-	[[nodiscard]] MCadValue compute()const final
-	{
-		switch ( childCount() )
-		{
-		case 1:
-			return compute(m_formulaIndex, std::static_pointer_cast<IMCadFormulaOperatorNode >(at(0))->compute());
-		case 2:
-			return compute(m_formulaIndex, std::static_pointer_cast<IMCadFormulaOperatorNode>(at(0))->compute(),
-				std::static_pointer_cast<IMCadFormulaOperatorNode>(at(1))->compute());
-		default:
-			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_WrongOperandCount, std::source_location::current( ), m_formulaIndex);
-		}
-	}
-
-	[[nodiscard]] MCadValue compute(const int a_formulaIndex, const MCadValue& a_value)
+	[[nodiscard]] MCadValue compute(const int a_formulaIndex, const MCadValue& a_value)const
 	{
 		switch ( Type )
 		{
@@ -197,7 +182,7 @@ public:
 		}
 	}
 
-	[[nodiscard]] MCadValue compute(const int a_formulaIndex, const MCadValue& a_first, const MCadValue& a_second)
+	[[nodiscard]] MCadValue compute(const int a_formulaIndex, const MCadValue& a_first, const MCadValue& a_second)const
 	{
 		switch ( Type )
 		{
@@ -222,6 +207,20 @@ public:
 			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_Incompatible_Op, std::source_location::current( ), a_formulaIndex);
 		}
 	}
+	
+	[[nodiscard]] MCadValue compute()const final
+	{
+		switch ( childCount() )
+		{
+		case 1:
+			return compute(m_formulaIndex, std::static_pointer_cast<IMCadFormulaNode>(at(0))->compute());
+		case 2:
+			return compute(m_formulaIndex, std::static_pointer_cast<IMCadFormulaNode>(at(0))->compute(),
+				std::static_pointer_cast<IMCadFormulaNode>(at(1))->compute());
+		default:
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_WrongOperandCount, std::source_location::current( ), m_formulaIndex);
+		}
+	}
 };
 
 template<OperatorType Type>
@@ -234,8 +233,8 @@ private:
 	MCadValue m_value;
 
 public:
-	MCadFormulaValueNode(const MCadValue& a_value) : IMCadFormulaNode(std::numeric_limits<int>::max()), m_value{a_value} {}
-	MCadFormulaValueNode(const MCadValue&& a_value) : IMCadFormulaNode(std::numeric_limits<int>::max( )), m_value{ a_value } {}
+	explicit MCadFormulaValueNode(const MCadValue& a_value) : IMCadFormulaNode(std::numeric_limits<int>::max()), m_value{a_value} {}
+	explicit MCadFormulaValueNode(const MCadValue&& a_value) : IMCadFormulaNode(std::numeric_limits<int>::max( )), m_value{ a_value } {}
 	
 	[[nodiscard]] MCadValue compute()const
 	{

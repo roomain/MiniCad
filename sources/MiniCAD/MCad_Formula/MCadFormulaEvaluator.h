@@ -10,7 +10,11 @@
 #include "MCadTreeNode.h"
 #include "MCadFormulaOperatorNode.h"
 #include "MCad_Formula_globals.h"
-#include "McadFormulaException.h"
+#include "MCadFormulaException.h"
+
+
+#pragma warning(push)
+#pragma warning(disable : 4251)
 
 using MCadVariableDatabase = std::unordered_map<std::string, MCadValue>;
 
@@ -18,10 +22,21 @@ using MCadVariableDatabase = std::unordered_map<std::string, MCadValue>;
 /*@brief used to parse and evaluate formula*/
 class MCAD_FORMULA_EXPORT MCadFormulaEvaluator
 {
-protected:
-	static char m_decimalSeparator;		/*!< decimal separator*/
-	static char m_valueSeparator;		/*!< value separator for vector*/
-	static MCadFormulaRegEx m_parser;	/*!< regex parsing*/
+private:
+	struct FormulaData
+	{
+		int m_formulaParsingLocation;					/*!< current location in formula*/
+		int m_currentPriorityOffset;					/*!< priority offset due to parenthesis*/
+		MCadFormulaValueNodePtr m_lastVariable;			/*!< last parsed variable node*/
+		OperatorType m_lastOperatorType;				/*!< last operator type*/
+		IMCadFormulaNodePtr m_lastOperator;				/*!< last parsed operator node*/
+		IMCadFormulaNodePtr m_formulaRootNode;			/*!< formula root node*/
+	};
+
+	char m_decimalSeparator = '.';					/*!< decimal separator*/
+	char m_valueSeparator = ',';					/*!< value separator for vector*/
+	MCadFormulaRegEx m_parser;						/*!< regex parsing*/
+	VRegExReactor<FormulaData&> m_regexReact;		/*!< action per regular expression*/
 
 	// operator token
 	static constexpr char Token_Space = ' ';
@@ -33,23 +48,52 @@ protected:
 	static constexpr char Token_Op_Div = '/';
 	static constexpr char Token_Op_Modul = '%';
 
-	struct FormulaData
-	{
-		int m_formulaParsingLocation;					/*!< current location in formula*/
-		int m_currentPriorityOffset;					/*!< priority offset due to parenthesis*/
-		MCadFormulaValueNodePtr m_lastVariable;			/*!< last parsed variable node*/
-		OperatorType m_lastOperatorType;				/*!< last operator type*/
-		IMCadFormulaNodePtr m_lastOperator;				/*!< last parsed operator node*/
-		IMCadFormulaNodePtr m_formulaRootNode;			/*!< formula root node*/
-	};
 
-
-	static bool checkDouble(const std::string& a_formula, FormulaData& a_formulaData);
-	static bool checkInt(const std::string& a_formula, FormulaData& a_formulaData);
-	static bool checkVariable(const std::string& a_formula, const MCadVariableDatabase& a_database, FormulaData& a_formulaData);
+	void processDouble(const std::string_view& a_value, FormulaData& a_formulaData);
+	void processInt(const std::string_view& a_value, FormulaData& a_formulaData);
+	void processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData);
 
 	template<int Size>
-	static bool checkVector(const std::string& a_formula, FormulaData& a_formulaData)
+	void processVector(const std::string_view& a_formula, FormulaData& a_formulaData)
+	{
+		if ( !a_formulaData.m_lastVariable )
+		{
+			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_formula.size() ) - 1;
+			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getVector<Size>(a_formula, m_decimalSeparator, m_valueSeparator));
+
+			if ( a_formulaData.m_lastOperator )
+				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
+		}
+		else
+		{
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
+				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+		}
+	}
+
+
+	template<int Size>
+	void processRelativeVector(const std::string_view& a_formula, FormulaData& a_formulaData)
+	{
+		if ( !a_formulaData.m_lastVariable )
+		{
+			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_formula.size( ) ) - 1;
+			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getRelative<Size>(a_formula, m_decimalSeparator, m_valueSeparator));
+
+			if ( a_formulaData.m_lastOperator )
+				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
+		}
+		else
+		{
+			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_MissingOperator,
+				std::source_location::current( ), a_formulaData.m_formulaParsingLocation);
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+
+
+	template<int Size>
+	bool checkVector(const std::string& a_formula, FormulaData& a_formulaData)
 	{
 		std::regex regularExp;
 		switch ( Size )
@@ -87,8 +131,6 @@ protected:
 		}
 		return bRet;
 	}
-
-	static void parseFormula(const std::string_view& a_formula, FormulaData& a_data);
 
 	template<OperatorType Type>
 	static void createOperatorNode(FormulaData& a_data)
@@ -140,4 +182,11 @@ protected:
 		a_data.m_lastVariable.reset( );
 	}
 
+public:
+	MCadFormulaEvaluator( );
+	virtual ~MCadFormulaEvaluator( ) = default;
+	void parseFormula(const std::string_view& a_formula, FormulaData& a_data);
 };
+
+
+#pragma warning(pop)

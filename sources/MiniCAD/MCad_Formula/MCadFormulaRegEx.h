@@ -151,12 +151,29 @@ PolarCoord getPolar(const std::string_view& a_toParse, const char a_decimalSepar
 /*@brief Get relative polar value*/
 PolarCoord getRelativePolar(const std::string_view& a_toParse, const char a_decimalSeparator);
 
+
+template<typename ...Args>
 struct RegExReactor
 {
     std::regex m_regularExp;
-    std::function<void(const std::string_view&)> m_reaction;
+    std::function<void(const std::string_view&, Args&&...)> m_reaction;
 };
 
-using VRegExReactor = std::vector<RegExReactor>;
+template<typename ...Args>
+using VRegExReactor = std::vector<RegExReactor<Args...>>;
 
-bool parseAndReact(const std::string& a_toParse, const VRegExReactor& a_vReactor);
+template<typename ...Args>
+bool parseAndReact(const std::string& a_toParse, const VRegExReactor<Args...>& a_vReactor, int& a_matchLen, Args&&... a_arguments)
+{
+    for ( auto&& regReac : a_vReactor )
+    {
+        std::smatch match;
+        if ( std::regex_search(a_toParse, match, regReac.m_regularExp) && match.prefix( ).length( ) == 0 )
+        {
+            a_matchLen = static_cast<int>(match.length());
+            regReac.m_reaction(match.str(), a_arguments...);
+            return true;
+        }
+    }
+    return false;
+}
