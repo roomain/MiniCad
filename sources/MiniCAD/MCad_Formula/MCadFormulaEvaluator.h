@@ -28,7 +28,6 @@ private:
 		int m_formulaParsingLocation;					/*!< current location in formula*/
 		int m_currentPriorityOffset;					/*!< priority offset due to parenthesis*/
 		MCadFormulaValueNodePtr m_lastVariable;			/*!< last parsed variable node*/
-		OperatorType m_lastOperatorType;				/*!< last operator type*/
 		IMCadFormulaNodePtr m_lastOperator;				/*!< last parsed operator node*/
 		IMCadFormulaNodePtr m_formulaRootNode;			/*!< formula root node*/
 	};
@@ -37,6 +36,7 @@ private:
 	char m_valueSeparator = ',';					/*!< value separator for vector*/
 	MCadFormulaRegEx m_parser;						/*!< regex parsing*/
 	VRegExReactor<FormulaData&> m_regexReact;		/*!< action per regular expression*/
+	static constexpr int PRIORITY_OFFSET = 10;		/*!< priority offset for parenthesis*/
 
 	// operator token
 	static constexpr char Token_Space = ' ';
@@ -49,12 +49,12 @@ private:
 	static constexpr char Token_Op_Modul = '%';
 
 
-	void processDouble(const std::string_view& a_value, FormulaData& a_formulaData);
-	void processInt(const std::string_view& a_value, FormulaData& a_formulaData);
-	void processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData);
+	void processDouble(const std::string_view& a_value, FormulaData& a_formulaData)const;
+	void processInt(const std::string_view& a_value, FormulaData& a_formulaData)const;
+	void processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData)const;
 
 	template<int Size>
-	void processVector(const std::string_view& a_formula, FormulaData& a_formulaData)
+	void processVector(const std::string_view& a_formula, FormulaData& a_formulaData)const
 	{
 		if ( !a_formulaData.m_lastVariable )
 		{
@@ -73,7 +73,7 @@ private:
 
 
 	template<int Size>
-	void processRelativeVector(const std::string_view& a_formula, FormulaData& a_formulaData)
+	void processRelativeVector(const std::string_view& a_formula, FormulaData& a_formulaData)const
 	{
 		if ( !a_formulaData.m_lastVariable )
 		{
@@ -93,7 +93,7 @@ private:
 
 
 	template<int Size>
-	bool checkVector(const std::string& a_formula, FormulaData& a_formulaData)
+	bool checkVector(const std::string& a_formula, FormulaData& a_formulaData)const
 	{
 		std::regex regularExp;
 		switch ( Size )
@@ -156,19 +156,32 @@ private:
 		{
 			// find higher operator
 			const int priority = pOperator->priority( );
-			auto transitionPriority = findTransition(a_data.m_lastOperator,
-				[ priority ] (const IMCadFormulaNodePtr& a_node)
-				{
-					return a_node->priority( ) > priority;
-				});
+			
+			MCadFormulaNodeTransition transitionPriority;
+			if ( a_data.m_lastOperator->priority( ) >= priority )
+			{
+				transitionPriority = findTransition(a_data.m_lastOperator,
+					[ priority ] (const IMCadFormulaNodePtr& a_node)
+					{
+							return a_node->priority( ) >= priority;
+					});
+			}
 
 			if ( transitionPriority.m_child )
 			{
 				pOperator->appendChild(transitionPriority.m_child);
-				transitionPriority.m_parent->appendChild(pOperator);
+				if ( transitionPriority.m_parent )
+				{
+					transitionPriority.m_parent->appendChild(pOperator);
+				}
+				else
+				{
+					a_data.m_formulaRootNode = pOperator;
+				}
 			}
 			else
 			{
+				pOperator->appendChild(a_data.m_lastVariable);
 				// last operator has alread higher priority
 				a_data.m_lastOperator->appendChild(pOperator);
 			}
@@ -182,10 +195,12 @@ private:
 		a_data.m_lastVariable.reset( );
 	}
 
+	void parseFormula(const std::string_view& a_formula, FormulaData& a_data)const;
+
 public:
 	MCadFormulaEvaluator( );
 	virtual ~MCadFormulaEvaluator( ) = default;
-	void parseFormula(const std::string_view& a_formula, FormulaData& a_data);
+	[[nodiscard]] MCadValue evaluate(const std::string_view& a_formula)const;
 };
 
 

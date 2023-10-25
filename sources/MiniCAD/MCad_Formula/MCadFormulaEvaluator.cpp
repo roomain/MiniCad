@@ -20,43 +20,58 @@ MCadFormulaEvaluator::MCadFormulaEvaluator( )
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Cos>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("cos(").length( ));
+			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
 	m_regexReact.emplace_back(m_parser.m_sin, [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Sin>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("sin(").length( ));
+			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
 	m_regexReact.emplace_back(m_parser.m_tan, [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Tan>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("tan(").length( ));
+			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
 	m_regexReact.emplace_back(m_parser.m_acos, [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Acos>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("acos(").length( ));
+			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
 	m_regexReact.emplace_back(m_parser.m_asin, [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Asin>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("asin(").length( ));
+			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
 	m_regexReact.emplace_back(m_parser.m_atan, [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Atan>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast<int>(std::string_view("atan(").length( ));
+			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
-	// TODO
+	// TODO variable + function
 
 }
 
-void MCadFormulaEvaluator::processDouble(const std::string_view& a_value, FormulaData& a_formulaData)
+MCadValue MCadFormulaEvaluator::evaluate(const std::string_view& a_formula)const
+{
+	FormulaData formulaData;
+	parseFormula(a_formula, formulaData);
+	if(formulaData.m_formulaRootNode )
+		return formulaData.m_formulaRootNode->compute( );
+	return MCadValue();
+}
+
+void MCadFormulaEvaluator::processDouble(const std::string_view& a_value, FormulaData& a_formulaData)const
 {
 	// check if last token is not a variable
 	if ( !a_formulaData.m_lastVariable )
@@ -74,7 +89,7 @@ void MCadFormulaEvaluator::processDouble(const std::string_view& a_value, Formul
 	}
 }
 
-void MCadFormulaEvaluator::processInt(const std::string_view& a_value, FormulaData& a_formulaData)
+void MCadFormulaEvaluator::processInt(const std::string_view& a_value, FormulaData& a_formulaData)const
 {
 	// check if last token is not a variable
 	if ( !a_formulaData.m_lastVariable )
@@ -92,7 +107,7 @@ void MCadFormulaEvaluator::processInt(const std::string_view& a_value, FormulaDa
 	}
 }
 
-void MCadFormulaEvaluator::processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData)
+void MCadFormulaEvaluator::processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData)const
 {
 	// check if last token is not a variable
 	if ( !a_formulaData.m_lastVariable )
@@ -116,16 +131,14 @@ void MCadFormulaEvaluator::processVariable(const std::string_view& a_value, cons
 	}
 }
 
-void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, FormulaData& a_data)
+void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, FormulaData& a_data)const
 {
 	const auto formulaLenght = static_cast<int>(a_formula.size());
 	a_data.m_currentPriorityOffset = 0;
 	a_data.m_formulaParsingLocation = 0;
 
-
 	while ( a_data.m_formulaParsingLocation < formulaLenght )
 	{
-		bool bAllowInvert = true; // allow negative value
 
 		int matchLen = 1;
 		// check simple operators
@@ -135,13 +148,12 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 			break;
 
 		case Token_IncPriority:
-			a_data.m_currentPriorityOffset++;
+			a_data.m_currentPriorityOffset+= PRIORITY_OFFSET;
 			a_data.m_lastVariable.reset( );// to forbid operator just next
 			break;
 
 		case Token_DecPriority:
-			a_data.m_currentPriorityOffset--;
-			bAllowInvert = false;
+			a_data.m_currentPriorityOffset-= PRIORITY_OFFSET;
 			break;
 
 		case Token_Op_Add:
@@ -149,22 +161,7 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 			break;
 
 		case Token_Op_Minus:
-			if ( bAllowInvert )
-			{
-				const std::string_view subFormula = a_formula.substr(a_data.m_formulaParsingLocation,
-					static_cast< size_t >( formulaLenght - a_data.m_formulaParsingLocation ));
-				//
-			}
-			else if ( a_data.m_lastVariable || a_data.m_lastOperator )
-			{
-				createOperatorNode<OperatorType::Op_Minus>(a_data);
-			}
-			else
-			{
-				// todo
-				throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_IllFormed,
-				std::source_location::current( ), a_data.m_formulaParsingLocation);
-			}
+			createOperatorNode<OperatorType::Op_Minus>(a_data);
 			break;
 
 		case Token_Op_Mult:
@@ -180,7 +177,7 @@ void MCadFormulaEvaluator::parseFormula(const std::string_view& a_formula, Formu
 			break;
 
 		default:
-			if ( !parseAndReact(std::string(a_formula), m_regexReact, matchLen, a_data) )
+			if ( !parseAndReact(std::string(a_formula.substr(a_data.m_formulaParsingLocation, a_formula.size() - a_data.m_formulaParsingLocation)), m_regexReact, matchLen, a_data) )
 			{
 				throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_UnknownVariable,
 					std::source_location::current( ), a_data.m_formulaParsingLocation);

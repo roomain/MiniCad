@@ -115,7 +115,7 @@ using TransitionPredicate = std::function<bool(const IMCadFormulaNodePtr&)>;
 
 MCadFormulaNodeTransition findTransition(const IMCadFormulaNodePtr& a_startNode, const TransitionPredicate& a_predicate)
 {
-	MCadFormulaNodeTransition transition{ .m_parent = a_startNode };
+	MCadFormulaNodeTransition transition{ .m_parent = std::static_pointer_cast<IMCadFormulaNode>(a_startNode->parent().lock()), .m_child = a_startNode };
 	while ( transition.m_parent && !a_predicate(transition.m_parent) )
 	{
 		transition.m_child = transition.m_parent;

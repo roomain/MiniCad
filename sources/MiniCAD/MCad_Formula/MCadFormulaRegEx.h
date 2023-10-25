@@ -10,6 +10,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include "MCadStringTools.h"
+#include "MCad_Formula_globals.h"
 
 /*
 * @brief this file provide regular expression functions for entry parsing
@@ -146,10 +147,10 @@ struct PolarCoord
 };
 
 /*@brief Get polar value*/
-PolarCoord getPolar(const std::string_view& a_toParse, const char a_decimalSeparator);
+MCAD_FORMULA_EXPORT PolarCoord getPolar(const std::string_view& a_toParse, const char a_decimalSeparator);
 
 /*@brief Get relative polar value*/
-PolarCoord getRelativePolar(const std::string_view& a_toParse, const char a_decimalSeparator);
+MCAD_FORMULA_EXPORT PolarCoord getRelativePolar(const std::string_view& a_toParse, const char a_decimalSeparator);
 
 
 template<typename ...Args>

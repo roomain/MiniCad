@@ -37,7 +37,7 @@ private:
     {
         if(auto pParent = m_parent.lock())
         {
-            if(pParent != a_parent)
+            if(pParent == a_parent)
                 return;
 
             pParent->removeChild_internal(this);
