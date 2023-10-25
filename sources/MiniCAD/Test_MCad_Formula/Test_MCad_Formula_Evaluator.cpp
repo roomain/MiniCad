@@ -36,6 +36,9 @@ namespace TestMCadFormula
 				auto result = evaluator.evaluate("1+1*3");
 				Assert::AreEqual(4, std::get<int>(result), L"Wrong result 1+1*3");
 
+				result = evaluator.evaluate("3*(1+2)");
+				Assert::AreEqual(9, std::get<int>(result), L"Wrong result 3*(1+2)");
+
 				result = evaluator.evaluate("(1-1)*3");
 				Assert::AreEqual(0, std::get<int>(result), L"Wrong result (1-1)*3");
 				
