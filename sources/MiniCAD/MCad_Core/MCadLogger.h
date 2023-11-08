@@ -9,6 +9,8 @@
 #include <functional>
 #include <memory>
 #include <source_location>
+
+#include "MCadSingletonMacro.h"
 #include "MCad_Core_globals.h"
 
 #pragma warning(push)
@@ -50,6 +52,7 @@ using InternalLoggerPtr = std::shared_ptr<InteralLogger>;
 /*@brief singleton interface for log*/
 class MCAD_CORE_EXPORT MCadLogger
 {
+	NOT_COPIABLE(MCadLogger)
 private:
 	bool m_bEnable = true;					/*!< log is enable*/
 	LogMode m_mode = LogMode::LOG_INFO;		/*!< display mode*/
@@ -57,11 +60,6 @@ private:
 
 	MCadLogger() = default;
 public:
-	MCadLogger(const MCadLogger&) = delete;
-	MCadLogger(MCadLogger&&) = delete;
-	MCadLogger& operator = (const MCadLogger&) = delete;
-	MCadLogger& operator = (MCadLogger&&) = delete;
-
 	~MCadLogger() = default;
 	static [[nodiscard]] MCadLogger& Instance();
 	void setInternal(const InternalLoggerPtr& a_internal);

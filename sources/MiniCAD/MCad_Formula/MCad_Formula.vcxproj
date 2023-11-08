@@ -65,9 +65,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\props\glm.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\props\glm.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -113,14 +115,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Core;$(SolutionDir)..\..\..\..\Libraries\glm;$(SolutionDir)..\common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Configuration;$(SolutionDir)MCad_Core;$(SolutionDir)..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MCad_Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MCad_Core.lib;MCad_Configuration.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,7 +136,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Core;$(SolutionDir)..\..\..\..\Libraries\glm;$(SolutionDir)..\common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MCad_Configuration;$(SolutionDir)MCad_Core;$(SolutionDir)..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,7 +145,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MCad_Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MCad_Core.lib;MCad_Configuration.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -155,6 +157,7 @@
     <ClInclude Include="MCadFormulaEvaluator.h" />
     <ClInclude Include="MCadFormulaOperatorNode.h" />
     <ClInclude Include="MCadFormulaRegEx.h" />
+    <ClInclude Include="MCadFormulaDatabase.h" />
     <ClInclude Include="MCadOperator.h" />
     <ClInclude Include="MCadTrigonometricOperators.h" />
     <ClInclude Include="MCadTypeToString.h" />
@@ -163,6 +166,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MCadFormulaDatabase.cpp" />
     <ClCompile Include="MCadFormulaEvaluator.cpp" />
     <ClCompile Include="MCadFormulaException.cpp" />
     <ClCompile Include="MCadFormulaRegEx.cpp" />

@@ -8,7 +8,7 @@
 #include <variant>
 #include <string>
 #include <memory>
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 class MCadSelectionSet;
 using MCadSelectionSetPtr = std::shared_ptr<MCadSelectionSet>;

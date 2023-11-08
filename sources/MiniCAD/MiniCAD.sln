@@ -12,9 +12,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCad_Formula", "MCad_Formula\MCad_Formula.vcxproj", "{F30E165A-3765-4697-9C15-14EB57B50C2F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{22A892E6-95EB-4609-9CCA-5AB5AAF9462E} = {22A892E6-95EB-4609-9CCA-5AB5AAF9462E}
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E} = {ED25AAB1-3322-43FB-A99C-21D1C29FE74E}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test_MCad_Formula", "Test_MCad_Formula\Test_MCad_Formula.vcxproj", "{31E28543-D99C-401D-91ED-65CE3E8DC0BC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCad_Configuration", "MCad_Configuration\MCad_Configuration.vcxproj", "{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +67,14 @@ Global
 		{31E28543-D99C-401D-91ED-65CE3E8DC0BC}.Release|x64.Build.0 = Release|x64
 		{31E28543-D99C-401D-91ED-65CE3E8DC0BC}.Release|x86.ActiveCfg = Release|Win32
 		{31E28543-D99C-401D-91ED-65CE3E8DC0BC}.Release|x86.Build.0 = Release|Win32
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Debug|x64.ActiveCfg = Debug|x64
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Debug|x64.Build.0 = Debug|x64
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Debug|x86.ActiveCfg = Debug|Win32
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Debug|x86.Build.0 = Debug|Win32
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x64.ActiveCfg = Release|x64
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x64.Build.0 = Release|x64
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x86.ActiveCfg = Release|Win32
+		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

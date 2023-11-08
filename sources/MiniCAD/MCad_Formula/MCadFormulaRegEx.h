@@ -8,7 +8,7 @@
 #include <regex>
 #include <vector>
 #include <functional>
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include "MCadStringTools.h"
 #include "MCad_Formula_globals.h"
 

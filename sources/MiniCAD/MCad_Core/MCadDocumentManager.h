@@ -7,6 +7,8 @@
 #include <vector>
 #include <memory>
 #include "MCadReactive.h"
+
+#include "MCadSingletonMacro.h"
 #include "MCad_Core_globals.h"
 
 
@@ -24,6 +26,8 @@ class IMCadDocManagerReactor;
 class MCAD_CORE_EXPORT MCadDocumentManager : public MCadReactive<IMCadDocManagerReactor>
 {
 	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, MCadReactive<IMCadDocManagerReactor>)
+
+	NOT_COPIABLE(MCadDocumentManager)
 private:
 
 	std::vector<std::shared_ptr<MCadDocument>> m_vDocument;		/*!< opened documents*/
@@ -33,10 +37,6 @@ private:
 
 public:
 	virtual ~MCadDocumentManager() = default;
-	MCadDocumentManager(const MCadDocumentManager&) = delete;
-	MCadDocumentManager(MCadDocumentManager&&) = delete;
-	MCadDocumentManager& operator = (const MCadDocumentManager&) = delete;
-	MCadDocumentManager& operator = (MCadDocumentManager&&) = delete;
 
 	/*@brief document manager instance*/
 	static [[nodiscard]] MCadDocumentManager& Instance();
