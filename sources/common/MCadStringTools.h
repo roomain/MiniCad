@@ -6,7 +6,8 @@
 ************************************************/
 #include <string>
 #include <vector>
-#include <ranges>
+#include <algorithm>
+#include <iterator>
 
 /*@brief Provides tools for parsing string*/
 constexpr std::string left(const std::string_view& a_toParse ,const int a_iSize)
@@ -50,4 +51,11 @@ constexpr void split(const std::string_view& a_data, const char a_separator, std
         prev_pos = ++pos;
     }
     a_vData.emplace_back(a_data.substr(prev_pos, pos - prev_pos));
+}
+
+constexpr std::string toUpper(const std::string& a_data)
+{
+    std::string upperString;
+    std::ranges::transform(a_data, std::back_inserter(upperString), [] (const char a_character){return toupper(a_character);});
+    return upperString;
 }

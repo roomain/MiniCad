@@ -51,7 +51,7 @@
     <ClInclude Include="MCadTypeToString.h">
       <Filter>Fichiers d%27en-tête\tools</Filter>
     </ClInclude>
-    <ClInclude Include="McadFormulaException.h">
+    <ClInclude Include="MCadFormulaException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="MCad_Formula_globals.h">

@@ -16,8 +16,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4251)
 
-using MCadVariableDatabase = std::unordered_map<std::string, MCadValue>;
-
+class MCadFormulaDatabase;
 
 /*@brief used to parse and evaluate formula*/
 class MCAD_FORMULA_EXPORT MCadFormulaEvaluator
@@ -51,7 +50,7 @@ private:
 
 	void processDouble(const std::string_view& a_value, FormulaData& a_formulaData)const;
 	void processInt(const std::string_view& a_value, FormulaData& a_formulaData)const;
-	void processVariable(const std::string_view& a_value, const MCadVariableDatabase& a_database, FormulaData& a_formulaData)const;
+	void processVariable(const std::string_view& a_value, FormulaData& a_formulaData)const;
 
 	template<int Size>
 	void processVector(const std::string_view& a_formula, FormulaData& a_formulaData)const

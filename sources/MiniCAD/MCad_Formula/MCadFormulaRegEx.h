@@ -51,10 +51,10 @@ VECTOR:
 /*@brief configuration structure for parsing*/
 struct MCadFormulaRegEx
 {
-    const std::regex m_dotProdRegex{ "^<dot>" };                                /*!< dot prod operator regex*/
-    const std::regex m_crossProdRegex{ "^<cross>" };                            /*!< cross prod operator regex*/
-    const std::regex m_intRegex{ "^-?([1-9]+[0-9]*)|0" };                       /*!< int regex*/
-    const std::regex m_variableRegex{ "^\\$\\{[a-zA-Z]+(_ | [a-zA-Z])*\\}" };   /*!< variable name regex*/
+    static inline const std::regex m_dotProdRegex{ "^<dot>" };                                /*!< dot prod operator regex*/
+    static inline const std::regex m_crossProdRegex{ "^<cross>" };                            /*!< cross prod operator regex*/
+    static inline const std::regex m_intRegex{ "^-?([1-9]+[0-9]*)|0" };                       /*!< int regex*/
+    static inline const std::regex m_variableRegex{ "^\\$\\{[a-zA-Z]+(_ | [a-zA-Z])*\\}" };   /*!< variable name regex*/
 
     // depends on decimal and values separators
     std::regex m_doubleRegex{ "^$" };       /*!< double regex*/
@@ -65,19 +65,19 @@ struct MCadFormulaRegEx
     std::regex m_pt3DRegex{ "^$" };         /*!< point 3d regex*/
 
     // specific vector data
-    std::regex m_polarCoord{ "^$" };        /*!< polar coord regex*/
-    std::regex m_relCartesian3D{ "^$" };    /*!< relative cartesian 3d regex*/
-    std::regex m_relCartesian2D{ "^$" };    /*!< relative cartesian 2d regex*/
-    std::regex m_relPolar{ "^$" };          /*!< relative polar regex*/
+    std::regex m_polarCoordRegex{ "^$" };        /*!< polar coord regex*/
+    std::regex m_relCartesian3DRegex{ "^$" };    /*!< relative cartesian 3d regex*/
+    std::regex m_relCartesian2DRegex{ "^$" };    /*!< relative cartesian 2d regex*/
+    std::regex m_relPolarRegex{ "^$" };          /*!< relative polar regex*/
 
     // trigo regex and functions
-    std::regex m_cos{ R"(cos\()" };                             /*!<cos regex*/
-    std::regex m_sin{ R"(sin\()" };                             /*!<sin regex*/
-    std::regex m_tan{ R"(tan\()" };                             /*!<tan regex*/
-    std::regex m_acos{ R"(acos\()" };                           /*!<acos regex*/
-    std::regex m_asin{ R"(asin\()" };                           /*!<asin regex*/
-    std::regex m_atan{ R"(atan\()" };                           /*!<atan regex*/
-    std::regex m_function{ R"([a-zA-Z]+(_ | [a-zA-Z])*\()" };   /*!<function regex*/
+    std::regex m_cosRegex{ R"(cos\()" };                             /*!<cos regex*/
+    std::regex m_sinRegex{ R"(sin\()" };                             /*!<sin regex*/
+    std::regex m_tanRegex{ R"(tan\()" };                             /*!<tan regex*/
+    std::regex m_acosRegex{ R"(acos\()" };                           /*!<acos regex*/
+    std::regex m_asinRegex{ R"(asin\()" };                           /*!<asin regex*/
+    std::regex m_atanRegex{ R"(atan\()" };                           /*!<atan regex*/
+    std::regex m_functionRegex{ R"([a-zA-Z]+(_ | [a-zA-Z])*\()" };   /*!<function regex*/
 
     static constexpr char PolarSeparator = '<';
 };
@@ -94,10 +94,10 @@ inline static void initialize(const char a_decimalSeparator, const char a_valueS
     a_formulaRegEx.m_pt2DRegex = std::regex{ std::string("^\\(") + sDouble + a_valueSeparator + sDouble + "\\)" };
     a_formulaRegEx.m_pt3DRegex = std::regex{ std::string("^\\(") + sDouble + a_valueSeparator + sDouble + a_valueSeparator + sDouble + "\\)" };
 
-    a_formulaRegEx.m_polarCoord = std::regex{ std::string("^") + sDouble + "<" + sDouble };
-    a_formulaRegEx.m_relCartesian2D = std::regex{ std::string("^@\\(") + sDouble + a_valueSeparator + sDouble + "\\)" };
-    a_formulaRegEx.m_relCartesian3D = std::regex{ std::string("^@\\(") + sDouble + a_valueSeparator + sDouble + a_valueSeparator + sDouble + "\\)" };
-    a_formulaRegEx.m_relPolar = std::regex{ std::string("^@") + sDouble + "<" + sDouble };
+    a_formulaRegEx.m_polarCoordRegex = std::regex{ std::string("^") + sDouble + "<" + sDouble };
+    a_formulaRegEx.m_relCartesian2DRegex = std::regex{ std::string("^@\\(") + sDouble + a_valueSeparator + sDouble + "\\)" };
+    a_formulaRegEx.m_relCartesian3DRegex = std::regex{ std::string("^@\\(") + sDouble + a_valueSeparator + sDouble + a_valueSeparator + sDouble + "\\)" };
+    a_formulaRegEx.m_relPolarRegex = std::regex{ std::string("^@") + sDouble + "<" + sDouble };
 }
 
 /*@brief Get data from string. The string entries are supposed correct*/
