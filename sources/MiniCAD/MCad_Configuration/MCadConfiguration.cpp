@@ -11,3 +11,8 @@ MCadConfigurationModulePtr MCadConfiguration::operator [](const std::string& a_m
 {
 	return m_modulesConfigurations.at(a_module);
 }
+
+MCadConfiguration::MCadConfiguration( )
+{
+	//
+}

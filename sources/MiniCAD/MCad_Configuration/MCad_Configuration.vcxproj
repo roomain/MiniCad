@@ -152,6 +152,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="MCadConfiguration.h" />
     <ClInclude Include="MCadAngle.h" />
+    <ClInclude Include="MCadDependProperty.h" />
     <ClInclude Include="MCadPropertiesDef.h" />
     <ClInclude Include="MCadProperty.h" />
     <ClInclude Include="MCad_Configuration_globals.h" />

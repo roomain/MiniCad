@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 #include "MCadProperty.h"
+#include "MCadDependProperty.h"
 #include "MCadAngle.h"
 #include "glm/glm.hpp"
 #include "glm/gtx/quaternion.hpp"
@@ -26,7 +27,7 @@ class MCAD_CONFIGURATION_EXPORT MCadConfiguration
 {
 	NOT_COPIABLE(MCadConfiguration)
 private:
-	MCadConfiguration( ) = default;
+	MCadConfiguration( );
 	ModulesConfigurations m_modulesConfigurations; /*!< module configurations*/
 
 public:
@@ -45,6 +46,12 @@ public:
 
 #define PROPERTY_VALID_DEF(Type, Name, Valid, DefaultValue) \
 	MCadValidProperty<Type, Valid> Name{#Name, DefaultValue};
+
+#define PROPERTY_DEPENDANT_One_DEF(Type, dependType, Name) \
+	MCadDependProperty<Type, dependType> Name{#Name, DefaultValue};
+
+#define PROPERTY_DEPENDANT_Two_DEF(Type, dependType1, dependType2, Name) \
+	MCadDependPropertyEx<Type, dependType1, dependType2> Name{#Name};
 
 #include "MCadPropertiesDef.h"
 

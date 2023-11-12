@@ -56,7 +56,7 @@ MCadValue MCadFormulaDatabase::getVariableValue(const std::string& a_name)const
 
 	if ( key.compare(MCadFormulaDatabase::USER_ORIGIN) == 0)
 	{
-		valueRet = MCadConfiguration::Instance( ).USER_ORIGIN.value();
+		valueRet = convert(MCadConfiguration::Instance( ).USER_ORIGIN.value());
 	}
 	else if ( key.compare(MCadFormulaDatabase::USER_XAXIS) == 0 )
 	{
@@ -111,7 +111,8 @@ bool MCadFormulaDatabase::renameVariable(const std::string& a_oldName, const std
 		if ( !formatName(a_newName, newKey) )
 			return false;
 
-		// TODO
+		m_variables.emplace(newKey, m_variables[ oldKey ]);
+		m_variables.erase(oldKey);
 	}
 	return false;
 }

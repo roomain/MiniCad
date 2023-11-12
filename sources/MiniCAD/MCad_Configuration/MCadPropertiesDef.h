@@ -2,7 +2,7 @@
 //#include "glm/glm.hpp"
 
 #ifdef PROPERTY_DEF_DEFAULT_INIT
-PROPERTY_DEF_DEFAULT_INIT(glm::dvec3, USER_ORIGIN)
+PROPERTY_DEF_DEFAULT_INIT(glm::vec3, USER_ORIGIN)
 PROPERTY_DEF_DEFAULT_INIT(glm::quat, USER_ORIENTATION)
 #endif
 
@@ -20,4 +20,12 @@ PROPERTY_DEF(AngleUnit, ANGLE_UNIT, AngleUnit::unit_degree)
 
 #ifdef PROPERTY_VALID_DEF
 //#define PROPERTY_VALID_DEF(Type, Name, Valid, DefaultValue)
+#endif
+
+#ifdef PROPERTY_DEPENDANT_One_DEF
+//#define PROPERTY_DEPENDANT_One_DEF(Type, Name, Valid, DefaultValue)
+#endif
+
+#ifdef PROPERTY_DEPENDANT_Two_DEF
+PROPERTY_DEPENDANT_Two_DEF(glm::mat4, glm::vec3, glm::quat, USER_TRANSFORM)
 #endif
