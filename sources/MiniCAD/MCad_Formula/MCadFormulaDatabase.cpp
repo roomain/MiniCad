@@ -143,3 +143,48 @@ bool MCadFormulaDatabase::removeVariable(const std::string& a_name)
 	}
 	return false;
 }
+
+bool MCadFormulaDatabase::renameFormula(const std::string& a_oldName, const std::string& a_newName)
+{
+	std::string oldKey;
+	if ( !formatName(a_oldName, oldKey) )
+		return false;
+
+	if ( m_formulas.contains(oldKey) )
+	{
+		std::string newKey;
+		if ( !formatName(a_newName, newKey) )
+			return false;
+
+		m_formulas.emplace(newKey, m_formulas [ oldKey ]);
+		m_formulas.erase(oldKey);
+	}
+	return false;
+}
+
+bool MCadFormulaDatabase::newFormula(const std::string& a_name, const MCadValue& a_value)
+{
+	std::string key;
+	if ( !formatName(a_name, key) )
+		return false;
+
+	if ( m_formulas.contains(key) )
+		return false;
+
+	m_formulas.emplace(key, a_value);
+	return true;
+}
+
+bool MCadFormulaDatabase::removeFormula(const std::string& a_name)
+{
+	std::string key;
+	if ( !formatName(a_name, key) )
+		return false;
+
+	if ( m_formulas.contains(key) )
+	{
+		m_formulas.erase(key);
+		return true;
+	}
+	return false;
+}

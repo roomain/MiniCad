@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+	<IMGUI_DIR Condition="exists('D:\libraries\imgui')">"D:\libraries\imgui"</IMGUI_DIR>
+    <IMGUI_DIR Condition="exists('C:\libraries\imgui')">"C:\libraries\imgui"</IMGUI_DIR>
+    <IMGUI_INC>$(IMGUI_DIR)</IMGUI_INC>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IMGUI_INC);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="IMGUI_DIR">
+      <Value>$(IMGUI_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="IMGUI_INC">
+      <Value>$(IMGUI_INC)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

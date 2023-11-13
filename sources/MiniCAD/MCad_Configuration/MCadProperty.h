@@ -27,7 +27,7 @@ protected:
 	std::string m_propertyName;		/*!< property name*/
 	ReactorVec<Type> m_reactors;	/*!< reactor callback*/
 
-	void callRactors(const Type& a_oldValue, const Type& a_newValue)const
+	void callReactors(const Type& a_oldValue, const Type& a_newValue)const
 	{
 		for ( const auto& callback : m_reactors )
 			callback(m_propertyName, a_oldValue, a_newValue);
@@ -70,13 +70,13 @@ public:
 	
 	MCadProperty<Type, ReadOnly>& operator = (const Type& a_value) requires( !ReadOnly )
 	{
-		callRactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+		callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 		MCadBaseProperty<Type>::m_propertyValue = a_value;
 		return *this;
 	}
 	MCadProperty<Type, ReadOnly>& operator = (Type&& a_value)noexcept requires( !ReadOnly )
 	{
-		callRactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+		callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 		MCadBaseProperty<Type>::m_propertyValue = a_value;
 		return *this;
 	}
@@ -102,7 +102,7 @@ public:
 	{
 		if ( Valid(a_value) )
 		{
-			callRactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+			callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 			MCadBaseProperty<Type>::m_propertyValue = a_value;
 		}
 		return *this;
@@ -111,7 +111,7 @@ public:
 	{
 		if ( Valid(a_value) )
 		{
-			callRactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+			callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 			MCadBaseProperty<Type>::m_propertyValue = a_value;
 		}
 		return *this;

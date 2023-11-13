@@ -29,10 +29,14 @@ public:
 	explicit MCadDependProperty(const std::string_view& a_name, Type&& a_defaultValue) : MCadBaseProperty<Type>{ a_name, std::move(a_defaultValue) }{}
 	void setDependancy(const ComputeFun<Type, DependType>& a_callback, MCadBaseProperty<DependType>& a_depends)
 	{
+		// initialize
 		m_dependsFun = a_callback;
+		m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_depends.value( ));
+
+		// setup callback
 		a_depends.addReactor([ this ] (const std::string&, const Type&, const Type& a_newValue)
 			{
-				callRactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue));
+				this->callRactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue));
 			});
 	}
 };
@@ -56,15 +60,21 @@ public:
 	explicit MCadDependPropertyEx(const std::string_view& a_name, Type&& a_defaultValue) : MCadBaseProperty<Type>{ a_name, std::move(a_defaultValue) } {}
 	void setDependancies(const ComputeFunEx<Type, DependTypeFirst, DependTypeSecond>& a_callback, MCadBaseProperty<DependTypeFirst>& a_dependFirst, MCadBaseProperty<DependTypeSecond>& a_dependSecond)
 	{
+		// initialize
 		m_dependsFun = a_callback;
-		a_dependFirst.addReactor([ this ] (const std::string&, const Type&, const Type& a_newValue)
+		m_dependingValues.m_firstDependancyValue = a_dependFirst.value( );
+		m_dependingValues.m_secondDependancyValue = a_dependSecond.value( );
+		m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_dependFirst.value( ), a_dependSecond.value( ));
+
+		// setup callbacks
+		a_dependFirst.addReactor([ this ] (const std::string&, const DependTypeFirst&, const DependTypeFirst& a_newValue)
 			{
-				callRactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue, m_dependingValues.m_secondDependancyValue));
+				this->callReactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue, m_dependingValues.m_secondDependancyValue));
 				m_dependingValues.m_firstDependancyValue = a_newValue;
 			});
-		a_dependSecond.addReactor([ this ] (const std::string&, const Type&, const Type& a_newValue)
+		a_dependSecond.addReactor([ this ] (const std::string&, const DependTypeSecond&, const DependTypeSecond& a_newValue)
 			{
-				callRactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, m_dependingValues.m_firstDependancyValue, a_newValue));
+				this->callReactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, m_dependingValues.m_firstDependancyValue, a_newValue));
 				m_dependingValues.m_secondDependancyValue = a_newValue;
 			});
 	}

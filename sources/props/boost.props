@@ -2,7 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <BOOST_DIR>$(solutionDir)..\Externals\boost_1_77_0</BOOST_DIR>
+	<BOOST_DIR Condition="exists('D:\libraries\glm')">"D:\libraries\boost_1_83_0"</BOOST_DIR>
+    <BOOST_DIR Condition="exists('C:\libraries\glm')">"C:\libraries\boost_1_83_0"</BOOST_DIR>
     <BOOST_INC>$(BOOST_DIR)</BOOST_INC>
     <BOOST_LIB>$(BOOST_DIR)\bin.v2\libs</BOOST_LIB>
   </PropertyGroup>

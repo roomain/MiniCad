@@ -44,5 +44,9 @@ public:
 	[[nodiscard]] bool hasFormula(const std::string& a_name)const;
 	[[nodiscard]] std::string getFormula(const std::string& a_name)const;
 
+	[[nodiscard]] bool renameFormula(const std::string& a_oldName, const std::string& a_newName);
+	[[nodiscard]] bool newFormula(const std::string& a_name, const MCadValue& a_value);
+	[[nodiscard]] bool removeFormula(const std::string& a_name);
+
 };
 #pragma warning(pop)
