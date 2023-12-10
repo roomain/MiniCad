@@ -125,7 +125,7 @@ inline static glm::vec<VecSize, double, glm::defaultp> getVector(const std::stri
     split(workingData, a_valueSeparator, vdata);
     VecType vRet;
     int index = 0;
-    for ( auto&& strValue : vdata )
+    for ( const auto& strValue : vdata )
     {
         vRet [ index ] = getDouble(strValue, a_decimalSeparator);
         ++index;

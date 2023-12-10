@@ -19,6 +19,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test_MCad_Formula", "Test_M
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCad_Configuration", "MCad_Configuration\MCad_Configuration.vcxproj", "{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests unitaires", "Tests unitaires", "{5B1573DF-3699-446F-9FE7-D23E230D0A33}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driver", "Driver", "{0BE329BA-C4B5-47A3-9F84-059482A9AC33}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCadDriverInterface", "MCadDriverInterface\MCadDriverInterface.vcxproj", "{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCadEvents", "MCadEvents\MCadEvents.vcxproj", "{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCadCommands", "MCadCommands\MCadCommands.vcxproj", "{C1353500-D19F-41B5-8ECD-77CD248D4C2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -75,9 +85,38 @@ Global
 		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x64.Build.0 = Release|x64
 		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x86.ActiveCfg = Release|Win32
 		{ED25AAB1-3322-43FB-A99C-21D1C29FE74E}.Release|x86.Build.0 = Release|Win32
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Debug|x64.ActiveCfg = Debug|x64
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Debug|x64.Build.0 = Debug|x64
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Debug|x86.ActiveCfg = Debug|Win32
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Debug|x86.Build.0 = Debug|Win32
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Release|x64.ActiveCfg = Release|x64
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Release|x64.Build.0 = Release|x64
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Release|x86.ActiveCfg = Release|Win32
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}.Release|x86.Build.0 = Release|Win32
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Debug|x64.ActiveCfg = Debug|x64
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Debug|x64.Build.0 = Debug|x64
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Debug|x86.ActiveCfg = Debug|Win32
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Debug|x86.Build.0 = Debug|Win32
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Release|x64.ActiveCfg = Release|x64
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Release|x64.Build.0 = Release|x64
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Release|x86.ActiveCfg = Release|Win32
+		{386D3F3A-BAF2-4384-88F7-1AE5280C1BD0}.Release|x86.Build.0 = Release|Win32
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Debug|x64.ActiveCfg = Debug|x64
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Debug|x64.Build.0 = Debug|x64
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Debug|x86.ActiveCfg = Debug|Win32
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Debug|x86.Build.0 = Debug|Win32
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Release|x64.ActiveCfg = Release|x64
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Release|x64.Build.0 = Release|x64
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Release|x86.ActiveCfg = Release|Win32
+		{C1353500-D19F-41B5-8ECD-77CD248D4C2B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7AF209BA-8C16-4BBD-8099-C70ED3B9F08B} = {5B1573DF-3699-446F-9FE7-D23E230D0A33}
+		{31E28543-D99C-401D-91ED-65CE3E8DC0BC} = {5B1573DF-3699-446F-9FE7-D23E230D0A33}
+		{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9} = {0BE329BA-C4B5-47A3-9F84-059482A9AC33}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A73F945E-1012-454B-8BE0-F3725B278BEE}

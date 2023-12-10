@@ -20,7 +20,7 @@ using ComputeFunEx = std::function<Type(Type&, const DependTypeFirst&, const Dep
 template<typename Type, typename DependType>
 class MCadDependProperty : public MCadBaseProperty<Type>
 {
-protected:
+private:
 	ComputeFun<Type, DependType> m_dependsFun;	/*!< callback of depend change*/
 
 public:
@@ -36,7 +36,7 @@ public:
 		// setup callback
 		a_depends.addReactor([ this ] (const std::string&, const Type&, const Type& a_newValue)
 			{
-				this->callRactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue));
+				this->MCadBaseProperty<Type>::callRactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue));
 			});
 	}
 };
@@ -45,7 +45,7 @@ public:
 template<typename Type, typename DependTypeFirst, typename DependTypeSecond>
 class MCadDependPropertyEx : public MCadBaseProperty<Type>
 {
-protected:
+private:
 	ComputeFunEx<Type, DependTypeFirst, DependTypeSecond> m_dependsFun;	/*!< callback of depend change*/
 
 	struct
@@ -69,12 +69,12 @@ public:
 		// setup callbacks
 		a_dependFirst.addReactor([ this ] (const std::string&, const DependTypeFirst&, const DependTypeFirst& a_newValue)
 			{
-				this->callReactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue, m_dependingValues.m_secondDependancyValue));
+				this->MCadBaseProperty<Type>::callReactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, a_newValue, m_dependingValues.m_secondDependancyValue));
 				m_dependingValues.m_firstDependancyValue = a_newValue;
 			});
 		a_dependSecond.addReactor([ this ] (const std::string&, const DependTypeSecond&, const DependTypeSecond& a_newValue)
 			{
-				this->callReactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, m_dependingValues.m_firstDependancyValue, a_newValue));
+				this->MCadBaseProperty<Type>::callReactors(MCadBaseProperty<Type>::m_propertyValue, m_dependsFun(MCadBaseProperty<Type>::m_propertyValue, m_dependingValues.m_firstDependancyValue, a_newValue));
 				m_dependingValues.m_secondDependancyValue = a_newValue;
 			});
 	}

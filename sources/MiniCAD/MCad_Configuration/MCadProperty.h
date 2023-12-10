@@ -57,9 +57,11 @@ public:
 
 };
 
-template<typename Type, bool ReadOnly = false>
+template<typename Type, bool ReadOnly = false, typename Friend = void>
 class MCadProperty : public MCadBaseProperty<Type>
 {
+	friend Friend;
+
 public:
 	MCadProperty( ) = delete;
 	explicit MCadProperty(const std::string_view& a_name) :
@@ -70,13 +72,13 @@ public:
 	
 	MCadProperty<Type, ReadOnly>& operator = (const Type& a_value) requires( !ReadOnly )
 	{
-		callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+		MCadBaseProperty<Type>::callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 		MCadBaseProperty<Type>::m_propertyValue = a_value;
 		return *this;
 	}
 	MCadProperty<Type, ReadOnly>& operator = (Type&& a_value)noexcept requires( !ReadOnly )
 	{
-		callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+		MCadBaseProperty<Type>::callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 		MCadBaseProperty<Type>::m_propertyValue = a_value;
 		return *this;
 	}
@@ -102,7 +104,7 @@ public:
 	{
 		if ( Valid(a_value) )
 		{
-			callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+			MCadBaseProperty<Type>::callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 			MCadBaseProperty<Type>::m_propertyValue = a_value;
 		}
 		return *this;
@@ -111,7 +113,7 @@ public:
 	{
 		if ( Valid(a_value) )
 		{
-			callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
+			MCadBaseProperty<Type>::callReactors(MCadBaseProperty<Type>::m_propertyValue, a_value);
 			MCadBaseProperty<Type>::m_propertyValue = a_value;
 		}
 		return *this;
