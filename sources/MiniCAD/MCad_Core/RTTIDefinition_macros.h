@@ -56,7 +56,7 @@ public: \
 		if(s_definition.use_count() > 1)\
 			throw RTTIException(RTTIException::ExceptType::Except_CantUnitialize, std::source_location::current());\
 		s_definition.reset(); \
-	}\
+	}
 	
 
 //------------------------------------------------------------------------------------------------------------------------------------

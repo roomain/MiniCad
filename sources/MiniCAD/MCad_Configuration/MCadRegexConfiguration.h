@@ -10,9 +10,15 @@
 #include <functional>
 #include "glm/glm.hpp"
 #include "MCadProperty.h"
+#include "MCad_Configuration_globals.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#pragma warning(disable : 4275)
 
 /*@brief contains regular expressions for parsing*/
-class MCadRegexConfiguration
+/*need to be exported due to link error on MCadValidProperty<char, &MCadRegexConfiguration::valid>*/
+class MCAD_CONFIGURATION_EXPORT MCadRegexConfiguration
 {
 ////////////////////////////////////////////////////////////////////////////////
 /* @brief
@@ -50,6 +56,7 @@ private:
 
     static bool valid(const char& a_separator);
     void updateRegex(const char& a_separator);
+
 public:
     MCadRegexConfiguration( );
     virtual ~MCadRegexConfiguration( ) = default;
@@ -81,6 +88,8 @@ public:
     MCadProperty<std::regex, true, MCadRegexConfiguration> REL_3D_CARTESIAN_REGEX{ "REL_3D_CARTESIAN_REGEX", std::regex{ "^$" } };      /*!< relative cartesian 3d regex*/
     MCadProperty<std::regex, true, MCadRegexConfiguration> REL_2D_CARTESIAN_REGEX{ "REL_2D_CARTESIAN_REGEX", std::regex{ "^$" } };      /*!< relative cartesian 2d regex*/
     MCadProperty<std::regex, true, MCadRegexConfiguration> REL_POLAR_REGEX{ "REL_POLAR_REGEX", std::regex{ "^$" } };                    /*!< relative polar regex*/
-
-    MCadValidProperty<char, MCadRegexConfiguration::valid> DECIMAL_SEPARATOR{ "DECIMAL_SEPARATOR", '.' };
+    MCadProperty<char, true> POLAR_SEPARATOR{ "POLAR_SEPARATOR", '<' };
+    MCadProperty<char, true, MCadRegexConfiguration> VALUE_SEPARATOR{ "VALUE_SEPARATOR", ',' };
+    MCadValidProperty<char, &MCadRegexConfiguration::valid> DECIMAL_SEPARATOR{ "DECIMAL_SEPARATOR", '.' };
 };
+#pragma warning(pop)

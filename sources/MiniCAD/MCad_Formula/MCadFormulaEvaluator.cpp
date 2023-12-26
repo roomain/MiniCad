@@ -6,53 +6,49 @@
 MCadFormulaEvaluator::MCadFormulaEvaluator( )
 {
 	using namespace std::placeholders;
-	initialize(m_decimalSeparator, m_valueSeparator, m_parser);
-
-	m_regexReact.emplace_back(m_parser.m_doubleRegex, std::bind_front(&MCadFormulaEvaluator::processDouble, this));
-	m_regexReact.emplace_back(MCadFormulaRegEx::m_intRegex, std::bind_front(&MCadFormulaEvaluator::processInt, this));
-	m_regexReact.emplace_back(m_parser.m_vec2DRegex, std::bind_front(&MCadFormulaEvaluator::processVector<2>, this));
-	m_regexReact.emplace_back(m_parser.m_vec3DRegex, std::bind_front(&MCadFormulaEvaluator::processVector<3>, this));
-	m_regexReact.emplace_back(m_parser.m_vec4DRegex, std::bind_front(&MCadFormulaEvaluator::processVector<4>, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).DOUBLE_REGEX.value(), std::bind_front(&MCadFormulaEvaluator::processDouble, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).INT_REGEX.value( ), std::bind_front(&MCadFormulaEvaluator::processInt, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).VEC2_REGEX.value( ), std::bind_front(&MCadFormulaEvaluator::processVector<2>, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).VEC3_REGEX.value( ), std::bind_front(&MCadFormulaEvaluator::processVector<3>, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).VEC4_REGEX.value( ), std::bind_front(&MCadFormulaEvaluator::processVector<4>, this));
 
 
-	m_regexReact.emplace_back(m_parser.m_relCartesian2DRegex, std::bind_front(&MCadFormulaEvaluator::processRelativeVector<2>, this));
-	m_regexReact.emplace_back(m_parser.m_relCartesian3DRegex, std::bind_front(&MCadFormulaEvaluator::processRelativeVector<3>, this));
-	m_regexReact.emplace_back(m_parser.m_cosRegex, [] (const std::string_view&, FormulaData& a_formula)
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).REL_2D_CARTESIAN_REGEX.value( ), std::bind_front(&MCadFormulaEvaluator::processRelativeVector<2>, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).REL_3D_CARTESIAN_REGEX.value( ), std::bind_front(&MCadFormulaEvaluator::processRelativeVector<3>, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).COS_REGEX.value( ), [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Cos>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("cos(").length( ));
 			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
-		}
-	);
-	m_regexReact.emplace_back(m_parser.m_sinRegex, [] (const std::string_view&, FormulaData& a_formula)
+		});
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).SIN_REGEX.value( ), [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Sin>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("sin(").length( ));
 			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
-		}
-	);
-	m_regexReact.emplace_back(m_parser.m_tanRegex, [] (const std::string_view&, FormulaData& a_formula)
+		});
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).TAN_REGEX.value( ), [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Tan>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("tan(").length( ));
 			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
-	m_regexReact.emplace_back(m_parser.m_acosRegex, [] (const std::string_view&, FormulaData& a_formula)
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).ACOS_REGEX.value( ), [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Acos>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("acos(").length( ));
 			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
-	m_regexReact.emplace_back(m_parser.m_asinRegex, [] (const std::string_view&, FormulaData& a_formula)
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).ASIN_REGEX.value( ), [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Asin>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast< int >( std::string_view("asin(").length( ));
 			a_formula.m_currentPriorityOffset += PRIORITY_OFFSET;
 		}
 	);
-	m_regexReact.emplace_back(m_parser.m_atanRegex, [] (const std::string_view&, FormulaData& a_formula)
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).ATAN_REGEX.value( ), [] (const std::string_view&, FormulaData& a_formula)
 		{
 			MCadFormulaEvaluator::createOperatorNode<OperatorType::Op_Atan>(a_formula);
 			a_formula.m_formulaParsingLocation += static_cast<int>(std::string_view("atan(").length( ));
@@ -60,7 +56,7 @@ MCadFormulaEvaluator::MCadFormulaEvaluator( )
 		}
 	);
 	// TODO variable + function
-	m_regexReact.emplace_back(MCadFormulaRegEx::m_variableRegex, std::bind_front(&MCadFormulaEvaluator::processVariable, this));
+	m_regexReact.emplace_back(MCadConfiguration::Instance( ).VAR_REGEX.value(), std::bind_front(&MCadFormulaEvaluator::processVariable, this));
 
 }
 
@@ -79,7 +75,7 @@ void MCadFormulaEvaluator::processDouble(const std::string_view& a_value, Formul
 	if ( !a_formulaData.m_lastVariable )
 	{
 		a_formulaData.m_formulaParsingLocation += static_cast< int >( a_value.size( ) ) - 1;
-		a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getDouble(a_value, m_decimalSeparator));
+		a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getDouble(a_value));
 
 		if ( a_formulaData.m_lastOperator )
 			a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);

@@ -11,14 +11,14 @@
 #include "glm/glm.hpp"
 
 using MCadArgList = std::vector<std::string>;
-using MCadArgIterator = MCadArgList::const_iterator;
+using MCadArgIterator = MCadArgList::iterator;
 
 class MCadCmArguments
 {
 	NOT_COPIABLE(MCadCmArguments)
 private:
-	MCadArgList m_argList;						/*!< list of command arguments*/
-	std::optional<MCadArgIterator> m_argIter;	/*!< current iterator*/
+	MCadArgList m_argList;								/*!< list of command arguments*/
+	mutable std::optional<MCadArgIterator> m_argIter;	/*!< current iterator*/
 
 public:
 	MCadCmArguments( );
@@ -31,7 +31,7 @@ public:
 		// need to define function: bool fromString(const std::string&, Type&)
 		if ( m_argIter.has_value( ) && fromString(*( m_argIter.value( ) ), a_arg) )
 		{
-			m_argIter.value( )++;
+			(*m_argIter)++;
 			return true;
 		}
 		return false;

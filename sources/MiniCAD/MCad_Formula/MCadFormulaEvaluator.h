@@ -6,11 +6,11 @@
 ************************************************/
 #include<unordered_map>
 #include "MCadValue.h"
-#include "MCadFormulaRegEx.h"
 #include "MCadTreeNode.h"
 #include "MCadFormulaOperatorNode.h"
 #include "MCad_Formula_globals.h"
 #include "MCadFormulaException.h"
+#include "MCadFormulaRegEx.h"
 
 
 #pragma warning(push)
@@ -33,7 +33,6 @@ private:
 
 	char m_decimalSeparator = '.';					/*!< decimal separator*/
 	char m_valueSeparator = ',';					/*!< value separator for vector*/
-	MCadFormulaRegEx m_parser;						/*!< regex parsing*/
 	VRegExReactor<FormulaData&> m_regexReact;		/*!< action per regular expression*/
 	static constexpr int PRIORITY_OFFSET = 10;		/*!< priority offset for parenthesis*/
 
@@ -58,7 +57,7 @@ private:
 		if ( !a_formulaData.m_lastVariable )
 		{
 			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_formula.size() ) - 1;
-			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getVector<Size>(a_formula, m_decimalSeparator, m_valueSeparator));
+			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getVector<Size>(a_formula));
 
 			if ( a_formulaData.m_lastOperator )
 				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
@@ -77,7 +76,7 @@ private:
 		if ( !a_formulaData.m_lastVariable )
 		{
 			a_formulaData.m_formulaParsingLocation += static_cast< int >( a_formula.size( ) ) - 1;
-			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getRelative<Size>(a_formula, m_decimalSeparator, m_valueSeparator));
+			a_formulaData.m_lastVariable = std::make_shared<MCadFormulaValueNode>(getRelative<Size>(a_formula));
 
 			if ( a_formulaData.m_lastOperator )
 				a_formulaData.m_lastOperator->appendChild(a_formulaData.m_lastVariable);
@@ -98,13 +97,13 @@ private:
 		switch ( Size )
 		{
 		case 2:
-			regularExp = m_parser.m_vec2DRegex;
+			regularExp = MCadConfiguration::Instance().VEC2_REGEX;
 			break;
 		case 3:
-			regularExp = m_parser.m_vec3DRegex;
+			regularExp = MCadConfiguration::Instance( ).VEC3_REGEX;
 			break;
 		case 4:
-			regularExp = m_parser.m_vec4DRegex;
+			regularExp = MCadConfiguration::Instance( ).VEC4_REGEX;
 			break;
 		default:
 			throw MCadFormulaException(MCadFormulaException::ExceptType::Formula_except_NotSupported,

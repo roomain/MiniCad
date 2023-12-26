@@ -204,6 +204,9 @@
     <ClInclude Include="TMCadRecordContainerEmptyCell.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
+    <ClInclude Include="TMCadSelectionSet.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

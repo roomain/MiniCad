@@ -9,5 +9,6 @@
 
 // ajouter les en-têtes à précompiler ici
 #include "framework.h"
-
+#include "MCadConfiguration.h"
+#include "MCadFormulaRegEx.h"
 #endif //PCH_H

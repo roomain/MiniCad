@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include <unordered_map>
+#include <string>
 #include "MCadValue.h"
 #include "MCadSingletonMacro.h"
 #include "MCad_Formula_globals.h"

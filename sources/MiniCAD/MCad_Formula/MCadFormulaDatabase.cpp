@@ -1,9 +1,7 @@
 #include "pch.h"
 #include <numbers>
 #include "MCadFormulaDatabase.h"
-#include "MCadConfiguration.h"
 #include "MCadStringTools.h"
-#include "MCadFormulaRegEx.h"
 
 MCadFormulaDatabase& MCadFormulaDatabase::Instance( )
 {
@@ -20,7 +18,7 @@ bool MCadFormulaDatabase::formatName(const std::string& a_name, std::string& a_f
 	if ( formatted [ 0 ] != '$' )
 		formatted = "$" + formatted;
 	
-	if ( std::regex_match(formatted, MCadFormulaRegEx::m_variableRegex) )
+	if ( std::regex_match(formatted, MCadConfiguration::Instance().VAR_REGEX.value()) )
 	{
 		a_formatted = formatted;
 		return true;
@@ -171,7 +169,7 @@ bool MCadFormulaDatabase::newFormula(const std::string& a_name, const MCadValue&
 	if ( m_formulas.contains(key) )
 		return false;
 
-	m_formulas.emplace(key, a_value);
+	m_formulas.emplace(key, std::get<std::string>(a_value));
 	return true;
 }
 

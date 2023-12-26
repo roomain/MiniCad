@@ -13,17 +13,19 @@
 #include "glm/glm.hpp"
 #include "glm/gtx/quaternion.hpp"
 #include "MCadSingletonMacro.h"
+#include "MCadRegexConfiguration.h"
 #include "MCad_Configuration_globals.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
+#pragma warning(disable : 4275)
 
 class MCadConfigurationModule;
 using MCadConfigurationModulePtr = std::shared_ptr<MCadConfigurationModule>;
 using ModulesConfigurations = std::unordered_map<std::string, MCadConfigurationModulePtr>;
 
 /*@brief configuration singleton*/
-class MCAD_CONFIGURATION_EXPORT MCadConfiguration
+class MCAD_CONFIGURATION_EXPORT MCadConfiguration : public MCadRegexConfiguration
 {
 	NOT_COPIABLE(MCadConfiguration)
 private:

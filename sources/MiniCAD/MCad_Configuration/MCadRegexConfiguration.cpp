@@ -14,6 +14,7 @@ MCadRegexConfiguration::MCadRegexConfiguration( )
 void MCadRegexConfiguration::updateRegex(const char& a_separator)
 {
 	const char valueSeparator = ( a_separator == ',' ) ? ';' : ',';
+	VALUE_SEPARATOR.m_propertyValue = valueSeparator;
 	std::string regExdecimalSeparator = ( a_separator == '.' ) ? std::string("\\.") : std::string("" + a_separator);
 	std::string sDouble = std::string("-?(([1-9]+[0-9]*)|([0-9]))") + regExdecimalSeparator + std::string("[0-9]*");
 	DOUBLE_REGEX.m_propertyValue = std::regex{ std::string("^") + sDouble };
