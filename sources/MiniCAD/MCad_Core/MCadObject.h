@@ -7,7 +7,7 @@
 #include <atomic>
 #include "RTTIDefinition_macros.h"
 #include "IMCadObjectReactor.h"
-#include "MCadReactive.h"
+#include "TMCadReactive.h"
 #include "MCad_Core_globals.h"
 #include "defines.h"
 #include "MCadMemory.h"
@@ -23,10 +23,10 @@ class IMCadOutputStream;
 #pragma warning(disable : 4251)
 
 /*@brief base MCad object*/
-class MCAD_CORE_EXPORT MCadObject : public MCadRefObject, public MCadReactive<IMCadObjectReactor>,
+class MCAD_CORE_EXPORT MCadObject : public MCadRefObject, public TMCadReactive<IMCadObjectReactor>,
 	public MCadShared_from_this<MCadObject>
 {
-	DECLARE_RTTI_DERIVED(1, MCadObject, MCadReactive<IMCadObjectReactor>)
+	DECLARE_RTTI_DERIVED(1, MCadObject, TMCadReactive<IMCadObjectReactor>)
 private:
 	std::atomic_bool m_bErased = false;				/*!< erased flag (object is no more usable)*/
 	std::weak_ptr<MCadDocument> m_pDoc;				/*!< document container*/

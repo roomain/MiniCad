@@ -59,3 +59,11 @@ constexpr std::string toUpper(const std::string& a_data)
     std::ranges::transform(a_data, std::back_inserter(upperString), [] (const char a_character){return toupper(a_character);});
     return upperString;
 }
+
+constexpr bool equivalent(const std::string& a_first, const std::string& a_second)
+{
+    return (a_first.size() == a_second.size()) && std::equal(a_first.cbegin(), a_first.cend(), a_second.cbegin(),[](const char a_firstChar, const char a_secChar)
+    {
+        return toupper(a_firstChar) == toupper(a_secChar);
+    });
+}

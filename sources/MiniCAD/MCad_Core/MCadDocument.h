@@ -6,7 +6,7 @@
 ************************************************/
 #include <vector>
 #include <map>
-#include "MCadReactive.h"
+#include "TMCadReactive.h"
 #include "MCadUndoRedo.h"
 #include "MCadMemory.h"
 #include "MCad_Core_globals.h"
@@ -24,10 +24,10 @@ using MCadObjectPtr = MCadShared_ptr<MCadObject>;
 #pragma warning(disable : 4251)
 
 /*@brief base class for document*/
-class MCAD_CORE_EXPORT MCadDocument : public MCadReactive<IMCadDocumentReactor>
+class MCAD_CORE_EXPORT MCadDocument : public TMCadReactive<IMCadDocumentReactor>
 {
 	friend class RTTIDefinition;
-	DECLARE_RTTI_DERIVED(1, MCadDocument, MCadReactive<IMCadDocumentReactor>)
+	DECLARE_RTTI_DERIVED(1, MCadDocument, TMCadReactive<IMCadDocumentReactor>)
 private:
 	std::string	m_sFilePath;												/*!< file path of document*/
 	MCadUndoRedo m_undoRedo;												/*!< tool of undo redo*/

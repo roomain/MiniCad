@@ -129,7 +129,7 @@
     <ClInclude Include="MCadObject.h">
       <Filter>Fichiers d%27en-tête\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="MCadReactive.h">
+    <ClInclude Include="TMCadReactive.h">
       <Filter>Fichiers d%27en-tête\Reactors</Filter>
     </ClInclude>
     <ClInclude Include="MCadNamedObject.h">

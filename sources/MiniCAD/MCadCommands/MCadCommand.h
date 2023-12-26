@@ -27,8 +27,8 @@ public:
 		const std::string a_localName);
 	virtual ~MCadCommand( ) = default;
 	virtual std::optional<MCadResult> execute(const std::string a_arguments, MCadIO& a_IOInterface) = 0;
-	[[nodiscard]] std::string commandName( )const noexcept { return m_commandName; }
-	[[nodiscard]] std::string commandGlobalName( )const noexcept { return m_globalName; }
-	[[nodiscard]] std::string commandLocalName( )const noexcept { return m_localName; }
+	[[nodiscard]] constexpr std::string commandName( )const noexcept { return m_commandName; }
+	[[nodiscard]] constexpr std::string commandGlobalName( )const noexcept { return m_globalName; }
+	[[nodiscard]] constexpr std::string commandLocalName( )const noexcept { return m_localName; }
 };
 

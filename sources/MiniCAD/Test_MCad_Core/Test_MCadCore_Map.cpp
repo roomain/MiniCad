@@ -17,10 +17,10 @@ namespace TestMCadCore
 		TEST_CLASS_INITIALIZE(InitClass)
 		{
 			IMCadObjectReactor::initDef( );
-			MCadReactive<IMCadObjectReactor>::initDef( );
+			TMCadReactive<IMCadObjectReactor>::initDef( );
 			MCadObject::initDef( );
 			IMCadDocumentReactor::initDef( );
-			MCadReactive<IMCadDocumentReactor>::initDef( );
+			TMCadReactive<IMCadDocumentReactor>::initDef( );
 			MCadDocument::initDef( );
 			MCadTestObject::initDef( );
 			auto pDoc = MCadDocumentManager::Instance( ).createDocument( );
@@ -31,10 +31,10 @@ namespace TestMCadCore
 			MCadDocumentManager::Instance( ).closeAllDocument( );
 			MCadTestObject::releaseDef( );
 			MCadDocument::releaseDef( );
-			MCadReactive<IMCadDocumentReactor>::releaseDef( );
+			TMCadReactive<IMCadDocumentReactor>::releaseDef( );
 			IMCadDocumentReactor::releaseDef( );
 			MCadObject::releaseDef( );
-			MCadReactive<IMCadObjectReactor>::releaseDef( );
+			TMCadReactive<IMCadObjectReactor>::releaseDef( );
 			IMCadObjectReactor::releaseDef( );
 		}
 

@@ -6,7 +6,7 @@
 ************************************************/
 #include <vector>
 #include <memory>
-#include "MCadReactive.h"
+#include "TMCadReactive.h"
 
 #include "MCadSingletonMacro.h"
 #include "MCad_Core_globals.h"
@@ -23,9 +23,9 @@ class IMCadDocManagerReactor;
 #pragma warning(disable : 4251)
 
 /*@brief Manage opened documents*/
-class MCAD_CORE_EXPORT MCadDocumentManager : public MCadReactive<IMCadDocManagerReactor>
+class MCAD_CORE_EXPORT MCadDocumentManager : public TMCadReactive<IMCadDocManagerReactor>
 {
-	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, MCadReactive<IMCadDocManagerReactor>)
+	DECLARE_RTTI_DERIVED(1, MCadDocumentManager, TMCadReactive<IMCadDocManagerReactor>)
 
 	NOT_COPIABLE(MCadDocumentManager)
 private:

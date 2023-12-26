@@ -1,6 +1,6 @@
 #pragma once
 /***********************************************
-* @headerfile MCadReactive.h
+* @headerfile TMCadReactive.h
 * @date 19 / 07 / 2023
 * @author Roomain
 ************************************************/
@@ -17,9 +17,9 @@
 
 /*@brief base class for reactive object*/
 template<typename Reactor>
-class MCadReactive
+class TMCadReactive
 {
-	DECLARE_RTTI(1, MCadReactive<Reactor>)
+	DECLARE_RTTI(1, TMCadReactive<Reactor>)
 public:
 	using ReactorPtr = std::shared_ptr<Reactor>;
 
@@ -37,8 +37,8 @@ protected:
 	}
 
 public:
-	MCadReactive() = default;
-	virtual ~MCadReactive() = default;
+	TMCadReactive() = default;
+	virtual ~TMCadReactive() = default;
 
 	/*@brief reactors management*/
 	void add_reactor(const ReactorPtr& a_pReactor)
