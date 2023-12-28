@@ -26,6 +26,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCadDriverInterface", "MCadDriverInterface\MCadDriverInterface.vcxproj", "{5DA8982C-FE2E-481D-8A2D-8E29C0DC96B9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCadCommands", "MCadCommands\MCadCommands.vcxproj", "{C1353500-D19F-41B5-8ECD-77CD248D4C2B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22A892E6-95EB-4609-9CCA-5AB5AAF9462E} = {22A892E6-95EB-4609-9CCA-5AB5AAF9462E}
+		{28EDF753-8D6B-400D-905B-6F36E8344135} = {28EDF753-8D6B-400D-905B-6F36E8344135}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCad_Events", "MCad_Events\MCad_Events.vcxproj", "{28EDF753-8D6B-400D-905B-6F36E8344135}"
 EndProject

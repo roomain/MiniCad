@@ -22,3 +22,11 @@ struct TMCadIOResult
     std::optional<KeywordType> m_keyword;                   /*!< keyword value*/
     std::optional<ReturnType>  m_retType;                   /*!< return type*/
 };
+
+/*@brief result of command IO*/
+template<typename KeywordType> requires( std::is_enum_v<KeywordType> )
+struct TMCadIOKeywordResult
+{
+    ResultStatus m_status = ResultStatus::status_Cancel;    /*!< result status*/
+    std::optional<KeywordType> m_keyword;                   /*!< keyword value*/
+};

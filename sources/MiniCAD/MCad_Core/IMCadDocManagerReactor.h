@@ -18,4 +18,6 @@ public:
 
 	virtual void onNewDocument(const MCadDocument*) = 0;
 	virtual void onCurrentDocument(const MCadDocument*) = 0;
+	/*@brief is active*/
+	virtual bool enabled( )const noexcept = 0;
 };

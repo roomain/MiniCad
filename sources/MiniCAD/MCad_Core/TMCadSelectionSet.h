@@ -27,7 +27,7 @@ class TMCadSelectionSet : public IMCadSelectionSet
 {
 private:
 	std::set<std::weak_ptr<Type>> m_selection;	/*!< selection onject*/
-	SelectionFilter m_filter;					/*!< selection filter*/
+	SelectionFilter<Type> m_filter;				/*!< selection filter*/
 
 public:
 	using SelectionIter = std::set<std::weak_ptr<Type>>::const_iterator;
@@ -35,7 +35,7 @@ public:
 	TMCadSelectionSet( ) = default;
 	~TMCadSelectionSet( ) = default;
 	void clear( ) { m_selection.clear( ); }
-	void setFilter(const SelectionFilter& a_filter)
+	void setFilter(const SelectionFilter<Type>& a_filter)
 	{
 		m_filter = a_filter;
 	}

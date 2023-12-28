@@ -7,18 +7,21 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <optional>
 #include <stack>
 #include "TMCadReactive.h"
+#include "MCadResult.h"
+#include "MCad_Command_globals.h"
 
 class MCadCommand;
-class MCadCmdArguments;
+class IMCadIO;
 
 using MCadCommandPtr = std::shared_ptr<MCadCommand>;
 
 class MCadCommandReactor;
 
 /*@brief commands database*/
-class MCadCommandsManager : public TMCadReactive<MCadCommandReactor>
+class MCAD_CMD_EXPORT MCadCommandsManager : public TMCadReactive<MCadCommandReactor>
 {
 private:
 	std::vector<MCadCommandPtr> m_vCommands;
@@ -30,17 +33,13 @@ private:
 public:
 	MCadCommandsManager( ) = default;
 	virtual ~MCadCommandsManager( );
-	bool registerCommand(const MCadCommandPtr& a_command);
-	void releaseCommand(const std::string& a_command);
+	void registerCommand(const MCadCommandPtr& a_command);
+	void releaseCommand(const std::string& a_cmdName);
 
-	constexpr size_t stackSize( )const { return m_executedCommand.size( ); }
+	[[nodiscard]] inline size_t stackSize( )const { return m_executedCommand.size( ); }
 
-	void execute(const std::string& a_cmd, const MCadCmdArguments& a_arg);
-	void execute(const std::string& a_cmd);
-
-	void execute_async(const std::string& a_cmd, const MCadCmdArguments& a_arg);
-	void execute_async(const std::string& a_cmd);
-
+	std::optional<MCadResult> execute(const std::string& a_cmd, IMCadIO& a_inputInterface, const std::string& arguments = "");
+	
 	using const_iterator = std::vector<MCadCommandPtr>::const_iterator;
 	constexpr const_iterator cbegin( )const { return m_vCommands.cbegin( ); }
 	constexpr const_iterator cend( )const { return m_vCommands.cend( ); }

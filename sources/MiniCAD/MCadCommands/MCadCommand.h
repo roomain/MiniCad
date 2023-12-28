@@ -8,9 +8,10 @@
 #include <optional>
 #include <queue>
 #include "MCadResult.h"
+#include "MCadInputs.h"
 #include "not_copiable.h"
 
-class MCadIO;
+class IMCadIO;
 
 /*@brief base class of command*/
 class MCadCommand
@@ -21,12 +22,14 @@ private:
 	std::string m_globalName;
 	std::string m_localName;
 
+protected:
+	virtual std::optional<MCadResult> execute_internal(IMCadIO& a_IOInterface) = 0;
 public:
 	MCadCommand( ) = delete;
 	explicit MCadCommand(const std::string a_name, const std::string a_globalName,
 		const std::string a_localName);
 	virtual ~MCadCommand( ) = default;
-	virtual std::optional<MCadResult> execute(const std::string a_arguments, MCadIO& a_IOInterface) = 0;
+	std::optional<MCadResult> execute(const std::string a_arguments, IMCadIO& a_IOInterface);
 	[[nodiscard]] constexpr std::string commandName( )const noexcept { return m_commandName; }
 	[[nodiscard]] constexpr std::string commandGlobalName( )const noexcept { return m_globalName; }
 	[[nodiscard]] constexpr std::string commandLocalName( )const noexcept { return m_localName; }

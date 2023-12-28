@@ -10,5 +10,7 @@
 class IMCadDocumentReactor
 {
 	DECLARE_RTTI(1, IMCadDocumentReactor)
-	//
+public:
+	/*@brief is active*/
+	virtual bool enabled( )const noexcept = 0;
 };

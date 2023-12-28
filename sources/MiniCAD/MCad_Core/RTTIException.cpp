@@ -22,7 +22,7 @@ std::string RTTIException::message()const noexcept
 	switch (m_exceptType)
 	{
 #define RTTI_EXCEPTION(ExType, Message)\
-	case Type::ExType: \
+	case ExceptType::ExType: \
 		message = std::format("{} {}", std::string_view(#Message), m_extra);\
 		break;
 

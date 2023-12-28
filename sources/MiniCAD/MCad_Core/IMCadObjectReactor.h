@@ -25,7 +25,7 @@ public:
 	/*@brief called when target object is erased*/
 	virtual void onObjectErased(MCadObject* const a_pObject) = 0;
 	/*@brief is active*/
-	virtual void enabled()const noexcept = 0;
+	virtual bool enabled()const noexcept = 0;
 };
 
 using IMCadObjectReactorPtr = std::shared_ptr<IMCadObjectReactor>;
