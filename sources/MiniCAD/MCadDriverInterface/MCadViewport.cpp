@@ -4,24 +4,56 @@
 #include <functional>
 #include "MCadViewport.h"
 
-void MCadViewport::moveFromTop(const float a_move)
+void MCadViewport::moveFromTop(MCadViewportEvent& a_event)
 {
-	m_top += a_move;
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	{
+		m_top += a_event.m_movement.y;
+		a_event.m_exception.emplace_back(this);
+		std::ranges::for_each(m_topViewports, [ &a_event ] (auto& a_viewport)
+			{
+				a_viewport.lock()->moveFromBottom(a_event);
+			});
+	}
 }
 
-void MCadViewport::moveFromBottom(const float a_move)
+void MCadViewport::moveFromBottom(MCadViewportEvent& a_event)
 {
-	m_bottom += a_move;
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	{
+		m_bottom += a_event.m_movement.y;
+		a_event.m_exception.emplace_back(this);
+		std::ranges::for_each(m_topViewports, [ &a_event ] (auto& a_viewport)
+			{
+				a_viewport.lock( )->moveFromTop(a_event);
+			});
+	}
 }
 
-void MCadViewport::moveFromLeft(const float a_move)
+void MCadViewport::moveFromLeft(MCadViewportEvent& a_event)
 {
-	m_left += a_move;
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	{
+		m_left += a_event.m_movement.x;
+		a_event.m_exception.emplace_back(this);
+		std::ranges::for_each(m_topViewports, [ &a_event ] (auto& a_viewport)
+			{
+				a_viewport.lock( )->moveFromRight(a_event);
+			});
+	}
 }
 
-void MCadViewport::moveFromRight(const float a_move)
+void MCadViewport::moveFromRight(MCadViewportEvent& a_event)
 {
-	m_right += a_move;
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	{
+		m_right += a_event.m_movement.x;
+		a_event.m_exception.emplace_back(this);
+		std::ranges::for_each(m_topViewports, [ &a_event ] (auto& a_viewport)
+			{
+				a_viewport.lock( )->moveFromLeft(a_event);
+			});
+	}
 }
 
 
@@ -40,6 +72,27 @@ MCadViewport::MCadViewport(const float a_top, const float a_bottom, const float 
 MCadViewport::~MCadViewport( )
 {
 	// TODO
+}
+
+Border MCadViewport::selectedBorder(const glm::vec2& a_pos, const glm::vec2& a_epsylon)const
+{
+	if ( ( m_top - a_epsylon.y ) < a_pos.y )
+	{
+		return Border::Top;
+	}
+	else if ( ( m_bottom + a_epsylon.y ) > a_pos.y )
+	{
+		return Border::Bottom;
+	}
+	else if ( ( m_right - a_epsylon.x ) < a_pos.x )
+	{
+		return Border::Right;
+	}
+	else if ( ( m_left + a_epsylon.x ) > a_pos.x )
+	{
+		return Border::Left;
+	}
+	return Border::None;
 }
 
 
@@ -91,30 +144,41 @@ void MCadViewport::removeFromRight(const MCadViewportWPtr& a_pViewport)
 }
 
 
-void MCadViewport::moveTop(const float a_move)
+void MCadViewport::onEvent(MCadViewportEvent& a_event)
 {
-	moveFromTop(a_move);
-	std::for_each(m_bottomViewports.begin( ), m_bottomViewports.end( ),
-		std::bind_front(&MCadViewport::moveFromBottom));
+	//
 }
 
-void MCadViewport::moveBottom(const float a_move)
+void MCadViewport::updateOrganisation(const std::vector<MCadViewportPtr>& a_vViewports)
 {
-	moveFromBottom(a_move);
-	std::for_each(m_bottomViewports.begin( ), m_bottomViewports.end( ),
-		std::bind_front(&MCadViewport::moveFromTop));
-}
-
-void MCadViewport::moveLeft(const float a_move)
-{
-	moveFromLeft(a_move);
-	std::for_each(m_leftViewports.begin( ), m_leftViewports.end( ),
-		std::bind_front(&MCadViewport::moveFromRight));
-}
-
-void MCadViewport::moveRight(const float a_move)
-{
-	moveFromRight(a_move);
-	std::for_each(m_rightViewports.begin( ), m_rightViewports.end( ),
-		std::bind_front(&MCadViewport::moveFromLeft));
+	m_topViewports.clear();
+	m_bottomViewports.clear( );
+	m_leftViewports.clear( );
+	m_rightViewports.clear( );
+	for ( auto& pViewport : a_vViewports )
+	{
+		if ( pViewport.get( ) != this )
+		{
+			if ( m_top - pViewport->m_bottom < EPSYLON )
+			{
+				// top
+				m_topViewports.emplace_back(pViewport);
+			}
+			else if ( m_bottom - pViewport->m_top < EPSYLON )
+			{
+				// bottom
+				m_bottomViewports.emplace_back(pViewport);
+			}
+			else if ( m_right - pViewport->m_left < EPSYLON )
+			{
+				// right
+				m_rightViewports.emplace_back(pViewport);
+			}
+			else if ( m_left - pViewport->m_right < EPSYLON )
+			{
+				// left
+				m_leftViewports.emplace_back(pViewport);
+			}
+		}
+	}
 }

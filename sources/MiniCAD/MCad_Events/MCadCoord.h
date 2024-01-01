@@ -9,7 +9,7 @@
 /*@brief represents mouse coordinates in different system*/
 struct MCadCoord
 {
-	glm::ivec2 m_windowCoords;	/*!< window coordinate*/
+	glm::vec2 m_windowCoords;	/*!< window coordinate*/
 	glm::ivec2 m_screenCoords;	/*!< screen coordinate (reverse Y axis from window coordinates)*/
 	glm::dvec3 m_worldCoords;	/*!< word coordinates*/
 	glm::dvec3 m_localCoords;	/*!< local coordinates*/

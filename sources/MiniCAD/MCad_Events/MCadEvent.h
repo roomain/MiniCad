@@ -92,6 +92,11 @@ enum class MCadMouseButton
 
 ENUM_FLAG_OPERATORS(MCadMouseButton)
 
+struct MCadResizeEvent
+{
+	int m_newWidth = 0;
+	int m_newHeight = 0;
+};
 
 struct MCadKeyboardEvent
 {
@@ -100,8 +105,18 @@ struct MCadKeyboardEvent
 	MCadKey m_key;
 };
 
+
+enum class MouseEventType
+{
+	Mouse_Press,
+	Mouse_Release,
+	Mouse_DoubleClick,
+	Mouse_Move
+};
+
 struct MCadMouseEvent
 {
+	MouseEventType m_type;										/*!< mouse event type*/
 	MCadKeyModifier m_keyModifier = MCadKeyModifier::None;		/*!< key modifier*/
 	MCadMouseButton m_buttons = MCadMouseButton::NoButton;		/*!< mouse click button*/
 	MCadCoord m_mouseCoords;									/*!< mouse coords*/
@@ -121,12 +136,12 @@ struct MCadEvent
 	{
 		Keyboard_event,
 		Mouse_event,
-		Selection_event
-		//
+		Selection_event,
+		Resize_event
 	};
 
 
-	using VariantEvent = std::variant<MCadKeyboardEvent, MCadMouseEvent, MCadSelectionEvent>;
+	using VariantEvent = std::variant<MCadKeyboardEvent, MCadMouseEvent, MCadSelectionEvent, MCadResizeEvent>;
 
 	EventType m_type;	/*!< event type*/
 	VariantEvent m_internalEvent;
