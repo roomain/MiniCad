@@ -21,7 +21,7 @@ enum class Border
 
 struct MCadViewportEvent
 {
-	Border m_selectedBoder = Border::None;
+	Border m_selectedBorder = Border::None;
 	glm::fvec2 m_lastPos;							/*!< last position*/
 	glm::fvec2 m_movement;							/*!< movement*/
 	std::vector<const MCadViewport*> m_exception;	/*!< not considered by event*/

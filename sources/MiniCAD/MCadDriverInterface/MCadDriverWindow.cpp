@@ -1,16 +1,15 @@
 #include "pch.h"
 #include <ranges>
+#include <execution>
 #include "MCadDriverWindow.h"
 #include "MCadViewport.h"
 
 void MCadDriverWindow::updateViewportOrganisation( )
 {
-	int index = 1;
-	for ( auto& pViewport : m_viewportList )
-	{
-		//
-		++index;
-	}
+	std::for_each(std::execution::par, m_viewportList.begin( ), m_viewportList.end( ), [ this ] (auto&& a_pViewport)
+		{
+			a_pViewport->updateOrganisation(m_viewportList);
+		});
 }
 
 void MCadDriverWindow::onMouseEvent(MCadMouseEvent& a_event)
@@ -24,7 +23,7 @@ void MCadDriverWindow::onMouseEvent(MCadMouseEvent& a_event)
 	{
 		m_vpEvnt.m_lastPos = a_event.m_mouseCoords.m_windowCoords;
 		if( m_currentViewport = getviewport(a_event.m_mouseCoords.m_windowCoords) )
-			m_vpEvnt.m_selectedBoder = m_currentViewport->selectedBorder(a_event.m_mouseCoords.m_windowCoords, m_epsylon);
+			m_vpEvnt.m_selectedBorder = m_currentViewport->selectedBorder(a_event.m_mouseCoords.m_windowCoords, m_epsylon);
 		//
 	}
 		break;
