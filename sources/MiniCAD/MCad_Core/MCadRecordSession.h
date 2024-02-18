@@ -23,8 +23,7 @@ using SessionTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 class MCAD_CORE_EXPORT MCadRecordSession
 {
 private:
-	std::list<IMCadRecordPtr> m_lRecordUndo;	/*!< records for undo*/
-	std::list<IMCadRecordPtr> m_lRecordRedo;	/*!< records for redo*/
+	std::list<IMCadRecordPtr> m_lRecords;		/*!< records for undo*/
 	SessionTimePoint m_timePoint;				/*!< time of undo session*/
 	std::string m_title;						/*!< session title*/
 	MCadBinaryBufferPtr m_pBinBuffer;			/*!< saving buffer*/
@@ -41,10 +40,10 @@ public:
 	[[nodiscard]] MCadOutputBinStream& outputStream( )const { return m_outputStream; }
 	[[nodiscard]] constexpr SessionTimePoint time()const noexcept { return m_timePoint; }
 	[[nodiscard]] constexpr std::string title()const noexcept { return m_title; }
-	[[nodiscard]] size_t size()const noexcept { return m_lRecordUndo.size() + m_lRecordRedo.size(); }
+	[[nodiscard]] size_t size()const noexcept { return m_lRecords.size(); }
 	void append(const IMCadRecordPtr& a_record);
-	void undo(MCadRealocMemory& a_realocMemory);
-	void redo(MCadRealocMemory& a_realocMemory);
+	void undo(MCadReallocMemory& a_realocMemory);
+	void redo(MCadReallocMemory& a_realocMemory);
 
 };
 

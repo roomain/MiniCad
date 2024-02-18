@@ -21,7 +21,7 @@ private:
 
 public:
 	MCadNamedObject() = default;
-	virtual ~MCadNamedObject() = default;
+	~MCadNamedObject()override = default;
 	inline std::string name()const noexcept { return m_name; }
 	// container set the owner to his children
 	// container has check function (Protocol extension), this check function is called in setName

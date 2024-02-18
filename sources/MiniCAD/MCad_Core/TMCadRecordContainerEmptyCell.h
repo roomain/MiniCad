@@ -67,7 +67,7 @@ public:
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
@@ -80,7 +80,7 @@ public:
 	}
 
 	/*@brief generate reverse record*/
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		return std::make_shared<TMCadRecordContainerEmptyCellRemoved<Key>>(this->m_Container, this->m_objectKey);
 	}
@@ -109,7 +109,7 @@ public:
 
 
 	/*@brief apply record for undo*/
-	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
@@ -121,7 +121,7 @@ public:
 		}
 	}
 
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		return std::make_shared<TMCadRecordContainerEmptyCellInsert<Key>>(this->m_Container, this->m_objectKey);
 	}
@@ -176,13 +176,13 @@ public:
 
 
 	/*@brief generate reverse record*/
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		return std::make_shared<TMCadRecordContainerToEmptyCellChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, m_newObjectUID, m_pDef);
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([[ maybe_unused ]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[ maybe_unused ]] IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
@@ -220,13 +220,13 @@ public:
 	virtual [[nodiscard]] bool hasReverse( )const noexcept override { return false; }
 
 	/*@brief generate reverse record*/
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		return nullptr;
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([[ maybe_unused ]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[ maybe_unused ]] IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{

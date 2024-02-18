@@ -16,4 +16,5 @@
 #include "MCadDocument.h"
 #include "MCadObject.h"
 #include "MCadLogger.h"
+#include "MCadMemory.h"
 #endif //PCH_H

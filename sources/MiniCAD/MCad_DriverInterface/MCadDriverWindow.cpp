@@ -21,6 +21,15 @@ void MCadDriverWindow::onMouseEvent(MCadMouseEvent& a_event)
 	{
 	case MouseEventType::Mouse_Press:
 	{
+		for ( auto pViewport : m_viewportList )
+		{
+			if ( pViewport->contains(a_event.m_mouseCoords.m_windowCoords) )
+			{
+				m_currentViewport = pViewport;
+				break;
+			}
+		}
+
 		if ( m_currentViewport )
 			m_currentViewport->setSelected(false);
 
@@ -122,6 +131,8 @@ void MCadDriverWindow::onEvent(MCadEvent& m_event)
 	case MCadEvent::EventType::Resize_event:
 		onResizeEvent(std::get<MCadResizeEvent>(m_event.m_internalEvent));
 		break;
+	default:
+		break;
 	}
 }
 
@@ -156,22 +167,71 @@ void MCadDriverWindow::setup_OneLeftTwoRight( )
 
 void MCadDriverWindow::setup_TwoLeftTwoRight( )
 {
-	// TODO
+	auto pViewportLeftTop = m_viewportList.emplace_back(viewportFactory(1.0f, 0.5f, 0.0f, 0.5f));
+	auto pViewportLeftBottom = m_viewportList.emplace_back(viewportFactory(0.5f, 0.0f, 0.0f, 0.5f));
+	auto pViewportRightTop = m_viewportList.emplace_back(viewportFactory(1.0f, 0.5f, 0.5f, 1.0f));
+	auto pViewportRightBottom = m_viewportList.emplace_back(viewportFactory(0.5f, 0.0f, 0.5f, 1.0f));
+
+	pViewportLeftTop->addRight(pViewportRightTop);
+	pViewportLeftTop->addBottom(pViewportLeftBottom);
+
+	pViewportLeftBottom->addTop(pViewportLeftTop);
+	pViewportLeftBottom->addRight(pViewportRightBottom);
+	//-----------------------------------------------------
+	pViewportRightTop->addBottom(pViewportRightBottom);
+	pViewportRightTop->addLeft(pViewportLeftTop);
+
+	pViewportRightBottom->addTop(pViewportRightTop);
+	pViewportRightBottom->addLeft(pViewportLeftBottom);
 }
 
 void MCadDriverWindow::setup_TwoLeftOneRight( )
 {
-	// TODO
+	auto pViewportLeftTop = m_viewportList.emplace_back(viewportFactory(1.0f, 0.5f, 0.0f, 0.5f));
+	auto pViewportLeftBottom = m_viewportList.emplace_back(viewportFactory(0.5f, 0.0f, 0.0f, 0.5f));
+	auto pViewportRight = m_viewportList.emplace_back(viewportFactory(1.0f, 0.0f, 0.5f, 1.0f));
+	
+	pViewportLeftTop->addRight(pViewportRight);
+	pViewportLeftTop->addBottom(pViewportLeftBottom);
+
+	pViewportLeftBottom->addTop(pViewportLeftTop);
+	pViewportLeftBottom->addRight(pViewportRight);
+
+
+	pViewportRight->addLeft(pViewportLeftTop);
+	pViewportRight->addLeft(pViewportLeftBottom);
 }
 
 void MCadDriverWindow::setup_OneTopTwoBottom( )
 {
-	// TODO
+	auto pViewportTop = m_viewportList.emplace_back(viewportFactory(1.0f, 0.5f, 0.0f, 1.f));
+	auto pViewportLeftBottom = m_viewportList.emplace_back(viewportFactory(0.5f, 0.0f, 0.0f, 0.5f));
+	auto pViewportRightBottom = m_viewportList.emplace_back(viewportFactory(0.5f, 0.0f, 0.5f, 1.0f));
+
+	pViewportTop->addBottom(pViewportLeftBottom);
+	pViewportTop->addBottom(pViewportRightBottom);
+
+	pViewportLeftBottom->addTop(pViewportTop);
+	pViewportRightBottom->addTop(pViewportTop);
+
+	pViewportLeftBottom->addRight(pViewportRightBottom);
+	pViewportRightBottom->addLeft(pViewportLeftBottom);
 }
 
 void MCadDriverWindow::setup_TwoTopOneBottom( )
 {
-	// TODO
+	auto pViewportLeftTop = m_viewportList.emplace_back(viewportFactory(1.0f, 0.5f, 0.0f, 0.5f));
+	auto pViewportRightTop = m_viewportList.emplace_back(viewportFactory(1.0f, 0.5f, 0.5f, 1.0f));
+	auto pViewportBottom = m_viewportList.emplace_back(viewportFactory(0.5f, 0.0f, 0.0f, 1.f));
+
+	pViewportLeftTop->addRight(pViewportRightTop);
+	pViewportRightTop->addLeft(pViewportLeftTop);
+
+	pViewportLeftTop->addBottom(pViewportBottom);
+	pViewportRightTop->addBottom(pViewportBottom);
+
+	pViewportBottom->addTop(pViewportLeftTop);
+	pViewportBottom->addTop(pViewportRightTop);
 }
 
 

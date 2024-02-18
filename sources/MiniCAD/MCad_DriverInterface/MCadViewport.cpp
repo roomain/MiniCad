@@ -6,7 +6,7 @@
 
 void MCadViewport::moveFromTop(MCadViewportEvent& a_event)
 {
-	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend() )
 	{
 		m_top += a_event.m_movement.y;
 		a_event.m_exception.emplace_back(this);
@@ -19,7 +19,7 @@ void MCadViewport::moveFromTop(MCadViewportEvent& a_event)
 
 void MCadViewport::moveFromBottom(MCadViewportEvent& a_event)
 {
-	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend() )
 	{
 		m_bottom += a_event.m_movement.y;
 		a_event.m_exception.emplace_back(this);
@@ -32,7 +32,7 @@ void MCadViewport::moveFromBottom(MCadViewportEvent& a_event)
 
 void MCadViewport::moveFromLeft(MCadViewportEvent& a_event)
 {
-	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend() )
 	{
 		m_left += a_event.m_movement.x;
 		a_event.m_exception.emplace_back(this);
@@ -45,7 +45,7 @@ void MCadViewport::moveFromLeft(MCadViewportEvent& a_event)
 
 void MCadViewport::moveFromRight(MCadViewportEvent& a_event)
 {
-	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend( ) )
+	if ( std::ranges::find(a_event.m_exception, this) == a_event.m_exception.cend() )
 	{
 		m_right += a_event.m_movement.x;
 		a_event.m_exception.emplace_back(this);
@@ -118,7 +118,10 @@ void MCadViewport::addRight(const MCadViewportWPtr& a_pViewport)
 
 void MCadViewport::remove(std::vector<MCadViewportWPtr>& a_vector, const MCadViewportWPtr& a_pviewport)
 {
-	auto iter = std::find(a_vector.begin( ), a_vector.end( ), a_pviewport);
+	auto iter = std::ranges::find_if(a_vector, [ &a_pviewport ] (auto&& a_viewport)
+		{
+			return a_pviewport.lock( ) == a_viewport.lock( );
+		});
 	if ( iter != a_vector.end( ) )
 		a_vector.erase(iter);
 }

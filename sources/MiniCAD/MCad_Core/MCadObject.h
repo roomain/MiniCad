@@ -17,6 +17,7 @@ class MCadDocument;
 class MCadObject;
 class IMCadInputStream;
 class IMCadOutputStream;
+class MCadObjectUID;
 
 #pragma warning(push)
 #pragma warning(disable : 4275)
@@ -27,6 +28,8 @@ class MCAD_CORE_EXPORT MCadObject : public MCadRefObject, public TMCadReactive<I
 	public MCadShared_from_this<MCadObject>
 {
 	DECLARE_RTTI_DERIVED(1, MCadObject, TMCadReactive<IMCadObjectReactor>)
+	friend class MCadDocument;
+
 private:
 	std::atomic_bool m_bErased = false;				/*!< erased flag (object is no more usable)*/
 	std::weak_ptr<MCadDocument> m_pDoc;				/*!< document container*/
@@ -43,14 +46,14 @@ protected:
 	static void enableUIDGenerator(bool a_bEnable) { m_sEnableUIDGen = a_bEnable; }
 
 	void setUID(const ObjectUID& a_uid) { m_ObjectUID = a_uid; }
+	constexpr ObjectUID uid( )const noexcept { return m_ObjectUID; }
 
 public:
 	MCadObject();
-	virtual ~MCadObject() = default;
+	~MCadObject()override = default;
 	inline std::weak_ptr<MCadDocument> document()const noexcept { return m_pDoc; }
 		
-	/*@brief get object uid*/
-	constexpr ObjectUID uid()const noexcept { return m_ObjectUID; }
+	[[nodiscard]] MCadObjectUID objectUID( )const noexcept;
 	/*
 	* @brief load object from stream
 	* @return version number of object

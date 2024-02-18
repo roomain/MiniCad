@@ -27,7 +27,7 @@ private:
 
 public:
 	UndoRedoException(const std::source_location& a_loc, const ExceptionType a_type, const std::string_view& a_extra = "");
-	virtual ~UndoRedoException() = default;
+	~UndoRedoException()override = default;
 	[[nodiscard]] const ExceptionType type()const noexcept { return m_type; }
 	[[nodiscard]] std::string message()const noexcept override { return m_message; }
 };

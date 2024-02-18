@@ -4,7 +4,7 @@
 
 void MCadDocument::registerObject(const MCadObjectPtr& a_pObject)
 {
-	a_pObject->document().lock()->m_objectDatabase.emplace(a_pObject->uid(), a_pObject);
+	a_pObject->document().lock()->m_objectDatabase.emplace(a_pObject->uid(), a_pObject->objectUID());
 }
 
 void MCadDocument::unregisterObject(MCadDocument* const a_document, const ObjectUID& a_uid)
@@ -37,7 +37,7 @@ std::string MCadDocument::fileExtension()const noexcept
 	return path.extension().string();
 }
 
-MCadObjectWPtr MCadDocument::getObject(const ObjectUID& a_uid)const
+MCadObjectUID MCadDocument::getObject(const ObjectUID& a_uid)const
 {
 	return m_objectDatabase.at(a_uid);
 }

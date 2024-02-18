@@ -12,7 +12,7 @@
 #include <mutex> // for concurent undo buffer writing
 #include "MCadRecordSession.h"
 #include "UndoRedoException.h"
-#include "MCadRealocMemory.h"
+#include "MCadReallocMemory.h"
 #include "TMCadScoped.h"
 #include "MCad_Core_globals.h"
 
@@ -34,7 +34,7 @@ private:
 	bool m_active = true;					/*!< undo redo activation*/
 	bool m_sessionActive = false;			/*!< flag indicating an active session*/
 	SessionList m_sessionList;				/*!< list of undoredo session*/
-	MCadRealocMemory m_realocMemory;		/*!< realocation memory*/
+	MCadReallocMemory m_realocMemory;		/*!< realocation memory*/
 	SessionIterator m_SessionUndo;			/*!< iterator on undo session*/
 	SessionIterator m_SessionRedo;			/*!< iterator on redo session*/
 public:

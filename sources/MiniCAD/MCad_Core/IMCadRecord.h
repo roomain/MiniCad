@@ -5,7 +5,7 @@
 * @author Roomain
 ************************************************/
 #include <memory>
-#include "MCadRealocMemory.h"
+#include "MCadReallocMemory.h"
 #include "RTTIDefinition.h"
 
 class MCadObject;
@@ -15,26 +15,24 @@ class IMCadInputStream;
 /*@brief Base class for recording comands*/
 class IMCadRecord
 {
+private:
+    bool m_bErased = false;	    /*!< indicate erase record*/
+    bool m_bPrepareRedo = true; /*!< indicate redo need to be prepared*/
+
 protected:
-	bool m_bErased = false;	/*!< indicate erase record*/
+    virtual void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) = 0;
+    virtual void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) = 0;
+    virtual void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) = 0;
 
 public:
-	IMCadRecord() = default;
-	virtual ~IMCadRecord() = default;
-	void erase(bool a_bErase) { m_bErased = a_bErase; }
-	bool isErased()const { return m_bErased; }
-	/*@brief A reverse record can be generated*/
-	virtual bool hasReverse()const noexcept = 0;
-	/*@brief generate reverse record*/
-	virtual std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const = 0;
-	/*@brief apply record for undo*/
-	virtual void apply(IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) = 0;
+    IMCadRecord( ) = default;
+    virtual ~IMCadRecord( ) = default;
+    void erase(bool a_bErase) { m_bErased = a_bErase; }
+    bool isErased( )const { return m_bErased; }
 
-	// functions used for filtering
-	/*@brief object uid concerned by this record*/
-	virtual const ObjectUID recordedObject( )const noexcept = 0;
-	/*@brief definition of recorded object*/
-	virtual RTTIDefinitionWPtr recordedObjectDefinition( )const noexcept = 0;
+    void undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem, IMCadOutputStream& a_outStream);
+    void redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem);
 };
+
 
 using IMCadRecordPtr = std::shared_ptr<IMCadRecord>;

@@ -87,13 +87,13 @@ public:
 	bool hasReverse( )const noexcept { return true; }
 	
 	/*@brief generate reverse record*/
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		return std::make_shared<TMCadRecordContainerCellRemoved<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
 	}
 	
 	/*@brief apply record for undo*/
-	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[maybe_unused]] IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
@@ -129,13 +129,13 @@ public:
 	bool hasReverse( )const noexcept { return true; }
 
 	/*@brief generate reverse record*/
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		return std::make_shared<TMCadRecordContainerCellInsert<Key>>(this->m_Container, this->m_objectKey, this->m_pObject, this->m_ObjectUID, this->m_pDef);
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([[maybe_unused]]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[maybe_unused]]IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{
@@ -201,14 +201,14 @@ public:
 	bool hasReverse( )const noexcept { return true; }
 
 	/*@brief generate reverse record*/
-	std::shared_ptr<IMCadRecord> generateReverse(IMCadOutputStream& a_stream, MCadRealocMemory& a_realocMem)const final
+	std::shared_ptr<IMCadRecord> createReverseRecord(IMCadOutputStream& a_stream, MCadReallocMemory& a_realocMem)const final
 	{
 		auto pObj = this->m_pNewObject.lock( );
 		return std::make_shared<TMCadRecordContainerCellChanged<Key>>(this->m_Container, this->m_objectKey, this->m_pNewObject, this->m_pObject, pObj->uid(), pObj->isA());
 	}
 
 	/*@brief apply record for undo*/
-	virtual void apply([[ maybe_unused ]]IMCadInputStream& a_stream, MCadRealocMemory& a_realocMem) final
+	virtual void apply([[ maybe_unused ]]IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) final
 	{
 		if ( this->m_Container.realocate(a_realocMem) )
 		{

@@ -162,7 +162,7 @@
     <ClInclude Include="MCadRecordAssertion.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
-    <ClInclude Include="MCadRealocMemory.h">
+    <ClInclude Include="MCadReallocMemory.h">
       <Filter>Fichiers d%27en-tête\Memory</Filter>
     </ClInclude>
     <ClInclude Include="ProtocolExtension.h">
@@ -174,20 +174,11 @@
     <ClInclude Include="UndoRedoExceptionDefines.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
-    <ClInclude Include="MCadRecords.h">
-      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
-    </ClInclude>
-    <ClInclude Include="TIMCadContainer.h">
-      <Filter>Fichiers d%27en-tête\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="MCadRef.h">
       <Filter>Fichiers d%27en-tête\Memory</Filter>
     </ClInclude>
     <ClInclude Include="TMCadRecordContainerCell.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
-    </ClInclude>
-    <ClInclude Include="TMCadCell.h">
-      <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
     <ClInclude Include="TMCadObjectProxy.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
@@ -198,14 +189,26 @@
     <ClInclude Include="TMCadMap.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="TMCadKeyCell.h">
-      <Filter>Fichiers d%27en-tête\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="TMCadRecordContainerEmptyCell.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
     <ClInclude Include="TMCadSelectionSet.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="MCad_traits.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadObjectUID.h">
+      <Filter>Fichiers d%27en-tête\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadObjectRecord.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="TMCadUnordered_map.h">
+      <Filter>Fichiers d%27en-tête\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="TMCadVectorRecords.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,13 +251,19 @@
     <ClCompile Include="MCadRecordAssertion.cpp">
       <Filter>Fichiers sources\UndoRedo</Filter>
     </ClCompile>
-    <ClCompile Include="MCadRealocMemory.cpp">
+    <ClCompile Include="MCadReallocMemory.cpp">
       <Filter>Fichiers sources\Memory</Filter>
     </ClCompile>
     <ClCompile Include="UndoRedoException.cpp">
       <Filter>Fichiers sources\UndoRedo</Filter>
     </ClCompile>
-    <ClCompile Include="MCadRecords.cpp">
+    <ClCompile Include="MCadObjectUID.cpp">
+      <Filter>Fichiers sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="IMCadRecord.cpp">
+      <Filter>Fichiers sources\UndoRedo</Filter>
+    </ClCompile>
+    <ClCompile Include="MCadObjectRecord.cpp">
       <Filter>Fichiers sources\UndoRedo</Filter>
     </ClCompile>
   </ItemGroup>

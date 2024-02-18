@@ -27,7 +27,7 @@ public:
 
 	MCadCommandException( ) = delete;
 	MCadCommandException(ExceptType a_type, const std::source_location& a_loc);
-	virtual ~MCadCommandException( ) = default;
+	~MCadCommandException( ) override = default;
 	[[nodiscard]] ExceptType type( )const noexcept { return m_exceptType; }
 	[[nodiscard]] std::string message( )const noexcept override;
 	[[deprecated]] const char* what( )const override;

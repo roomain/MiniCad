@@ -29,6 +29,7 @@ namespace TestMCadFormula
 
 		TEST_METHOD(Test_GetDouble_Comma_DecimalSeparator)
 		{
+			MCadConfiguration::Instance( ).DECIMAL_SEPARATOR = ',';
 			Assert::AreEqual(3.5, getDouble("3,5"), L"Wrong value");
 			Assert::AreEqual(0.1, getDouble("0,1"), L"Wrong value");
 			Assert::AreEqual(13.5, getDouble("13,5"), L"Wrong value");

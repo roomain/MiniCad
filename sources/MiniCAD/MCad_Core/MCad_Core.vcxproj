@@ -153,8 +153,11 @@
     <ClInclude Include="IMCadObjectReactor.h" />
     <ClInclude Include="MCadBinaryBuffer.h" />
     <ClInclude Include="IMCadDocManagerReactor.h" />
+    <ClInclude Include="MCadObjectRecord.h" />
+    <ClInclude Include="MCadObjectUID.h" />
+    <ClInclude Include="TMCadVectorRecords.h" />
+    <ClInclude Include="MCad_traits.h" />
     <ClInclude Include="TMCadSelectionSet.h" />
-    <ClInclude Include="TMCadCell.h" />
     <ClInclude Include="MCadDocument.h" />
     <ClInclude Include="MCadDocumentManager.h" />
     <ClInclude Include="MCadInputBinStream.h" />
@@ -162,15 +165,14 @@
     <ClInclude Include="MCadMemory.h" />
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
-    <ClInclude Include="TMCadKeyCell.h" />
     <ClInclude Include="TMCadMap.h" />
     <ClInclude Include="TMCadRecordContainerEmptyCell.h" />
+    <ClInclude Include="TMCadUnordered_map.h" />
     <ClInclude Include="TMCadVector.h" />
     <ClInclude Include="TMCadObjectProxy.h" />
     <ClInclude Include="MCadOutputBinStream.h" />
     <ClInclude Include="TMCadReactive.h" />
-    <ClInclude Include="MCadRealocMemory.h" />
-    <ClInclude Include="MCadRecords.h" />
+    <ClInclude Include="MCadReallocMemory.h" />
     <ClInclude Include="MCadRecordSession.h" />
     <ClInclude Include="MCadRef.h" />
     <ClInclude Include="TMCadScoped.h" />
@@ -182,7 +184,6 @@
     <ClInclude Include="RTTIDefinition_macros.h" />
     <ClInclude Include="RTTIException.h" />
     <ClInclude Include="RTTIException_macro.h" />
-    <ClInclude Include="TIMCadContainer.h" />
     <ClInclude Include="TMCadRecordContainerCell.h" />
     <ClInclude Include="TRTTIDefinition.h" />
     <ClInclude Include="MCadUndoRedo.h" />
@@ -190,16 +191,18 @@
     <ClInclude Include="UndoRedoExceptionDefines.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IMCadRecord.cpp" />
     <ClCompile Include="MCadDocument.cpp" />
     <ClCompile Include="MCadDocumentManager.cpp" />
     <ClCompile Include="MCadInputBinStream.cpp" />
     <ClCompile Include="MCadLogger.cpp" />
     <ClCompile Include="MCadNamedObject.cpp" />
     <ClCompile Include="MCadObject.cpp" />
+    <ClCompile Include="MCadObjectRecord.cpp" />
+    <ClCompile Include="MCadObjectUID.cpp" />
     <ClCompile Include="MCadOutputBinStream.cpp" />
-    <ClCompile Include="MCadRealocMemory.cpp" />
+    <ClCompile Include="MCadReallocMemory.cpp" />
     <ClCompile Include="MCadRecordAssertion.cpp" />
-    <ClCompile Include="MCadRecords.cpp" />
     <ClCompile Include="MCadRecordSession.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

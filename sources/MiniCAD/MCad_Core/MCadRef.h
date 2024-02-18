@@ -168,7 +168,7 @@ public:
         }
     }
 
-    virtual ~MCadRef( )
+    ~MCadRef( )override
     {
         if ( m_RefObject )
         {

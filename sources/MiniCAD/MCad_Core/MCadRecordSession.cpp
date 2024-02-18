@@ -21,27 +21,17 @@ MCadRecordSession::MCadRecordSession(const std::string& a_title) : m_title{ a_ti
 
 void MCadRecordSession::append(const IMCadRecordPtr& a_record)
 {
-	m_lRecordUndo.emplace_front(a_record);
+	m_lRecords.emplace_front(a_record);
 }
 
-void MCadRecordSession::undo(MCadRealocMemory& a_realocMemory)
+void MCadRecordSession::undo(MCadReallocMemory& a_realocMemory)
 {
-	bool bGenRedoRecord = m_lRecordRedo.empty( );
-	for ( auto&& pRecord : m_lRecordUndo )
-	{
-		if ( bGenRedoRecord && pRecord->hasReverse( ) && !pRecord->isErased( ) )
-			m_lRecordRedo.push_front(pRecord->generateReverse(m_outputStream, a_realocMemory));
-
-		if( !pRecord->isErased() )
-			pRecord->apply(m_inputStream, a_realocMemory);
-	}
+	for (const auto& pRecord : m_lRecords )
+		pRecord->undo(m_inputStream, a_realocMemory, m_outputStream);
 }
 
-void MCadRecordSession::redo(MCadRealocMemory& a_realocMemory)
+void MCadRecordSession::redo(MCadReallocMemory& a_realocMemory)
 {
-	for ( auto&& pRecord : m_lRecordRedo )
-	{
-		if ( !pRecord->isErased( ) )
-			pRecord->apply(m_inputStream, a_realocMemory);
-	}
+	for ( auto&& pRecord : m_lRecords )
+		pRecord->redo(m_inputStream, a_realocMemory);
 }

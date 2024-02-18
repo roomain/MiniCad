@@ -7,6 +7,11 @@
 #include <memory>
 #include "glm/glm.hpp"
 #include "MCadViewportEvent.h"
+#include "MCad_DriverInterface_globals.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#pragma warning(disable : 4251)
 
 class MCadViewport;
 using MCadViewportWPtr = std::weak_ptr<MCadViewport>;
@@ -15,7 +20,7 @@ using MCadViewportPtr = std::shared_ptr<MCadViewport>;
 struct MCadMouseEvent;
 
 /*@brief viewport is a part of non directional graph*/
-class MCadViewport
+class MCAD_DRIVER_INTERFACE_EXPORT MCadViewport
 {
 private:
 	static constexpr float EPSYLON = 0.01f;
@@ -50,7 +55,7 @@ public:
 	}
 	[[nodiscard]] constexpr bool isValid( )const
 	{
-		return ( m_right - m_right ) > 0.2 && ( m_top - m_bottom ) > 0.2;
+		return ( m_right - m_left ) > 0.2 && ( m_top - m_bottom ) > 0.2;
 	}
 
 	virtual void setSelected(const bool a_bSelect) { m_bSelect = a_bSelect; }
@@ -69,4 +74,12 @@ public:
 	void onEvent(MCadViewportEvent& a_event);
 	virtual void writeMousePosition(MCadMouseEvent& a_event) = 0;
 	void updateOrganisation(const std::vector<MCadViewportPtr>& a_vViewports);
+
+	[[nodiscard]] constexpr float top( )const { return m_top; }
+	[[nodiscard]] constexpr float bottom( )const { return m_bottom; }
+	[[nodiscard]] constexpr float left( )const { return m_left; }
+	[[nodiscard]] constexpr float right( )const { return m_right; }
 };
+
+
+#pragma warning(pop)

@@ -33,8 +33,6 @@ enum class MCadKeyFunction
 	F5		= 5,
 	F6		= 6,
 	F7		= 7,
-	F8		= 6,
-	F7		= 7,
 	F8		= 8,
 	F9		= 9,
 	F10		= 10,
@@ -134,6 +132,7 @@ struct MCadEvent
 {
 	enum class EventType : int
 	{
+		invalid_event,
 		Keyboard_event,
 		Mouse_event,
 		Selection_event,
@@ -143,6 +142,53 @@ struct MCadEvent
 
 	using VariantEvent = std::variant<MCadKeyboardEvent, MCadMouseEvent, MCadSelectionEvent, MCadResizeEvent>;
 
-	EventType m_type;	/*!< event type*/
+	EventType m_type = EventType::invalid_event;	/*!< event type*/
 	VariantEvent m_internalEvent;
+	inline void operator = (const MCadKeyboardEvent& a_event)
+	{
+		m_type = EventType::Keyboard_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (MCadKeyboardEvent&& a_event)noexcept
+	{
+		m_type = EventType::Keyboard_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (const MCadMouseEvent& a_event)
+	{
+		m_type = EventType::Mouse_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (MCadMouseEvent&& a_event)noexcept
+	{
+		m_type = EventType::Mouse_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (const MCadSelectionEvent& a_event)
+	{
+		m_type = EventType::Selection_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (MCadSelectionEvent&& a_event)noexcept
+	{
+		m_type = EventType::Selection_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (const MCadResizeEvent& a_event)
+	{
+		m_type = EventType::Resize_event;
+		m_internalEvent = a_event;
+	}
+
+	inline void operator = (MCadResizeEvent&& a_event)noexcept
+	{
+		m_type = EventType::Resize_event;
+		m_internalEvent = a_event;
+	}
 };

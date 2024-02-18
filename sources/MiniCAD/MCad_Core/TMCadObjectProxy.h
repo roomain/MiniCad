@@ -60,7 +60,7 @@ private:
 
 	struct RealocVisitor
 	{
-		MCadRealocMemory* const m_memory;
+		MCadReallocMemory* const m_memory;
 		ObjectUID m_objID;
 		std::weak_ptr<RTTIDefinition> m_pDef;
 
@@ -134,7 +134,7 @@ public:
 		return  std::visit(RealocableVisitor{}, m_proxyObj);
 	}
 
-	bool realocate(MCadRealocMemory& a_memory)
+	bool realocate(MCadReallocMemory& a_memory)
 	{
 		return  std::visit(RealocVisitor{ &a_memory , m_objectUID , m_pObjectDef }, m_proxyObj);
 	}

@@ -8,13 +8,20 @@
 #include <vector>
 #include "MCadEvent.h"
 #include "MCadViewportEvent.h"
+#include "MCad_DriverInterface_globals.h"
+
+
+
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#pragma warning(disable : 4251)
 
 class MCadViewport;
 using MCadViewportPtr = std::shared_ptr<MCadViewport>;
 struct MCadViewportSeparator;
 
 /*@brief represents a window*/
-class MCadDriverWindow
+class MCAD_DRIVER_INTERFACE_EXPORT  MCadDriverWindow
 {
 private:
 	float m_windowWidth;			/*!< window width in pixels*/
@@ -61,5 +68,10 @@ public:
 	};
 
 	void setupViewport(const ViewportMapping a_mapping);
+	[[nodiscard]] inline MCadViewportPtr currentViewport( )const { return m_currentViewport; }
+	[[nodiscard]] constexpr int viewportCount( )const { return static_cast< int >( m_viewportList.size() ); }
+	[[nodiscard]] inline MCadViewportPtr viewportAt(const int a_index)const {return m_viewportList[ a_index ];}
 };
 
+
+#pragma warning(pop)

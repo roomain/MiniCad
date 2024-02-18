@@ -9,6 +9,7 @@
 #include "TMCadReactive.h"
 #include "MCadUndoRedo.h"
 #include "MCadMemory.h"
+#include "MCadObjectUID.h"
 #include "MCad_Core_globals.h"
 
 class MCadObject;
@@ -31,7 +32,7 @@ class MCAD_CORE_EXPORT MCadDocument : public TMCadReactive<IMCadDocumentReactor>
 private:
 	std::string	m_sFilePath;												/*!< file path of document*/
 	MCadUndoRedo m_undoRedo;												/*!< tool of undo redo*/
-	std::unordered_map<ObjectUID, MCadObjectWPtr> m_objectDatabase;
+	std::unordered_map<ObjectUID, MCadObjectUID> m_objectDatabase;
 
 	static void registerObject(const MCadObjectPtr& a_pObject);
 	static void unregisterObject(MCadDocument* const a_document, const ObjectUID& a_uid);
@@ -54,7 +55,7 @@ public:
 
 	MCadUndoRedo& undoRedo() { return m_undoRedo; }
 
-	MCadObjectWPtr getObject(const ObjectUID& a_uid)const;
+	MCadObjectUID getObject(const ObjectUID& a_uid)const;
 
 };
 

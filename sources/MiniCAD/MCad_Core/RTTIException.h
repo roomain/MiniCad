@@ -26,7 +26,7 @@ public:
 
 	explicit RTTIException(ExceptType a_Type, const std::source_location& a_loc, const std::string_view& a_extra = "");
 	RTTIException() = delete;
-	virtual ~RTTIException() = default;
+	~RTTIException()override = default;
 	[[nodiscard]] ExceptType type()const noexcept;
 	[[nodiscard]] std::string message()const noexcept override;
 	[[deprecated]] const char* what()const override;

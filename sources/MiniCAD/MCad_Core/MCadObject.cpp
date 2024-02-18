@@ -10,7 +10,10 @@ MCadObject::MCadObject()
 	m_pDoc = MCadDocumentManager::Instance().currentDocument();
 }
 
-
+MCadObjectUID MCadObject::objectUID( )const noexcept
+{
+	return MCadObjectUID(this, m_ObjectUID);
+}
 
 void MCadObject::erase()
 {

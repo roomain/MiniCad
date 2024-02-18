@@ -104,7 +104,7 @@ public:
 		throw MCadResultException(std::source_location::current( ));
 	}
 
-	virtual void operator () (const void* a_arg)
+	virtual void operator () (...)
 	{
 		throw MCadResultException(std::source_location::current( ));
 	}

@@ -5,32 +5,76 @@
 * @author Roomain
 ************************************************/
 #include <memory>
+#include <functional>
 #include <type_traits>
 #include "MCadRecordAssertion.h"
 
 class MCadObject;
 
-/*@brief special smart pointer for MCad*/
+template<typename Type>
+class MCadShared_ptr;
+
+template<typename Type>
+using AffectCB = std::function<void(const MCadShared_ptr<Type>)>;
+
+/*@brief special smart pointer for MCad undo/redo*/
 template<typename Type>
 class MCadShared_ptr : public std::shared_ptr<Type>
 {
+private:
+    AffectCB<Type> m_affectationCallback;
+
 public:
     using std::shared_ptr<Type>::shared_ptr;
-    MCadShared_ptr(const std::shared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {};
-    explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {};
-    MCadShared_ptr(const std::weak_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {};
-    explicit MCadShared_ptr(std::weak_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {};
+
+    MCadShared_ptr(const MCadShared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
+    MCadShared_ptr(MCadShared_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other) {}
+    explicit MCadShared_ptr(const std::shared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
+    explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other) {}
+    explicit MCadShared_ptr(const std::weak_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
+    explicit MCadShared_ptr(std::weak_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {}
     template<typename U>
-    explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other, Type* a_ptr) noexcept : std::shared_ptr<Type>(a_other, a_ptr) {};
-    virtual ~MCadShared_ptr()
+    explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other, Type* a_ptr) noexcept : std::shared_ptr<Type>(a_other, a_ptr) {}
+    ~MCadShared_ptr()
     {
         if constexpr (std::is_base_of_v<MCadObject, Type>)
         {
             // is last use and pointer not null
             if (std::shared_ptr<Type>::use_count() == 1 && std::shared_ptr<Type>::get())
                 assertDeletion(std::shared_ptr<Type>::get());
-
         }
+    }
+    MCadShared_ptr<Type>& operator = (const MCadShared_ptr<Type>& a_other)
+    {
+        if ( m_affectationCallback )
+            m_affectationCallback(*this);
+        std::shared_ptr<Type>::operator = (a_other);
+        return *this;
+    }
+    MCadShared_ptr<Type>& operator = (const MCadShared_ptr<Type>&& a_other)noexcept
+    {
+        if ( m_affectationCallback )
+            m_affectationCallback(*this);
+        std::shared_ptr<Type>::operator = (a_other);
+        return *this;
+    }
+    MCadShared_ptr<Type>& operator = (const std::shared_ptr<Type>& a_other)
+    {
+        if ( m_affectationCallback )
+            m_affectationCallback(*this);
+        std::shared_ptr<Type>::operator = (a_other);
+        return *this;
+    }
+    MCadShared_ptr<Type>& operator = (std::shared_ptr<Type>&& a_other)noexcept
+    {
+        if ( m_affectationCallback )
+            m_affectationCallback(*this);
+        std::shared_ptr<Type>::operator = (a_other);
+        return *this;
+    }
+    void setCallback(const AffectCB<Type>& a_callback)
+    {
+        m_affectationCallback = a_callback;
     }
 };
 
@@ -63,17 +107,13 @@ public:
         return MCadShared_ptr<const Type>(m_Wptr);
     }
 
-    [[nodiscard]] std::weak_ptr<Type> weak_from_this()
+    [[nodiscard]] std::weak_ptr<Type> weak_from_this()const
     {
-        if (!m_Wptr.lock())
-            throw std::bad_weak_ptr{};
         return m_Wptr;
     }
 
     [[nodiscard]] std::weak_ptr<const Type> weak_from_const_this()
     {
-        if (!m_Wptr.lock())
-            throw std::bad_weak_ptr{};
         return m_Wptr;
     }
 
