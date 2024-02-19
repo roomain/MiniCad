@@ -8,6 +8,9 @@
 #include "MCadMemory.h"
 #include "MCad_Core_globals.h"
 #include "MCadObject.h"
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#pragma warning(disable : 4251)
 
 class MCAD_CORE_EXPORT MCadObjectUID
 {
@@ -62,7 +65,8 @@ public:
     {
         auto pObject = m_object.lock( );
         if ( pObject )
-            return pObject->cast<Type>();
+            return pObject->cast<Type>()->shared_from_this();
         return nullptr;
     }
 };
+#pragma warning(pop)

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MCadRecordAssertion.h"
 #include "MCadObject.h"
-#include "MCadObjectRecords.h"
+#include "MCadObjectRecord.h"
 #include <variant>
 
 
@@ -12,7 +12,7 @@ void assertModification(MCadObject* const a_object)
 		if (pDoc->undoRedo().active())
 		{
 			auto& session = pDoc->undoRedo( ).currentSession( );
-			session.append(std::make_shared<MCadRecordModification>(a_object, session.outputStream()));
+			session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID(), session.outputStream()));
 		}
 	}
 }
@@ -24,7 +24,7 @@ void assertDeletion(const MCadObject* a_object)
 		if (pDoc->undoRedo().active())
 		{
 			auto& session = pDoc->undoRedo( ).currentSession( );
-			session.append(std::make_shared<MCadRecordDeletion>(a_object, session.outputStream( )));
+			session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( )));
 		}
 	}
 }

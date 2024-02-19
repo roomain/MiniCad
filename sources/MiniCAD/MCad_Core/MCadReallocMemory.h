@@ -28,7 +28,7 @@ private:
 
 public:
 	MCadReallocMemory() = default;
-	MCadShared_ptr<MCadObject> realloc(MCadObjectUID& a_objUID)const;
+	MCadShared_ptr<MCadObject> realloc(MCadObjectUID& a_objUID);
 	MCadShared_ptr<MCadObject> realloc(MCadObjectUID& a_objUID, const std::weak_ptr<RTTIDefinition>& a_objectDef);
 	void endSession();
 };

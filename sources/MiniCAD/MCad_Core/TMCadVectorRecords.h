@@ -1,7 +1,7 @@
 #pragma once
 /***********************************************
 * @headerfile TMCadVectorRecords.h
-* @date 28 / 01 / 2024
+* @date 18 / 02 / 2024
 * @author Roomain
 ************************************************/
 #include "IMCadRecord.h"
@@ -53,7 +53,7 @@ protected:
             }
             else
             {
-                MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo";
+                MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo object not recored";
             }
         }
         else
@@ -105,7 +105,7 @@ protected:
             }
             else
             {
-                //
+                MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo object not recored";
             }
         }
         else

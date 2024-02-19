@@ -4,7 +4,7 @@
 #include "MCadObjectUID.h"
 
 
-MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID)const
+MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID)
 {
 	if ( a_objUID.isValid( ) )
 		return a_objUID.open<MCadObject>( );
