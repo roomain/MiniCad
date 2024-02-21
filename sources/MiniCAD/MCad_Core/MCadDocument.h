@@ -31,7 +31,7 @@ class MCAD_CORE_EXPORT MCadDocument : public TMCadReactive<IMCadDocumentReactor>
 	DECLARE_RTTI_DERIVED(1, MCadDocument, TMCadReactive<IMCadDocumentReactor>)
 private:
 	std::string	m_sFilePath;												/*!< file path of document*/
-	MCadUndoRedo m_undoRedo;												/*!< tool of undo redo*/
+	UndoRedo::MCadUndoRedo m_undoRedo;										/*!< tool of undo redo*/
 	std::unordered_map<ObjectUID, MCadObjectUID> m_objectDatabase;
 
 	static void registerObject(const MCadObjectPtr& a_pObject);
@@ -53,7 +53,7 @@ public:
 	/*@brief return the extension of document file (without dot)*/
 	std::string fileExtension()const noexcept;
 
-	MCadUndoRedo& undoRedo() { return m_undoRedo; }
+	UndoRedo::MCadUndoRedo& undoRedo() { return m_undoRedo; }
 
 	MCadObjectUID getObject(const ObjectUID& a_uid)const;
 

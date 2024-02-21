@@ -1,10 +1,13 @@
+#pragma once
 /***********************************************
 * @headerfile MCad_traits.h
 * @date 28 / 01 / 2024
 * @author Roomain
 ************************************************/
 #include <type_traits>
-#include "MCadMemory.h"
+
+template<typename Type>
+class MCadShared_ptr;
 
 /*@ brief Type is shared_ptr*/
 template<typename Type> struct is_shared_ptr : std::false_type {};
@@ -21,7 +24,7 @@ template<typename Base, typename Type> struct is_shared_base_of<Base , std::shar
 
 /*@ brief Type is MCadShared_ptr*/
 template<typename Type> struct is_MCadShared_ptr : std::false_type {};
-template<typename Type> struct is_shared_ptr<MCadShared_ptr<Type>> : std::true_type {};
+template<typename Type> struct is_MCadShared_ptr<MCadShared_ptr<Type>> : std::true_type {};
 
 /*@brief Type is MCadShared_ptr and base of U*/
 template<typename Base, typename Type> struct is_MCadShared_base_of : std::false_type {};

@@ -9,38 +9,42 @@
 #include "MCad_traits.h"
 #include "MCadRef.h"
 
-template<typename Key, typename Type> requires ( is_MCadShared_base_of<MCadObject, Type>::value )
-class TMCadUnordered_map : public MCadRefObject, private std::unordered_map<Key, MCadShared<Type>>
+namespace UndoRedo
 {
-private:
-    using unordered_mapBase = std::unordered_map<Key, Type>;
-
-    // callback called if item changes
-    void assertChange(const Type& a_object)
+    template<typename Key, typename Type> requires ( is_MCadShared_base_of<MCadObject, Type>::value )
+        class TMCadUnordered_map : public MCadRefObject, private std::unordered_map<Key, Type>
     {
-        if (/*undo/redo is not running*/ )
-        {
-            auto iter = std::ranges::find(*this, a_object);
-            // TODO
-        }
-    }
+    private:
+        using unordered_mapBase = std::unordered_map<Key, Type>;
 
-    void assertInsert(const Type& a_object, const Key& a_key)
-    {
-        if (/*undo/redo is not running*/ )
+        // callback called if item changes
+        void assertChange(const Type& a_object)
         {
-            // pas de if constexpr car requires
+            if (/*undo/redo is not running*/ )
+            {
+                auto iter = std::ranges::find(*this, a_object);
+                // TODO
+            }
         }
-    }
 
-    void assertErase(const Type& a_object, const Key& a_key)
-    {
-        if (/*undo/redo is not running*/ )
+        void assertInsert(const Type& a_object, const Key& a_key)
         {
-            // pas de if constexpr car requires
+            if (/*undo/redo is not running*/ )
+            {
+                // pas de if constexpr car requires
+            }
         }
-    }
 
-public:
-    //
-};
+        void assertErase(const Type& a_object, const Key& a_key)
+        {
+            if (/*undo/redo is not running*/ )
+            {
+                // pas de if constexpr car requires
+            }
+        }
+
+    public:
+        //
+    };
+
+}

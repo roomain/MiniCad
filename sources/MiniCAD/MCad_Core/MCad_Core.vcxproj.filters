@@ -105,9 +105,6 @@
     <ClInclude Include="IMCadOutputStream.h">
       <Filter>Fichiers d%27en-tête\Stream</Filter>
     </ClInclude>
-    <ClInclude Include="MCadBinaryBuffer.h">
-      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
-    </ClInclude>
     <ClInclude Include="MCadDocumentManager.h">
       <Filter>Fichiers d%27en-tête\Document</Filter>
     </ClInclude>
@@ -177,9 +174,6 @@
     <ClInclude Include="MCadRef.h">
       <Filter>Fichiers d%27en-tête\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="TMCadRecordContainerCell.h">
-      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
-    </ClInclude>
     <ClInclude Include="TMCadObjectProxy.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
@@ -188,9 +182,6 @@
     </ClInclude>
     <ClInclude Include="TMCadMap.h">
       <Filter>Fichiers d%27en-tête\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="TMCadRecordContainerEmptyCell.h">
-      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
     </ClInclude>
     <ClInclude Include="TMCadSelectionSet.h">
       <Filter>Fichiers d%27en-tête</Filter>
@@ -209,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="TMCadVectorRecords.h">
       <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="MCadBinaryBuffer.h">
+      <Filter>Fichiers d%27en-tête\Stream</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

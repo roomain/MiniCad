@@ -9,12 +9,14 @@
 #include "MCadRef.h"
 #include "defines.h"
 
+
+
 template<typename Type>
 class TMCadObjectProxy
 {
 private:
 	using Proxy = std::variant<std::weak_ptr<Type>, MCadRef<Type>>;
-	
+
 	Proxy m_proxyObj;
 	ObjectUID m_objectUID;
 	std::weak_ptr<RTTIDefinition> m_pObjectDef;
@@ -107,7 +109,7 @@ public:
 			}
 		}
 	}
-	
+
 	explicit TMCadObjectProxy(const TMCadObjectProxy<Type>& a_other) :
 		m_proxyObj{ a_other.m_proxyObj },
 		m_objectUID{ a_other.m_objectUID },

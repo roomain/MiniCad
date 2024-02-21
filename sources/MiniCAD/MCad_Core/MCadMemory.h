@@ -37,11 +37,11 @@ public:
     explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other, Type* a_ptr) noexcept : std::shared_ptr<Type>(a_other, a_ptr) {}
     ~MCadShared_ptr()
     {
-        if constexpr (std::is_base_of_v<MCadObject, Type>)
+        if constexpr ( std::is_base_of_v<MCadObject, Type> )
         {
             // is last use and pointer not null
             if (std::shared_ptr<Type>::use_count() == 1 && std::shared_ptr<Type>::get())
-                assertDeletion(std::shared_ptr<Type>::get());
+                UndoRedo::assertDeletion(std::shared_ptr<Type>::get());
         }
     }
     MCadShared_ptr<Type>& operator = (const MCadShared_ptr<Type>& a_other)

@@ -4,27 +4,31 @@
 #include "MCadObjectRecord.h"
 #include <variant>
 
-
-void assertModification(MCadObject* const a_object)
+namespace UndoRedo
 {
-	if (auto pDoc = a_object->document().lock())
+
+	void assertModification(MCadObject* const a_object)
 	{
-		if (pDoc->undoRedo().active())
+		if ( auto pDoc = a_object->document( ).lock( ) )
 		{
-			auto& session = pDoc->undoRedo( ).currentSession( );
-			session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID(), session.outputStream()));
+			if ( pDoc->undoRedo( ).active( ) )
+			{
+				auto& session = pDoc->undoRedo( ).currentSession( );
+				session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( )));
+			}
 		}
 	}
-}
 
-void assertDeletion(const MCadObject* a_object)
-{
-	if (auto pDoc = a_object->document().lock())
+	void assertDeletion(const MCadObject* a_object)
 	{
-		if (pDoc->undoRedo().active())
+		if ( auto pDoc = a_object->document( ).lock( ) )
 		{
-			auto& session = pDoc->undoRedo( ).currentSession( );
-			session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( )));
+			if ( pDoc->undoRedo( ).active( ) )
+			{
+				auto& session = pDoc->undoRedo( ).currentSession( );
+				session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( )));
+			}
 		}
 	}
+
 }

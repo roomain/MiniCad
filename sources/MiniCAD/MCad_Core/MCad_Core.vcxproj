@@ -166,7 +166,6 @@
     <ClInclude Include="MCadNamedObject.h" />
     <ClInclude Include="MCadObject.h" />
     <ClInclude Include="TMCadMap.h" />
-    <ClInclude Include="TMCadRecordContainerEmptyCell.h" />
     <ClInclude Include="TMCadUnordered_map.h" />
     <ClInclude Include="TMCadVector.h" />
     <ClInclude Include="TMCadObjectProxy.h" />
@@ -184,7 +183,6 @@
     <ClInclude Include="RTTIDefinition_macros.h" />
     <ClInclude Include="RTTIException.h" />
     <ClInclude Include="RTTIException_macro.h" />
-    <ClInclude Include="TMCadRecordContainerCell.h" />
     <ClInclude Include="TRTTIDefinition.h" />
     <ClInclude Include="MCadUndoRedo.h" />
     <ClInclude Include="UndoRedoException.h" />
