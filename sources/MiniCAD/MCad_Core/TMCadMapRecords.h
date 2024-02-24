@@ -1,6 +1,6 @@
 #pragma once
 /***********************************************
-* @headerfile TMCadVectorRecords.h
+* @headerfile TMCadMapRecords.h
 * @date 18 / 02 / 2024
 * @author Roomain
 ************************************************/
@@ -10,21 +10,20 @@
 
 namespace UndoRedo
 {
-
-    template<typename Type> 
+    template<typename Key, typename Type,  class Compare = std::less<Key>>  
         requires ( is_MCadShared_base_of<MCadObject, Type>::value )
-    class TMCadVector;
+    class TMCadMap;
 
-    template<typename ContainedType>
-    class TMCadVectorInsertRecord : public IMCadRecord
+    template<typename Key, typename ContainedType, class Compare = std::less<Key>>
+    class TMCadMapInsertRecord : public IMCadRecord
     {
     public:
-        using RecordedVec = TMCadVector<ContainedType>;
+        using RecordedMap = TMCadMap<Key, ContainedType, Compare>;
 
     private:
-        MCadRef<RecordedVec> m_container;
+        MCadRef<RecordedMap> m_container;
         std::weak_ptr<RTTIDefinition> m_objectDef;
-        size_t m_index = -1;                                /*!< index of object*/
+        Key m_key;                                          /*!< key of object*/
         MCadObjectUID m_recorded;                           /*!< recorded object*/
 
         template<typename Type>
@@ -43,7 +42,7 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                m_container->erase(m_container->begin( ) + m_index);
+                m_container->erase(m_key);
             }
             else
             {
@@ -58,7 +57,7 @@ namespace UndoRedo
                 auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
-                    m_container->insert(m_container->begin( ) + m_index);
+                    (*m_container.pointer())[m_key] = pObject;
                 }
                 else
                 {
@@ -72,25 +71,24 @@ namespace UndoRedo
         }
 
     public:
-        TMCadVectorInsertRecord( ) = delete;
-        TMCadVectorInsertRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
-            m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }
+        TMCadMapInsertRecord( ) = delete;
+        TMCadMapInsertRecord(const MCadRef<RecordedMap>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
+            m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }
         {
             m_objectDef = a_objuid.open<MCadObject>( )->isA( );
         }
     };
 
-
-    template<typename ContainedType>
-    class TMCadVectorEraseRecord : public IMCadRecord
+    template<typename Key, typename ContainedType, class Compare = std::less<Key>>
+    class TMCadMapEraseRecord : public IMCadRecord
     {
     public:
-        using RecordedVec = TMCadVector<ContainedType>;
+        using RecordedMap = TMCadMap<Key, ContainedType, Compare>;
 
     private:
-        MCadRef<TMCadVector<ContainedType>> m_container;
+        MCadRef<RecordedMap> m_container;
         std::weak_ptr<RTTIDefinition> m_objectDef;
-        size_t m_index = -1;                                /*!< index of object*/
+        Key m_key;                                          /*!< key of object*/
         MCadObjectUID m_recorded;                           /*!< recorded object*/
 
         template<typename Type>
@@ -113,7 +111,7 @@ namespace UndoRedo
                 if ( pObject )
                 {
                     m_recorded = pObject->objectUID( );
-                    m_container->insert(m_container->begin( ) + m_index);
+                    ( *m_container.pointer( ) ) [ m_key ] = pObject;
                 }
                 else
                 {
@@ -128,9 +126,10 @@ namespace UndoRedo
 
         void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
         {
+
             if ( m_container.valid( ) )
             {
-                m_container->erase(m_container->begin( ) + m_index);
+                m_container->erase(m_key);
             }
             else
             {
@@ -139,24 +138,24 @@ namespace UndoRedo
         }
 
     public:
-        TMCadVectorEraseRecord( ) = delete;
-        TMCadVectorEraseRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
-            m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }
+        TMCadMapEraseRecord( ) = delete;
+        TMCadMapEraseRecord(const MCadRef<RecordedMap>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
+            m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }
         {
             m_objectDef = a_objuid.open<MCadObject>( )->isA( );
         }
     };
 
-
-    template<typename ContainedType>
-    class TMCadVectorChangeRecord : public IMCadRecord
+    template<typename Key, typename ContainedType, class Compare = std::less<Key>>
+    class TMCadMapChangeRecord : public IMCadRecord
     {
     public:
-        using RecordedVec = TMCadVector<ContainedType>;
+        using RecordedMap = TMCadMap<Key, ContainedType, Compare>;
+
     private:
-        MCadRef<TMCadVector<ContainedType>> m_container;
+        MCadRef<RecordedMap> m_container;
         std::weak_ptr<RTTIDefinition> m_objectDef;
-        size_t m_index = -1;                                /*!< index of object*/
+        Key m_key;                                          /*!< key of object*/
         MCadObjectUID m_modified;                           /*!< recorded object*/
         MCadObjectUID m_modifier;                           /*!< recorded object*/
 
@@ -169,7 +168,7 @@ namespace UndoRedo
     protected:
         void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override
         {
-            m_modifier = ( *m_container.pointer ) [ m_index ];
+            m_modifier = (*m_container.pointer) [ m_key ];
         }
 
         void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
@@ -180,7 +179,7 @@ namespace UndoRedo
                 if ( pObject )
                 {
                     m_modified = pObject->objectUID( );
-                    ( *m_container.pointer ) [ m_index ] = m_modified;
+                    ( *m_container.pointer ) [ m_key ] = m_modified;
                 }
                 else
                 {
@@ -201,7 +200,7 @@ namespace UndoRedo
                 if ( pObject )
                 {
                     m_modifier = pObject->objectUID( );
-                    ( *m_container.pointer ) [ m_index ] = m_modifier;
+                    ( *m_container.pointer ) [ m_key ] = m_modifier;
                 }
                 else
                 {
@@ -215,9 +214,9 @@ namespace UndoRedo
         }
 
     public:
-        TMCadVectorChangeRecord( ) = delete;
-        TMCadVectorChangeRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
-            m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }
+        TMCadMapChangeRecord( ) = delete;
+        TMCadMapChangeRecord(const MCadRef<RecordedMap>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
+            m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }
         {
             m_objectDef = a_objuid.open<MCadObject>( )->isA( );
         }

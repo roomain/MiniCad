@@ -204,6 +204,12 @@
     <ClInclude Include="MCadBinaryBuffer.h">
       <Filter>Fichiers d%27en-tête\Stream</Filter>
     </ClInclude>
+    <ClInclude Include="TMCadMapRecords.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="TMCadUnordered_mapRecords.h">
+      <Filter>Fichiers d%27en-tête\UndoRedo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

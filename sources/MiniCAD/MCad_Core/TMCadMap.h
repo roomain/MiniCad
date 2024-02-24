@@ -47,8 +47,8 @@ namespace UndoRedo
 
     public:
         //
-        using iterator = std::map <Key, TMCadKeyCell<Key, Type>, Compare>::iterator;
-        using const_iterator = std::map < Key, TMCadKeyCell<Key, Type>, Compare>::const_iterator;
+        using iterator = std::map <Key, Type, Compare>::iterator;
+        using const_iterator = std::map < Key, Type, Compare>::const_iterator;
 
         template< class... Args >
         std::pair<iterator, bool> try_emplace(const Key& a_key, Args&&... args)

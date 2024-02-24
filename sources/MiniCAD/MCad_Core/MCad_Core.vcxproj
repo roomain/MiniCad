@@ -155,6 +155,8 @@
     <ClInclude Include="IMCadDocManagerReactor.h" />
     <ClInclude Include="MCadObjectRecord.h" />
     <ClInclude Include="MCadObjectUID.h" />
+    <ClInclude Include="TMCadMapRecords.h" />
+    <ClInclude Include="TMCadUnordered_mapRecords.h" />
     <ClInclude Include="TMCadVectorRecords.h" />
     <ClInclude Include="MCad_traits.h" />
     <ClInclude Include="TMCadSelectionSet.h" />
