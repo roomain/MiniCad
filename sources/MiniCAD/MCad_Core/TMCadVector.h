@@ -6,9 +6,11 @@
 ************************************************/
 #include <vector>
 #include <ranges>
+#include <functional>
 #include "MCad_traits.h"
 #include "MCadRef.h"
 #include "TMCadVectorRecords.h"
+#include "MCadDocumentManager.h"
 
 namespace UndoRedo
 {
@@ -19,20 +21,22 @@ namespace UndoRedo
         using VectorBase = std::vector<Type>;
 
         // callback called if item changes => MCadShared callback
-        void assertChange(const Type& a_object)
-        {
-            if ( auto pDoc = a_object->document( ).lock( ) )
+        void assertChange(const Type* a_old)
+        {   
+            if ( auto pDoc = MCadDocumentManager::Instance().currentDocument( ).lock( ) )
             {
                 if ( pDoc->undoRedo( ).active( ) )
                 {
-                    auto iter = std::ranges::find_if(*this, [ &a_object ] (const Type& a_cur)
+                    auto iter = std::ranges::find_if(*this, [ a_old ] (const Type& a_cur)
                         {
-                                return a_object == &a_cur;
+                                return a_old == &a_cur;
                         });
                     if ( iter != cend( ) )
                     {
-                        const size_t index = std::distance(cbegin( ), iter);
-                        session.append(std::make_shared<TMCadVectorChangeRecord<Type>>(*this, index, a_object->objectUID( )));
+                        const size_t index = std::distance(begin( ), iter);
+                        auto& session = pDoc->undoRedo( ).currentSession( );
+
+                        session.append(std::make_shared<TMCadVectorChangeRecord<Type>>(make_ref(*this), index, ( *a_old ) ? ( *a_old )->objectUID( ) : MCadObjectUID( ), a_old->objectDef( )));
                     }
                 }
             }
@@ -44,9 +48,9 @@ namespace UndoRedo
             {
                 if ( pDoc->undoRedo( ).active( ) )
                 {
-                    a_object->setCallback(std::bind_front(&TMCadVector<Type>::assertChange, this));
+                    a_object.setCallback(std::bind_front(&TMCadVector<Type>::assertChange, this));
                     auto& session = pDoc->undoRedo( ).currentSession( );
-                    session.append(std::make_shared<TMCadVectorInsertRecord<Type>>(*this, a_key, a_object->objectUID( )));
+                    session.append(std::make_shared<TMCadVectorInsertRecord<Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
                 }
             }
         }
@@ -58,7 +62,7 @@ namespace UndoRedo
                 if ( pDoc->undoRedo( ).active( ) )
                 {
                     auto& session = pDoc->undoRedo( ).currentSession( );
-                    session.append(std::make_shared<TMCadVectorEraseRecord<Type>>(*this, index, a_object->objectUID( )));
+                    session.append(std::make_shared<TMCadVectorEraseRecord<Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
                 }
             }
         }
@@ -73,10 +77,15 @@ namespace UndoRedo
 
         explicit TMCadVector(const size_t& a_size) : std::vector<Type>(a_size)
         {
-            // TODO
+            for ( auto& obj : *this )
+                obj.setCallback(std::bind_front(&TMCadVector<Type>::assertChange, this));
         }
 
-        ~TMCadVector( ) = default;
+        ~TMCadVector( )override
+        {
+            for ( auto& obj : *this )
+                obj.setCallback(nullptr);
+        }
 
         void clear( )
         {
@@ -89,16 +98,16 @@ namespace UndoRedo
             VectorBase::clear( );
         }
 
-        void sort(const std::functional<bool(const Type&, const Type&)>& a_sort)
+        void sort(const std::function<bool(const Type&, const Type&)>& a_sort)
         {
-            assertSort( );
-            std::ranges_sort(*this, a_sort);
+            //assertSort( );
+            std::ranges::sort(*this, a_sort);
         }
 
         template<typename ...Args>
         TMCadVector<Type>& emplace_back(Args&& ...a_args)
         {
-            VectorBase::emplace_back(m_onChangeContentCallback, a_args...);
+            VectorBase::emplace_back(assertInsert, a_args...);
             assertInsert(VectorBase::back( ), size( ) - 1);
             return *this;
         }
@@ -129,8 +138,13 @@ namespace UndoRedo
         using std::vector<Type>::crend;
         using std::vector<Type>::size;
         using std::vector<Type>::empty;
-        using std::vector<Type>::reserve;
+        //using std::vector<Type>::reserve;
 
+        void reserve(const size_t& a_size)
+        {
+            for ( auto& obj : *this )
+                obj.setCallback(std::bind_front(&TMCadVector<Type>::assertChange, this));
+        }
 
         using iterator = std::vector<Type>::iterator;
         using const_iterator = std::vector<Type>::const_iterator;
@@ -159,7 +173,7 @@ namespace UndoRedo
 
         iterator erase(iterator a_pos)
         {
-            assert_ItemRemoved(( *a_pos ), std::distance(a_pos, begin( )));
+            assertErase(( *a_pos ), std::distance(a_pos, begin( )));
             auto iter = VectorBase::erase(a_pos);
             return iter;
         }

@@ -46,13 +46,13 @@ namespace TestMCadCore
 		TEST_METHOD(Test_TMCadVector_createObject_Undo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
-			TMCadVector<MCadTestObject> vector;
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vector;
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty");
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
 			vector.push_back(MCadTestObject::createObject( ));
 			Assert::AreEqual(1, static_cast< int >( vector.size( ) ), L"Wrong vector size after push_back");
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
-
+			
 			pWDoc.lock( )->undoRedo( ).undo( );
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty after undo");
 		}
@@ -60,14 +60,14 @@ namespace TestMCadCore
 		TEST_METHOD(Test_TMCadVector_createObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
-			TMCadVector<MCadTestObject> vector;
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vector;
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty");
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
 			auto pTestObj = MCadTestObject::createObject( );
 			vector.push_back(pTestObj);
 			Assert::AreEqual(1, static_cast< int >( vector.size( ) ), L"Wrong vector size after push_back");
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
-
+			
 			pWDoc.lock( )->undoRedo( ).undo( );
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty after undo");
 			pWDoc.lock( )->undoRedo( ).redo( );
@@ -77,13 +77,13 @@ namespace TestMCadCore
 		TEST_METHOD(Test_TMCadVector_createAndDeleteObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
-			TMCadVector<MCadTestObject> vector;
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vector;
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty");
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
 			vector.push_back(MCadTestObject::createObject( ));
 			Assert::AreEqual(1, static_cast< int >( vector.size( ) ), L"Wrong vector size after push_back");
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
-
+			
 			pWDoc.lock( )->undoRedo( ).undo( );
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty after undo");
 			pWDoc.lock( )->undoRedo( ).redo( );
@@ -93,38 +93,54 @@ namespace TestMCadCore
 		TEST_METHOD(Test_TMCadVector_DeleteObject_Redo)
 		{
 			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
-			TMCadVector<MCadTestObject> vector;
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vector;
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty");
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
 			vector.push_back(MCadTestObject::createObject( ));
 			Assert::AreEqual(1, static_cast< int >( vector.size( ) ), L"Wrong vector size after push_back");
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
-
+			
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("Remove object");
 			vector.pop_back( );
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
 			Assert::IsTrue(vector.empty( ), L"Vector Not empty");
-
+			
 			pWDoc.lock( )->undoRedo( ).undo( );
 			Assert::AreEqual(1, static_cast< int >( vector.size( ) ), L"Vector empty after redo");
 		}
 
-		TEST_METHOD(Test_ctor)
+		TEST_METHOD(Test_reserve)
 		{
 			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
-			TMCadVector<MCadTestObject> vec(5);
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vec(5);
 			auto ptr = MCadTestObject::createObject( );
 			Assert::AreEqual(5, static_cast< int >( vec.size( ) ), L"Wrong size");
-
+			
 			pWDoc.lock( )->undoRedo( ).startUndoRecord("change empty object");
-			vec.operator[](0) = ptr;
+			vec[0] = ptr;
 			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
 			pWDoc.lock( )->undoRedo( ).undo( );
 			Assert::AreEqual(5, static_cast< int >( vec.size( ) ), L"Wrong size undo");
-			Assert::IsTrue(vec.at(0).get( ) == nullptr, L"Not same pointer undo");
+			Assert::IsNull(vec.at(0).get( ), L"pointer is not null");
 			pWDoc.lock( )->undoRedo( ).redo( );
 			Assert::IsTrue(vec.at(0) == ptr, L"Not same pointer redo");
 			Assert::AreEqual(5, static_cast< int >( vec.size( ) ), L"Wrong size redo");
+		}
+
+		TEST_METHOD(Test_ChangeByNull)
+		{
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vec;
+			auto ptr = MCadTestObject::createObject( );
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create");
+			vec.push_back(ptr);
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("change empty object");
+			vec [ 0 ] = MCadTestObjectPtr();
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::IsTrue(vec.at(0) == ptr, L"Not same pointer redo");
+			pWDoc.lock( )->undoRedo( ).redo( );
+			Assert::IsNull(vec.at(0).get( ), L"pointer is not null");
 		}
 	};
 }

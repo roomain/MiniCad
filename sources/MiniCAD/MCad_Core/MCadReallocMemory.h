@@ -9,12 +9,11 @@
 #include "defines.h"
 #include "RTTIDefinition.h"
 #include "MCad_Core_globals.h"
+#include "MCadObject.h"
+#include "MCadObjectUID.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
-
-class MCadObject;
-class MCadObjectUID;
 
 using ReallocMap = std::unordered_map<ObjectUID, MCadShared_ptr<MCadObject>>;
 using ReallocWMap = std::unordered_map<ObjectUID, std::weak_ptr<MCadObject>>;
@@ -30,6 +29,27 @@ public:
 	MCadReallocMemory() = default;
 	MCadShared_ptr<MCadObject> realloc(MCadObjectUID& a_objUID);
 	MCadShared_ptr<MCadObject> realloc(MCadObjectUID& a_objUID, const std::weak_ptr<RTTIDefinition>& a_objectDef);
+
+	template<typename Type>
+	void realloc(MCadShared_ptr<Type>& pCastType, MCadObjectUID& a_objUID)
+	{
+		if ( a_objUID.noReference( ) )
+			return;
+
+		auto pTemp = realloc(a_objUID);
+		pCastType = MCadShared_ptr<Type>(std::dynamic_pointer_cast< Type >( pTemp ));//->cast<Type>( ));
+	}
+
+	template<typename Type>
+	void realloc(MCadShared_ptr<Type>& pCastType,  MCadObjectUID& a_objUID, const std::weak_ptr<RTTIDefinition>& a_objectDef)
+	{
+		if ( a_objUID.noReference( ) )
+			return;
+
+		auto pTemp = realloc(a_objUID,a_objectDef);
+		pCastType = MCadShared_ptr<Type>(std::dynamic_pointer_cast< Type >( pTemp ));// ->cast<Type>( ));
+	}
+
 	void endSession();
 };
 

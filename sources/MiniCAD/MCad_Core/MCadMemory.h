@@ -9,13 +9,16 @@
 #include <type_traits>
 #include "MCadRecordAssertion.h"
 
+class RTTIDefinition;
+using RTTIDefinitionPtr = std::shared_ptr< RTTIDefinition>;
+
 class MCadObject;
 
 template<typename Type>
 class MCadShared_ptr;
 
 template<typename Type>
-using AffectCB = std::function<void(const MCadShared_ptr<Type>)>;
+using AffectCB = std::function<void(const MCadShared_ptr<Type>*)>;
 
 /*@brief special smart pointer for MCad undo/redo*/
 template<typename Type>
@@ -47,34 +50,55 @@ public:
     MCadShared_ptr<Type>& operator = (const MCadShared_ptr<Type>& a_other)
     {
         if ( m_affectationCallback )
-            m_affectationCallback(*this);
+            m_affectationCallback(this);
         std::shared_ptr<Type>::operator = (a_other);
         return *this;
     }
     MCadShared_ptr<Type>& operator = (const MCadShared_ptr<Type>&& a_other)noexcept
     {
         if ( m_affectationCallback )
-            m_affectationCallback(*this);
+            m_affectationCallback(this);
         std::shared_ptr<Type>::operator = (a_other);
         return *this;
     }
     MCadShared_ptr<Type>& operator = (const std::shared_ptr<Type>& a_other)
     {
         if ( m_affectationCallback )
-            m_affectationCallback(*this);
+            m_affectationCallback(this);
         std::shared_ptr<Type>::operator = (a_other);
         return *this;
     }
     MCadShared_ptr<Type>& operator = (std::shared_ptr<Type>&& a_other)noexcept
     {
         if ( m_affectationCallback )
-            m_affectationCallback(*this);
+            m_affectationCallback(this);
         std::shared_ptr<Type>::operator = (a_other);
         return *this;
     }
+
+    template<typename OtherType>
+    MCadShared_ptr<OtherType> cast( )
+    {
+        return MCadShared_ptr<OtherType>(std::dynamic_pointer_cast< OtherType >( *this ));
+    }
+
+    operator bool ( ) const
+    {
+        return std::shared_ptr<Type>::operator bool();
+    }
+
     void setCallback(const AffectCB<Type>& a_callback)
     {
         m_affectationCallback = a_callback;
+    }
+
+    RTTIDefinitionPtr objectDef( )const
+    {
+        if constexpr ( std::is_base_of_v<MCadObject, Type> )
+        {
+            return Type::definition( );
+        }
+        return nullptr;
     }
 };
 
@@ -117,6 +141,25 @@ public:
         return m_Wptr;
     }
 
+    //---------------------------------------------------------------
+    template<typename OtherType>
+    [[nodiscard]] MCadShared_ptr<OtherType> shared_from_this( )
+    {
+        if ( !m_Wptr.lock( ) )
+            throw std::bad_weak_ptr{};
+        return MCadShared_ptr<Type>(m_Wptr).cast<OtherType>();
+    }
+
+    template<typename OtherType>
+    [[nodiscard]] MCadShared_ptr<const OtherType> shared_from_const_this( )const
+    {
+        if ( !m_Wptr.lock( ) )
+            throw std::bad_weak_ptr{};
+        return MCadShared_ptr<const OtherType>(m_Wptr).cast<const OtherType>( );
+    }
+
+    //---------------------------------------------------------------
+
     [[nodiscard]] bool isShared( )const noexcept
     {
         return !m_Wptr.expired( );
@@ -147,8 +190,8 @@ constexpr auto is_enable_shared_v = is_enable_shared<Type>::value;
 template<typename Type, typename ...Args>
 MCadShared_ptr<Type> make_MShared(Args&& ...arg)
 {
-    MCadShared_ptr<Type> pObj = std::make_shared<Type>(arg...);
-    if constexpr ( is_enable_shared_v<Type>)
+    MCadShared_ptr<Type> pObj{ std::make_shared<Type>(arg...) };
+    if constexpr ( is_enable_shared_v<Type> || std::is_base_of_v<MCadObject, Type>)
         pObj->m_Wptr = pObj;
     return pObj;
 }

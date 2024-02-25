@@ -2,6 +2,7 @@
 #include "MCadObject.h"
 #include "IMCadInputStream.h"
 #include "IMCadOutputStream.h"
+#include "MCadMemory.h"
 
 class MCadTestObject : public MCadObject
 {
@@ -11,24 +12,27 @@ private:
 
 public:
 	using MCadObject::MCadObject;
+
 	inline void setValue(const int a_value)
 	{
-		assertModification(this);
+		UndoRedo::assertModification(this);
 		m_value = a_value;
 	}
 
 	inline int value()const { return m_value; }
 
-	virtual unsigned short load(IMCadInputStream& a_stream) final
+	unsigned short load(IMCadInputStream& a_stream) override
 	{
 		a_stream >> m_value;
 		return 1;
 	}
 
 	/*@brief save object to stream*/
-	virtual bool save(IMCadOutputStream& a_stream)const
+	bool save(IMCadOutputStream& a_stream)const override
 	{
 		a_stream << m_value;
 		return true;
 	}
 };
+
+using MCadTestObjectPtr = MCadShared_ptr<MCadTestObject>;

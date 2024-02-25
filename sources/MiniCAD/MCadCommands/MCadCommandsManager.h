@@ -20,6 +20,10 @@ using MCadCommandPtr = std::shared_ptr<MCadCommand>;
 
 class MCadCommandReactor;
 
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#pragma warning(disable : 4251)
+
 /*@brief commands database*/
 class MCAD_CMD_EXPORT MCadCommandsManager : public TMCadReactive<MCadCommandReactor>
 {
@@ -32,7 +36,7 @@ private:
 
 public:
 	MCadCommandsManager( ) = default;
-	virtual ~MCadCommandsManager( );
+	virtual ~MCadCommandsManager( ) = default;
 	void registerCommand(const MCadCommandPtr& a_command);
 	void releaseCommand(const std::string& a_cmdName);
 
@@ -44,3 +48,5 @@ public:
 	constexpr const_iterator cbegin( )const { return m_vCommands.cbegin( ); }
 	constexpr const_iterator cend( )const { return m_vCommands.cend( ); }
 };
+
+#pragma warning(pop)

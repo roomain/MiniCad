@@ -1,5 +1,6 @@
 #pragma once
 #include "RTTIDefinition.h"
+#include "MCadMemory.h"
 
 /*@brief template RTTI definition*/
 template<typename DefinedClass>

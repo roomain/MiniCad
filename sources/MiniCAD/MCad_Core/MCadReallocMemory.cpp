@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "MCadReallocMemory.h"
 #include "MCadObject.h"
-#include "MCadObjectUID.h"
 
 
 MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID)
 {
+	if ( a_objUID.noReference( ) )
+		return MCadShared_ptr<MCadObject>( );
+
 	if ( a_objUID.isValid( ) )
 		return a_objUID.open<MCadObject>( );
 
@@ -29,6 +31,9 @@ MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID)
 
 MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID, const std::weak_ptr<RTTIDefinition>& a_objectDef)
 {
+	if ( a_objUID.noReference( ) )
+		return MCadShared_ptr<MCadObject>();
+
 	if ( a_objUID.isValid( ) )
 		return a_objUID.open<MCadObject>( );
 
@@ -43,7 +48,7 @@ MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID, c
 	}
 	else
 	{
-		// log
+		MCadLogger::Instance( ) << LogMode::LOG_ERROR << "Can't realloc";
 	}
 	return pReallocObject;
 }

@@ -30,8 +30,7 @@ private:
 };
 
 #define VK_CHECK(vkFun) \
-VkResult result = vkFun; \
-if(result == VK_SUCCESS) \
+if(VkResult result = vkFun; result  != VK_SUCCESS) \
 	throw MCadVulkanException(result, std::source_location::current());
 
 #pragma warning(pop)

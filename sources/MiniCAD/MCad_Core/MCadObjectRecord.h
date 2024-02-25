@@ -27,7 +27,7 @@ namespace UndoRedo
 
     public:
         MCadObjectRecord( ) = delete;
-        MCadObjectRecord(const MCadObjectUID& a_object, IMCadOutputStream& a_stream);
+        MCadObjectRecord(const MCadObjectUID& a_object, IMCadOutputStream& a_stream, const std::weak_ptr<RTTIDefinition>& a_def);
     };
 
 }

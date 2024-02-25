@@ -1,7 +1,7 @@
 #include "pch.h"
 
 std::atomic_bool MCadObject::m_sEnableUIDGen = true;
-std::atomic_ullong MCadObject::m_UIDGen = 0;
+std::atomic_ullong MCadObject::m_UIDGen = 1;
 
 
 MCadObject::MCadObject()

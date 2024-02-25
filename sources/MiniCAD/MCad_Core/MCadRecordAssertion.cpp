@@ -14,7 +14,7 @@ namespace UndoRedo
 			if ( pDoc->undoRedo( ).active( ) )
 			{
 				auto& session = pDoc->undoRedo( ).currentSession( );
-				session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( )));
+				session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( ), a_object->isA()));
 			}
 		}
 	}
@@ -26,7 +26,7 @@ namespace UndoRedo
 			if ( pDoc->undoRedo( ).active( ) )
 			{
 				auto& session = pDoc->undoRedo( ).currentSession( );
-				session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( )));
+				session.append(std::make_shared<MCadObjectRecord>(a_object->objectUID( ), session.outputStream( ), a_object->isA( )));
 			}
 		}
 	}

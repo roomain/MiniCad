@@ -21,12 +21,6 @@ MCadCommandPtr MCadCommandsManager::find(const std::string& a_cmdName)const
 	return MCadCommandPtr();
 }
 
-MCadCommandsManager::~MCadCommandsManager( )
-{
-	if ( !m_executedCommand.empty( ) )
-		throw MCadCommandException(MCadCommandException::ExceptType::Command_except_CmdIsRunning,
-			std::source_location::current( ));
-}
 
 void MCadCommandsManager::registerCommand(const MCadCommandPtr& a_command)
 {

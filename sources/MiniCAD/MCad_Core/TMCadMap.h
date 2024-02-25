@@ -8,40 +8,48 @@
 #include <ranges>
 #include "MCad_traits.h"
 #include "MCadRef.h"
+#include "TMCadMapRecords.h"
 
 namespace UndoRedo
 {
 
-    template<typename Key, typename Type,
-        class Compare = std::less<Key>>  requires ( is_MCadShared_base_of<MCadObject, Type>::value )
+    template<typename Key, typename Type, class Compare>  requires ( is_MCadShared_base_of<MCadObject, Type>::value )
         class TMCadMap : public MCadRefObject, private std::map<Key, Type, Compare>
     {
     private:
         using MapBase = std::map<Key, Type, Compare>;
 
         // callback called if item changes
-        void assertChange(const Type& a_object)
+        void assertChange(const Type* a_object)
         {
-            if (/*undo/redo is not running*/ )
+            if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
             {
-                auto iter = std::ranges::find(*this, a_object);
-                // TODO
+                if ( pDoc->undoRedo( ).active( ) )
+                {
+                    // TODO
+                }
             }
         }
 
         void assertInsert(const Type& a_object, const Key& a_key)
         {
-            if (/*undo/redo is not running*/ )
+            if ( auto pDoc = a_object->document( ).lock( ) )
             {
-                // pas de if constexpr car requires
+                if ( pDoc->undoRedo( ).active( ) )
+                {
+                    // TODO
+                }
             }
         }
 
         void assertErase(const Type& a_object, const Key& a_key)
         {
-            if (/*undo/redo is not running*/ )
+            if ( auto pDoc = a_object->document( ).lock( ) )
             {
-                // pas de if constexpr car requires
+                if ( pDoc->undoRedo( ).active( ) )
+                {
+                    // TODO
+                }
             }
         }
 
@@ -102,20 +110,20 @@ namespace UndoRedo
             return MapBase::erase(a_key);
         }
 
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::operator [];
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::at;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::begin;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::end;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::cbegin;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::cend;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::rbegin;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::rend;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::crbegin;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::crend;
+        using std::map<Key, Type, Compare>::operator [];
+        using std::map<Key, Type, Compare>::at;
+        using std::map<Key, Type, Compare>::begin;
+        using std::map<Key, Type, Compare>::end;
+        using std::map<Key, Type, Compare>::cbegin;
+        using std::map<Key, Type, Compare>::cend;
+        using std::map<Key, Type, Compare>::rbegin;
+        using std::map<Key, Type, Compare>::rend;
+        using std::map<Key, Type, Compare>::crbegin;
+        using std::map<Key, Type, Compare>::crend;
 
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::size;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::max_size;
-        using std::map<Key, TMCadKeyCell<Key, Type>, Compare>::empty;
+        using std::map<Key, Type, Compare>::size;
+        using std::map<Key, Type, Compare>::max_size;
+        using std::map<Key, Type, Compare>::empty;
     };
 
 }

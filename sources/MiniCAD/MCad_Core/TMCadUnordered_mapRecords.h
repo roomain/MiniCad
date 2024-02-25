@@ -1,12 +1,13 @@
 #pragma once
 /***********************************************
-* @headerfile TMCadUnordred_mapRecords.h
+* @headerfile TMCadUnordered_mapRecords.h
 * @date 24 / 02 / 2024
 * @author Roomain
 ************************************************/
 #include "IMCadRecord.h"
 #include "MCadLogger.h"
 #include "MCadObjectUID.h"
+#include "RTTIDefinition.h"
 
 namespace UndoRedo
 {
@@ -22,7 +23,7 @@ namespace UndoRedo
 
     private:
         MCadRef<RecordedUnordered_map> m_container;
-        std::weak_ptr<RTTIDefinition> m_objectDef;
+        std::weak_ptr<RTTIDefinition> m_pObjectDef;
         Key m_key;                                          /*!< key of object*/
         MCadObjectUID m_recorded;                           /*!< recorded object*/
 
@@ -72,10 +73,16 @@ namespace UndoRedo
 
     public:
         TMCadUnordered_mapInsertRecord( ) = delete;
-        TMCadUnordered_mapInsertRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
+        explicit  TMCadUnordered_mapInsertRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
             m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }
         {
-            m_objectDef = a_objuid.open<MCadObject>( )->isA( );
+            m_pObjectDef = a_objuid.open<MCadObject>( )->isA( );
+        }
+
+        explicit TMCadUnordered_mapInsertRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid, const std::weak_ptr<RTTIDefinition>& a_def) :
+            m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }, m_pObjectDef{ a_def }
+        {
+            //
         }
     };
 
@@ -87,7 +94,7 @@ namespace UndoRedo
 
     private:
         MCadRef<RecordedUnordered_map> m_container;
-        std::weak_ptr<RTTIDefinition> m_objectDef;
+        std::weak_ptr<RTTIDefinition> m_pObjectDef;
         Key m_key;                                          /*!< key of object*/
         MCadObjectUID m_recorded;                           /*!< recorded object*/
 
@@ -139,10 +146,16 @@ namespace UndoRedo
 
     public:
         TMCadUnordered_mapEraseRecord( ) = delete;
-        TMCadUnordered_mapEraseRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
+        explicit TMCadUnordered_mapEraseRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
             m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }
         {
-            m_objectDef = a_objuid.open<MCadObject>( )->isA( );
+            m_pObjectDef = a_objuid.open<MCadObject>( )->isA( );
+        }
+
+        explicit TMCadUnordered_mapEraseRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid, const std::weak_ptr<RTTIDefinition>& a_def) :
+            m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }, m_pObjectDef{ a_def }
+        {
+            //
         }
     };
 
@@ -154,7 +167,7 @@ namespace UndoRedo
 
     private:
         MCadRef<RecordedUnordered_map> m_container;
-        std::weak_ptr<RTTIDefinition> m_objectDef;
+        std::weak_ptr<RTTIDefinition> m_pObjectDef;
         Key m_key;                                          /*!< key of object*/
         MCadObjectUID m_modified;                           /*!< recorded object*/
         MCadObjectUID m_modifier;                           /*!< recorded object*/
@@ -215,10 +228,16 @@ namespace UndoRedo
 
     public:
         TMCadUnordered_mapChangeRecord( ) = delete;
-        TMCadUnordered_mapChangeRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
-            m_container{ a_vRef }, m_key{ a_key }, m_recorded{ a_objuid }
+        explicit TMCadUnordered_mapChangeRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid) :
+            m_container{ a_vRef }, m_key{ a_key }, m_modified{ a_objuid }
         {
-            m_objectDef = a_objuid.open<MCadObject>( )->isA( );
+            m_pObjectDef = a_objuid.open<MCadObject>( )->isA( );
+        }
+
+        explicit TMCadUnordered_mapChangeRecord(const MCadRef<RecordedUnordered_map>& a_vRef, const Key& a_key, const MCadObjectUID& a_objuid, const std::weak_ptr<RTTIDefinition>& a_def) :
+            m_container{ a_vRef }, m_key{ a_key }, m_modified{ a_objuid }, m_pObjectDef{ a_def }
+        {
+            //
         }
     };
 }

@@ -7,8 +7,8 @@
 namespace UndoRedo
 {
 
-    MCadObjectRecord::MCadObjectRecord(const MCadObjectUID& a_object, IMCadOutputStream& a_stream) :
-        m_dataUndoOffset{ m_dataUndoOffset = a_stream.offset( ) }, m_recorded{ a_object }
+    MCadObjectRecord::MCadObjectRecord(const MCadObjectUID& a_object, IMCadOutputStream& a_stream, const std::weak_ptr<RTTIDefinition>& a_def) :
+        m_dataUndoOffset{ m_dataUndoOffset = a_stream.offset( ) }, m_recorded{ a_object }, m_pObjectDef{ a_def }
     {
         m_recorded.open<MCadObject>( )->save(a_stream);
     }

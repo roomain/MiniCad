@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="Test_MCadBinaryBuffer.cpp" />
     <ClCompile Include="Test_MCadCore_Map.cpp" />
+    <ClCompile Include="Test_MCad_Core_Memory.cpp" />
     <ClCompile Include="Test_MCad_Core_RTTI.cpp" />
     <ClCompile Include="Test_MCad_Core_Stream.cpp" />
     <ClCompile Include="Test_MCad_Core_UndoRedo.cpp" />

@@ -18,17 +18,19 @@ class MCAD_CORE_EXPORT MCadObjectUID
     friend class MCadReallocMemory;
 
 private:
-    unsigned long long m_uniqueId;
+    unsigned long long m_uniqueId = 0;
     std::weak_ptr<MCadObject> m_object;
 
     MCadObjectUID(const MCadObject* a_pObject, const unsigned long long& a_uid)noexcept;
 
 public:
-    MCadObjectUID( ) = delete;
+    MCadObjectUID( ) = default;
 
     inline [[nodiscard]] unsigned long long uniqueIdentifier( )const noexcept { return m_uniqueId; }
 
     inline [[nodiscard]] bool isValid( )const noexcept { return !m_object.expired( ); }
+
+    inline [[nodiscard]] bool noReference( )const noexcept { return m_uniqueId == 0; }
 
     inline bool operator < (const MCadObjectUID& a_other)const
     {

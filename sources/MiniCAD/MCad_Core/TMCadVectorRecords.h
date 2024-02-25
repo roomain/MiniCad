@@ -7,6 +7,7 @@
 #include "IMCadRecord.h"
 #include "MCadLogger.h"
 #include "MCadObjectUID.h"
+#include "RTTIDefinition.h"
 
 namespace UndoRedo
 {
@@ -23,7 +24,7 @@ namespace UndoRedo
 
     private:
         MCadRef<RecordedVec> m_container;
-        std::weak_ptr<RTTIDefinition> m_objectDef;
+        std::weak_ptr<RTTIDefinition> m_pObjectDef;
         size_t m_index = -1;                                /*!< index of object*/
         MCadObjectUID m_recorded;                           /*!< recorded object*/
 
@@ -55,10 +56,11 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
+                ContainedType pObject;
+               a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
-                    m_container->insert(m_container->begin( ) + m_index);
+                    m_container->insert(m_container->cbegin( ) + m_index, pObject);
                 }
                 else
                 {
@@ -73,10 +75,17 @@ namespace UndoRedo
 
     public:
         TMCadVectorInsertRecord( ) = delete;
-        TMCadVectorInsertRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
+        explicit TMCadVectorInsertRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
             m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }
         {
-            m_objectDef = a_objuid.open<MCadObject>( )->isA( );
+            if ( a_objuid.isValid( ) )
+                m_pObjectDef = a_objuid.open<MCadObject>( )->isA( );
+        }
+
+        explicit TMCadVectorInsertRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid, const std::weak_ptr<RTTIDefinition>& a_def) :
+            m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }, m_pObjectDef{a_def}
+        {
+            //
         }
     };
 
@@ -89,7 +98,7 @@ namespace UndoRedo
 
     private:
         MCadRef<TMCadVector<ContainedType>> m_container;
-        std::weak_ptr<RTTIDefinition> m_objectDef;
+        std::weak_ptr<RTTIDefinition> m_pObjectDef;
         size_t m_index = -1;                                /*!< index of object*/
         MCadObjectUID m_recorded;                           /*!< recorded object*/
 
@@ -109,11 +118,12 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
                     m_recorded = pObject->objectUID( );
-                    m_container->insert(m_container->begin( ) + m_index);
+                    m_container->insert(m_container->cbegin( ) + m_index, pObject);
                 }
                 else
                 {
@@ -140,10 +150,16 @@ namespace UndoRedo
 
     public:
         TMCadVectorEraseRecord( ) = delete;
-        TMCadVectorEraseRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
+        explicit TMCadVectorEraseRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
             m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }
         {
-            m_objectDef = a_objuid.open<MCadObject>( )->isA( );
+            if ( a_objuid.isValid( ) )
+                m_pObjectDef = a_objuid.open<MCadObject>( )->isA( );
+        }
+        explicit TMCadVectorEraseRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid, const std::weak_ptr<RTTIDefinition>& a_def) :
+            m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }, m_pObjectDef{ a_def }
+        {
+            //
         }
     };
 
@@ -155,7 +171,7 @@ namespace UndoRedo
         using RecordedVec = TMCadVector<ContainedType>;
     private:
         MCadRef<TMCadVector<ContainedType>> m_container;
-        std::weak_ptr<RTTIDefinition> m_objectDef;
+        std::weak_ptr<RTTIDefinition> m_pObjectDef;
         size_t m_index = -1;                                /*!< index of object*/
         MCadObjectUID m_modified;                           /*!< recorded object*/
         MCadObjectUID m_modifier;                           /*!< recorded object*/
@@ -169,23 +185,21 @@ namespace UndoRedo
     protected:
         void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override
         {
-            m_modifier = ( *m_container.pointer ) [ m_index ];
+            if( ( *m_container.pointer( ) ) [ m_index ] )
+                m_modifier = ( *m_container.pointer() ) [ m_index ]->objectUID();
         }
 
         void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_modified, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_modified, m_pObjectDef);
                 if ( pObject )
                 {
                     m_modified = pObject->objectUID( );
-                    ( *m_container.pointer ) [ m_index ] = m_modified;
                 }
-                else
-                {
-                    MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo object not recored";
-                }
+                ( *m_container.pointer( ) ) [ m_index ] = pObject;
             }
             else
             {
@@ -197,16 +211,13 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_modifier, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_modifier, m_pObjectDef);
                 if ( pObject )
                 {
                     m_modifier = pObject->objectUID( );
-                    ( *m_container.pointer ) [ m_index ] = m_modifier;
                 }
-                else
-                {
-                    MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo object not recored";
-                }
+                ( *m_container.pointer( ) ) [ m_index ] = pObject;
             }
             else
             {
@@ -216,10 +227,17 @@ namespace UndoRedo
 
     public:
         TMCadVectorChangeRecord( ) = delete;
-        TMCadVectorChangeRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
-            m_container{ a_vRef }, m_index{ a_index }, m_recorded{ a_objuid }
+        explicit TMCadVectorChangeRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid) :
+            m_container{ a_vRef }, m_index{ a_index }, m_modified{ a_objuid }
         {
-            m_objectDef = a_objuid.open<MCadObject>( )->isA( );
+            if( a_objuid.isValid() )
+                m_pObjectDef = a_objuid.open<MCadObject>( )->isA( );
+        }
+
+        explicit TMCadVectorChangeRecord(const MCadRef<RecordedVec>& a_vRef, const size_t& a_index, const MCadObjectUID& a_objuid, const std::weak_ptr<RTTIDefinition>& a_def) :
+            m_container{ a_vRef }, m_index{ a_index }, m_modified{ a_objuid }, m_pObjectDef{ a_def }
+        {
+            //
         }
     };
 }
