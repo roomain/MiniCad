@@ -31,7 +31,8 @@ public:
     using std::shared_ptr<Type>::shared_ptr;
 
     MCadShared_ptr(const MCadShared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
-    MCadShared_ptr(MCadShared_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other) {}
+    MCadShared_ptr(MCadShared_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other),
+        m_affectationCallback{ a_other.m_affectationCallback }{}
     explicit MCadShared_ptr(const std::shared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
     explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other) {}
     explicit MCadShared_ptr(const std::weak_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
@@ -82,7 +83,7 @@ public:
         return MCadShared_ptr<OtherType>(std::dynamic_pointer_cast< OtherType >( *this ));
     }
 
-    operator bool ( ) const
+    constexpr explicit operator bool ( ) const
     {
         return std::shared_ptr<Type>::operator bool();
     }
@@ -92,7 +93,11 @@ public:
         m_affectationCallback = a_callback;
     }
 
-    RTTIDefinitionPtr objectDef( )const
+    [[nodiscard]] constexpr bool hasAffectationCallback( )const {
+        return m_affectationCallback  != nullptr;
+    }
+
+    [[nodiscard]] RTTIDefinitionPtr objectDef( )const
     {
         if constexpr ( std::is_base_of_v<MCadObject, Type> )
         {

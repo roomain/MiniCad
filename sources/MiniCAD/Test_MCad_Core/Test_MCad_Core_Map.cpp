@@ -4,13 +4,13 @@
 #include "MCadDocument.h"
 #include "IMCadDocumentReactor.h"
 #include "TestUndoRedo_Resources.h"
-#include "TMCadVector.h"
+#include "TMCadMap.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TestMCadCore
 {
-	TEST_CLASS(TestMCadCore_Memory)
+	TEST_CLASS(TestMCadCore_Map)
 	{
 	public:
 		TEST_CLASS_INITIALIZE(InitClass)
@@ -43,18 +43,32 @@ namespace TestMCadCore
 			pDoc->undoRedo( ).clear( );
 		}
 		//-------------------------------------------------------------------------
-		TEST_METHOD(Test_MShared_from_this_cast)
+		TEST_METHOD(Test_TMCadMap_createObject_Undo)
 		{
-			MCadShared_ptr<MCadTestObject> pTest = make_MShared<MCadTestObject>( );
-			MCadShared_ptr<MCadObject> pTestCast = pTest->shared_from_this<MCadObject>( );
-			Assert::IsNotNull(pTestCast.get( ), L"Wrong shared_from_this");
+			//;
 		}
 
-		TEST_METHOD(Test_move_ctor)
+		TEST_METHOD(Test_TMCadMap_createObject_Redo)
 		{
-			MCadShared_ptr<MCadTestObject> pTest = make_MShared<MCadTestObject>( );
-			//Assert::IsTrue(pTest.hasAffectationCallback( ), L"Callback is missing");
+			//
 		}
+
+		TEST_METHOD(Test_TMCadMap_createAndDeleteObject_Redo)
+		{
+			//
+		}
+
+		TEST_METHOD(Test_TMCadMap_DeleteObject_Redo)
+		{
+			//
+		}
+
+
+		TEST_METHOD(Test_ChangeByNull)
+		{
+			//
+		}
+
 
 	};
 }

@@ -33,6 +33,7 @@ namespace UndoRedo
 
         void assertInsert(const Type& a_object, const Key& a_key)
         {
+            a_object.setCallback(std::bind_front(&TMCadMap<Type>::assertChange, this, a_key));
             if ( auto pDoc = a_object->document( ).lock( ) )
             {
                 if ( pDoc->undoRedo( ).active( ) )

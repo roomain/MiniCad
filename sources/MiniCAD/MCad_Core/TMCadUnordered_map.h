@@ -9,15 +9,18 @@
 #include "MCad_traits.h"
 #include "MCadRef.h"
 #include "TMCadUnordered_mapRecords.h"
+#include "MCadDocumentManager.h"
 
 namespace UndoRedo
 {
     template<typename Key, typename Type> requires ( is_MCadShared_base_of<MCadObject, Type>::value )
         class TMCadUnordered_map : public MCadRefObject, private std::unordered_map<Key, Type>
     {
-    private:
+
+    public:
         using unordered_mapBase = std::unordered_map<Key, Type>;
 
+    private:
         // callback called if item changes
         void assertChange(const Type* a_object)
         {
@@ -39,60 +42,102 @@ namespace UndoRedo
 
         void assertInsert(const Type& a_object, const Key& a_key)
         {
-            if ( auto pDoc = a_object->document( ).lock( ) )
+            a_object.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this, a_key));
+
+            if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
             {
                 if ( pDoc->undoRedo( ).active( ) )
                 {
-                    a_object->setCallback(std::bind_front(&TMCadVector<Type>::assertChange, this, a_key));
                     auto& session = pDoc->undoRedo( ).currentSession( );
-                    //session.append(std::make_shared<TMCadVectorInsertRecord<Type>>(make_ref(*this), a_key, a_object->objectUID( )));
+                    session.append(std::make_shared<TMCadUnordered_mapInsertRecord<Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
                 }
             }
         }
 
         void assertErase(const Type& a_object, const Key& a_key)
         {
-            if ( auto pDoc = a_object->document( ).lock( ) )
+            if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
             {
                 if ( pDoc->undoRedo( ).active( ) )
                 {
-                    // TODO
+                    a_object->setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this, a_key));
+                    auto& session = pDoc->undoRedo( ).currentSession( );
+                    session.append(std::make_shared<TMCadUnordered_mapEraseRecord<Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
                 }
             }
         }
 
     public:
 
-        //
-        using iterator = std::unordered_map <Key, Type, Compare>::iterator;
-        using const_iterator = std::unordered_map < Key, Type, Compare>::const_iterator;
+        explicit TMCadUnordered_map(const size_t& a_size) : unordered_mapBase(a_size)
+        {
+            for ( auto& obj : *this )
+                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+        }
+
+        explicit TMCadUnordered_map(const unordered_mapBase& a_other) : unordered_mapBase(a_other)
+        {
+            for ( auto& obj : *this )
+                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+        }
+
+        explicit TMCadUnordered_map(const TMCadUnordered_map& a_other) : unordered_mapBase(a_other)
+        {
+            for ( auto& obj : *this )
+                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+        }
+
+        explicit TMCadUnordered_map(TMCadUnordered_map&& a_other)noexcept : unordered_mapBase(a_other)
+        {
+            for ( auto& obj : *this )
+                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+        }
+
+        using iterator = std::unordered_map <Key, Type>::iterator;
+        using const_iterator = std::unordered_map < Key, Type>::const_iterator;
 
         template< class... Args >
         std::pair<iterator, bool> try_emplace(const Key& a_key, Args&&... args)
         {
-            //
-            return unordered_mapBase::try_emplace(a_key, args);
+            auto emplaced = unordered_mapBase::try_emplace(a_key, args);
+            
+            if ( emplaced.second )
+                assertInsert(emplaced.first, a_key);
+            
+            return emplaced;
         }
 
         template< class... Args >
         std::pair<iterator, bool> try_emplace(Key&& a_key, Args&&... args)
         {
-            //
-            return unordered_mapBase::try_emplace(a_key, args);
+            auto emplaced = unordered_mapBase::emplace(a_key, args);
+
+            if ( emplaced.second )
+                assertInsert(emplaced.first, a_key);
+
+            return emplaced;
         }
 
         template< class... Args >
         std::pair<iterator, bool> emplace(const Key& a_key, Args&&... args)
         {
-            //
-            return unordered_mapBase::emplace(a_key, args);
+            auto emplaced = unordered_mapBase::emplace(a_key, args);
+
+            if ( emplaced.second )
+                assertInsert(emplaced.first, a_key);
+
+            return emplaced;
         }
 
         template< class... Args >
         std::pair<iterator, bool> emplace(Key&& a_key, Args&&... args)
         {
-            //
-            return unordered_mapBase::emplace(a_key, args);
+            auto emplaced = unordered_mapBase::emplace(a_key, args);
+
+            if ( emplaced.second )
+                assertInsert(emplaced.first, a_key);
+
+            return emplaced;
         }
 
         iterator erase(iterator a_pos)
@@ -119,20 +164,20 @@ namespace UndoRedo
             return unordered_mapBase::erase(a_key);
         }
 
-        using std::unordered_map<Key, Type, Compare>::operator [];
-        using std::unordered_map<Key, Type, Compare>::at;
-        using std::unordered_map<Key, Type, Compare>::begin;
-        using std::unordered_map<Key, Type, Compare>::end;
-        using std::unordered_map<Key, Type, Compare>::cbegin;
-        using std::unordered_map<Key, Type, Compare>::cend;
-        using std::unordered_map<Key, Type, Compare>::rbegin;
-        using std::unordered_map<Key, Type, Compare>::rend;
-        using std::unordered_map<Key, Type, Compare>::crbegin;
-        using std::unordered_map<Key, Type, Compare>::crend;
+        using std::unordered_map<Key, Type>::operator [];
+        using std::unordered_map<Key, Type>::at;
+        using std::unordered_map<Key, Type>::begin;
+        using std::unordered_map<Key, Type>::end;
+        using std::unordered_map<Key, Type>::cbegin;
+        using std::unordered_map<Key, Type>::cend;
+        using std::unordered_map<Key, Type>::rbegin;
+        using std::unordered_map<Key, Type>::rend;
+        using std::unordered_map<Key, Type>::crbegin;
+        using std::unordered_map<Key, Type>::crend;
 
-        using std::unordered_map<Key, Type, Compare>::size;
-        using std::unordered_map<Key, Type, Compare>::max_size;
-        using std::unordered_map<Key, Type, Compare>::empty;
+        using std::unordered_map<Key, Type>::size;
+        using std::unordered_map<Key, Type>::max_size;
+        using std::unordered_map<Key, Type>::empty;
     };
 
 }
