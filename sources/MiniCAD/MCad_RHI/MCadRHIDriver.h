@@ -14,9 +14,7 @@ class MCadRHITextureManager;
 
 enum class ImageFormat
 {
-	RGB_8,
-	RGBA_8
-	// TODO
+	//
 };
 
 /*@brief driver interface*/

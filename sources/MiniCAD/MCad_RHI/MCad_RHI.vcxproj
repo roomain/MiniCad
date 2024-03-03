@@ -151,6 +151,7 @@
     <ClInclude Include="MCadRHIDevice.h" />
     <ClInclude Include="MCadRHIDriver.h" />
     <ClInclude Include="MCad_RHI_globals.h" />
+    <ClInclude Include="MCadRHICapabilities.h" />
     <ClInclude Include="TMCadRHIResourceManager.h" />
     <ClInclude Include="MCadRHITextureManager.h" />
     <ClInclude Include="pch.h" />

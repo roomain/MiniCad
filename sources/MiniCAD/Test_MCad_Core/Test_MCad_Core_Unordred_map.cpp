@@ -45,28 +45,105 @@ namespace TestMCadCore
 		//-------------------------------------------------------------------------
 		TEST_METHOD(Test_TMCadUnordered_map_createObject_Undo)
 		{
-			//;
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadUnordered_map<std::string, MCadTestObjectPtr> umap;
+			
+			Assert::IsTrue(umap.empty( ), L"Unordered_map Not empty");
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
+			umap.emplace("test", MCadTestObject::createObject());
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Wrong Unordered_map size after push_back");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::IsTrue(umap.empty( ), L"Unordered_map Not empty after undo");
 		}
 
 		TEST_METHOD(Test_TMCadUnordered_map_createObject_Redo)
 		{
-			//
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadUnordered_map<std::string, MCadTestObjectPtr> umap;
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty");
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
+			auto pTestObj = MCadTestObject::createObject( );
+			umap.emplace("test", pTestObj);
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Wrong vector size after push_back");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty after undo");
+			pWDoc.lock( )->undoRedo( ).redo( );
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Vector empty after redo");
 		}
 
 		TEST_METHOD(Test_TMCadUnordered_map_createAndDeleteObject_Redo)
 		{
-			//
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadUnordered_map<std::string, MCadTestObjectPtr> umap;
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty");
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
+			umap.emplace("test", MCadTestObject::createObject( ));
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Wrong vector size after push_back");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty after undo");
+			pWDoc.lock( )->undoRedo( ).redo( );
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Vector empty after redo");
 		}
 
 		TEST_METHOD(Test_TMCadUnordered_map_DeleteObject_Redo)
 		{
-			//
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadUnordered_map<std::string, MCadTestObjectPtr> umap;
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty");
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
+			umap.emplace("test", MCadTestObject::createObject( ));
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Wrong vector size after push_back");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Remove object");
+			umap.erase("test");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty");
+
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Vector empty after redo");
+		}
+
+		TEST_METHOD(Test_TMCadUnordered_map_DeleteObject_Redo_Ex)
+		{
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadUnordered_map<std::string, MCadTestObjectPtr> umap;
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty");
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create object");
+			umap [ "test" ] = MCadTestObject::createObject( );
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Wrong vector size after push_back");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Remove object");
+			umap.erase("test");
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+			Assert::IsTrue(umap.empty( ), L"Vector Not empty");
+
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::AreEqual(1, static_cast< int >( umap.size( ) ), L"Vector empty after redo");
 		}
 
 
 		TEST_METHOD(Test_ChangeByNull)
 		{
-			//
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadUnordered_map<std::string, MCadTestObjectPtr> umap;
+			auto ptr = MCadTestObject::createObject( );
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("Create");
+			umap["test" ] = ptr;
+			pWDoc.lock( )->undoRedo( ).startUndoRecord("change empty object");
+			umap [ "test" ] = MCadTestObjectPtr( );
+			pWDoc.lock( )->undoRedo( ).endUndoRecord( );
+			pWDoc.lock( )->undoRedo( ).undo( );
+			Assert::IsTrue(umap [ "test" ] == ptr, L"Not same pointer redo");
+			pWDoc.lock( )->undoRedo( ).redo( );
+			Assert::IsNull(umap [ "test" ].get( ), L"pointer is not null");
 		}
 
 

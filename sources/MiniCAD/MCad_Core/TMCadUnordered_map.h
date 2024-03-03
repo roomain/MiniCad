@@ -5,6 +5,7 @@
 * @author Roomain
 ************************************************/
 #include <unordered_map>
+#include <utility>
 #include <ranges>
 #include "MCad_traits.h"
 #include "MCadRef.h"
@@ -13,171 +14,168 @@
 
 namespace UndoRedo
 {
-    template<typename Key, typename Type> requires ( is_MCadShared_base_of<MCadObject, Type>::value )
-        class TMCadUnordered_map : public MCadRefObject, private std::unordered_map<Key, Type>
-    {
+	template<typename Key, typename Type> requires ( is_MCadShared_base_of<MCadObject, Type>::value )
+		class TMCadUnordered_map : public MCadRefObject, private std::unordered_map<Key, Type>
+	{
 
-    public:
-        using unordered_mapBase = std::unordered_map<Key, Type>;
+	public:
+		using unordered_mapBase = std::unordered_map<Key, Type>;
 
-    private:
-        // callback called if item changes
-        void assertChange(const Type* a_object)
-        {
-            if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
-            {
-                if ( pDoc->undoRedo( ).active( ) )
-                {
-                    auto& session = pDoc->undoRedo( ).currentSession( );
-                    auto iter = std::ranges::find_if(*this, [ a_object ] (const auto& a_iter)
-                       {
-                          return a_object == &a_iter.second;
-                       });
+	private:
+		// callback called if item changes
+		void assertChange(const Key& a_key, const Type* a_object)
+		{
+			if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
+			{
+				if ( pDoc->undoRedo( ).active( ) )
+				{
+					auto& session = pDoc->undoRedo( ).currentSession( );
+					auto iter = unordered_mapBase::find(a_key);
 
-                    if ( iter != cend( ) )
-                        session.append(std::make_shared<TMCadUnordered_mapChangeRecord<Key, Type>>(make_ref(*this), iter.first, (*a_object) ? (*a_object)->objectUID( ) : MCadObjectUID( ), a_object->objectDef( )));
-                }
-            }
-        }
+					if ( iter != cend( ) )
+						session.append(std::make_shared<TMCadUnordered_mapChangeRecord<Key, Type>>(make_ref(*this), a_key, ( *a_object ) ? ( *a_object )->objectUID( ) : MCadObjectUID( ), a_object->objectDef( )));
+				}
+			}
+		}
 
-        void assertInsert(const Type& a_object, const Key& a_key)
-        {
-            a_object.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this, a_key));
+		void assertInsert(Type& a_object, const Key& a_key)
+		{
+			a_object.setCallback(std::bind_front(&TMCadUnordered_map<Key, Type>::assertChange, this, a_key));
 
-            if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
-            {
-                if ( pDoc->undoRedo( ).active( ) )
-                {
-                    auto& session = pDoc->undoRedo( ).currentSession( );
-                    session.append(std::make_shared<TMCadUnordered_mapInsertRecord<Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
-                }
-            }
-        }
+			if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
+			{
+				if ( pDoc->undoRedo( ).active( ) )
+				{
+					auto& session = pDoc->undoRedo( ).currentSession( );
+					session.append(std::make_shared<TMCadUnordered_mapInsertRecord<Key, Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
+				}
+			}
+		}
 
-        void assertErase(const Type& a_object, const Key& a_key)
-        {
-            if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
-            {
-                if ( pDoc->undoRedo( ).active( ) )
-                {
-                    a_object->setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this, a_key));
-                    auto& session = pDoc->undoRedo( ).currentSession( );
-                    session.append(std::make_shared<TMCadUnordered_mapEraseRecord<Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
-                }
-            }
-        }
+		void assertErase(Type& a_object, const Key& a_key)
+		{
+			if ( auto pDoc = MCadDocumentManager::Instance( ).currentDocument( ).lock( ) )
+			{
+				if ( pDoc->undoRedo( ).active( ) )
+				{
+					a_object.setCallback(std::bind_front(&TMCadUnordered_map<Key, Type>::assertChange, this, a_key));
+					auto& session = pDoc->undoRedo( ).currentSession( );
+					session.append(std::make_shared<TMCadUnordered_mapEraseRecord<Key, Type>>(make_ref(*this), a_key, a_object ? a_object->objectUID( ) : MCadObjectUID( ), a_object.objectDef( )));
+				}
+			}
+		}
 
-    public:
+	public:
+		TMCadUnordered_map( ) = default;
+		explicit TMCadUnordered_map(const size_t& a_size) : unordered_mapBase(a_size)
+		{
+			for ( auto& obj : *this )
+				obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+		}
 
-        explicit TMCadUnordered_map(const size_t& a_size) : unordered_mapBase(a_size)
-        {
-            for ( auto& obj : *this )
-                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
-        }
+		explicit TMCadUnordered_map(const unordered_mapBase& a_other) : unordered_mapBase(a_other)
+		{
+			for ( auto& obj : *this )
+				obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+		}
 
-        explicit TMCadUnordered_map(const unordered_mapBase& a_other) : unordered_mapBase(a_other)
-        {
-            for ( auto& obj : *this )
-                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
-        }
+		explicit TMCadUnordered_map(const TMCadUnordered_map& a_other) : unordered_mapBase(a_other)
+		{
+			for ( auto& obj : *this )
+				obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+		}
 
-        explicit TMCadUnordered_map(const TMCadUnordered_map& a_other) : unordered_mapBase(a_other)
-        {
-            for ( auto& obj : *this )
-                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
-        }
+		explicit TMCadUnordered_map(TMCadUnordered_map&& a_other)noexcept : unordered_mapBase(a_other)
+		{
+			for ( auto& obj : *this )
+				obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
+		}
 
-        explicit TMCadUnordered_map(TMCadUnordered_map&& a_other)noexcept : unordered_mapBase(a_other)
-        {
-            for ( auto& obj : *this )
-                obj.setCallback(std::bind_front(&TMCadUnordered_map<Type>::assertChange, this));
-        }
+		using iterator = std::unordered_map <Key, Type>::iterator;
+		using const_iterator = std::unordered_map < Key, Type>::const_iterator;
 
-        using iterator = std::unordered_map <Key, Type>::iterator;
-        using const_iterator = std::unordered_map < Key, Type>::const_iterator;
+		template< class... Args >
+		std::pair<iterator, bool> try_emplace(const Key& a_key, Args&&... args)
+		{
+			auto emplaced = unordered_mapBase::try_emplace(a_key, args...);
 
-        template< class... Args >
-        std::pair<iterator, bool> try_emplace(const Key& a_key, Args&&... args)
-        {
-            auto emplaced = unordered_mapBase::try_emplace(a_key, args);
-            
-            if ( emplaced.second )
-                assertInsert(emplaced.first, a_key);
-            
-            return emplaced;
-        }
+			if ( emplaced.second )
+				assertInsert(emplaced.first->second, a_key);
 
-        template< class... Args >
-        std::pair<iterator, bool> try_emplace(Key&& a_key, Args&&... args)
-        {
-            auto emplaced = unordered_mapBase::emplace(a_key, args);
+			return emplaced;
+		}
 
-            if ( emplaced.second )
-                assertInsert(emplaced.first, a_key);
+		template< class... Args >
+		std::pair<iterator, bool> try_emplace(Key&& a_key, Args&&... args)
+		{
+			auto emplaced = unordered_mapBase::emplace(a_key, args...);
 
-            return emplaced;
-        }
+			if ( emplaced.second )
+				assertInsert(emplaced.first->second, a_key);
 
-        template< class... Args >
-        std::pair<iterator, bool> emplace(const Key& a_key, Args&&... args)
-        {
-            auto emplaced = unordered_mapBase::emplace(a_key, args);
+			return emplaced;
+		}
 
-            if ( emplaced.second )
-                assertInsert(emplaced.first, a_key);
 
-            return emplaced;
-        }
+		template< class... Args >
+		std::pair<iterator, bool> emplace(Args&&... args)
+		{
+			auto emplaced = unordered_mapBase::emplace(args...);
 
-        template< class... Args >
-        std::pair<iterator, bool> emplace(Key&& a_key, Args&&... args)
-        {
-            auto emplaced = unordered_mapBase::emplace(a_key, args);
+			if ( emplaced.second )
+				assertInsert(emplaced.first->second, emplaced.first->first);
 
-            if ( emplaced.second )
-                assertInsert(emplaced.first, a_key);
+			return emplaced;
+		}
 
-            return emplaced;
-        }
+		iterator erase(iterator a_pos)
+		{
+			assertErase(a_pos->second, a_pos->first);
+			return unordered_mapBase::erase(a_pos);
+		}
 
-        iterator erase(iterator a_pos)
-        {
-            //
-            return unordered_mapBase::erase(a_pos);
-        }
+		iterator erase(const_iterator a_pos)
+		{
+			assertErase(a_pos->second, a_pos->first);
+			return unordered_mapBase::erase(a_pos);
+		}
 
-        iterator erase(const_iterator a_pos)
-        {
-            //
-            return unordered_mapBase::erase(a_pos);
-        }
+		iterator erase(const_iterator a_first, const_iterator a_last)
+		{
+			std::for_each(a_first, a_last, [ this ] (const auto& a_Iter)
+				{
+					assertErase(a_Iter->second, a_Iter->first);
+				});
+			return unordered_mapBase::erase(a_first, a_last);
+		}
 
-        iterator erase(const_iterator a_first, const_iterator a_last)
-        {
-            //
-            return unordered_mapBase::erase(a_first, a_last);
-        }
+		size_t erase(const Key& a_key)
+		{
+			auto iter = unordered_mapBase::find(a_key);
+			if(iter != end())
+				assertErase(iter->second, iter->first);
+			return unordered_mapBase::erase(a_key);
+		}
 
-        size_t erase(const Key& a_key)
-        {
-            //
-            return unordered_mapBase::erase(a_key);
-        }
+		Type& operator [] (const Key& a_key)
+		{
+			return try_emplace(a_key, Type{}).first->second;
+		}
 
-        using std::unordered_map<Key, Type>::operator [];
-        using std::unordered_map<Key, Type>::at;
-        using std::unordered_map<Key, Type>::begin;
-        using std::unordered_map<Key, Type>::end;
-        using std::unordered_map<Key, Type>::cbegin;
-        using std::unordered_map<Key, Type>::cend;
-        using std::unordered_map<Key, Type>::rbegin;
-        using std::unordered_map<Key, Type>::rend;
-        using std::unordered_map<Key, Type>::crbegin;
-        using std::unordered_map<Key, Type>::crend;
+		Type& operator [] (const Key&& a_key)
+		{
+			return try_emplace(std::move(a_key), Type{}).first->second;
+		}
 
-        using std::unordered_map<Key, Type>::size;
-        using std::unordered_map<Key, Type>::max_size;
-        using std::unordered_map<Key, Type>::empty;
-    };
+		using std::unordered_map<Key, Type>::at;
+		using std::unordered_map<Key, Type>::begin;
+		using std::unordered_map<Key, Type>::end;
+		using std::unordered_map<Key, Type>::cbegin;
+		using std::unordered_map<Key, Type>::cend;
+
+		using std::unordered_map<Key, Type>::size;
+		using std::unordered_map<Key, Type>::max_size;
+		using std::unordered_map<Key, Type>::empty;
+	};
 
 }

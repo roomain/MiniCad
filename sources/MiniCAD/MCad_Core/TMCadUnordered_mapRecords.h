@@ -55,7 +55,8 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
                     ( *m_container.pointer( ) ) [ m_key ] = pObject;
@@ -114,7 +115,8 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
                     m_recorded = pObject->objectUID( );
@@ -181,23 +183,21 @@ namespace UndoRedo
     protected:
         void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override
         {
-            m_modifier = ( *m_container.pointer ) [ m_key ];
+            if ( ( *m_container.pointer( ) ) [ m_key ] )
+                m_modifier = ( *m_container.pointer( ) ) [ m_key ]->objectUID( );
         }
 
         void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_modified, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_modified, m_pObjectDef);
                 if ( pObject )
                 {
                     m_modified = pObject->objectUID( );
-                    ( *m_container.pointer ) [ m_key ] = m_modified;
                 }
-                else
-                {
-                    MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo object not recored";
-                }
+                ( *m_container.pointer( ) ) [ m_key ] = pObject;
             }
             else
             {
@@ -209,16 +209,13 @@ namespace UndoRedo
         {
             if ( m_container.valid( ) )
             {
-                auto pObject = a_realocMem.realloc(m_modifier, m_pObjectDef);
+                ContainedType pObject;
+                a_realocMem.realloc(pObject, m_modifier, m_pObjectDef);
                 if ( pObject )
                 {
                     m_modifier = pObject->objectUID( );
-                    ( *m_container.pointer ) [ m_key ] = m_modifier;
                 }
-                else
-                {
-                    MCadLogger::Instance( ) << LogMode::LOG_WARNING << "Can't undo/redo object not recored";
-                }
+                ( *m_container.pointer( ) ) [ m_key ] = pObject;
             }
             else
             {

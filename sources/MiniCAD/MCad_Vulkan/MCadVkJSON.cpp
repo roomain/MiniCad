@@ -15,13 +15,11 @@ bool MCadVkJSON::load(const std::string& a_filepath)
 	boost::property_tree::json_parser::read_json(a_filepath, jsonTree);
 	if ( !jsonTree.empty() )
 	{
-		auto extensions = jsonTree.get_child(INSTANCE_EXTENSIONS);
-		for ( const auto& value : extensions )
-			m_instanceExtensions.emplace_back(value.second.get_value<std::string>( ));
+		for ( const auto& [key, value] : jsonTree.get_child(INSTANCE_EXTENSIONS) )
+			m_instanceExtensions.emplace_back(value.get_value<std::string>( ));
 		
-		auto layers = jsonTree.get_child(INSTANCE_LAYERS);
-		for ( const auto& value : layers )
-			m_instanceLayers.emplace_back(value.second.get_value<std::string>( ));
+		for ( const auto& [key, value] : jsonTree.get_child(INSTANCE_LAYERS) )
+			m_instanceLayers.emplace_back(value.get_value<std::string>( ));
 
 		//jsonTree.get<int>("height", 0)
 		//jsonTree.
