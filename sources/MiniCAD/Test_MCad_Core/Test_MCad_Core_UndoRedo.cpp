@@ -122,6 +122,5 @@ namespace TestMCadCore
 			pWDoc.lock()->undoRedo().redo();
 			Assert::AreEqual(8, pTestObject->value(), L"Value not redo 2");
 		}
-
 	};
 }

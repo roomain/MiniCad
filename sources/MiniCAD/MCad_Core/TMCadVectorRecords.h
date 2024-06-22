@@ -57,7 +57,7 @@ namespace UndoRedo
             if ( m_container.valid( ) )
             {
                 ContainedType pObject;
-               a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
+                a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
                     m_container->insert(m_container->cbegin( ) + m_index, pObject);

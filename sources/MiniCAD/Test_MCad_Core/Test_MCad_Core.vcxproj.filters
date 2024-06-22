@@ -36,6 +36,12 @@
     <ClCompile Include="Test_MCad_Core_Memory.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Test_MCad_Core_Unordred_map.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_MCad_Core_Map.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestRTTI_Resources.h">

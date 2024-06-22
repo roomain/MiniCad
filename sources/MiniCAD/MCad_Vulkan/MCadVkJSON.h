@@ -18,11 +18,11 @@ private:
 	StringVector m_deviceLayers;
 	StringVector m_deviceExtensions;
 
-	static constexpr std::string INSTANCE_EXTENSIONS = "INSTANCE_EXTENSIONS";
-	static constexpr std::string INSTANCE_LAYERS = "INSTANCE_LAYERS";
+	static constexpr std::string INSTANCE_EXTENSIONS{ "INSTANCE_EXTENSIONS" };
+	static constexpr std::string INSTANCE_LAYERS{ "INSTANCE_LAYERS" };
 
-	static constexpr std::string DEVICE_EXTENSIONS = "DEVICE_EXTENSIONS";
-	static constexpr std::string DEVICE_LAYERS = "DEVICE_LAYERS";
+	static constexpr std::string DEVICE_EXTENSIONS{ "DEVICE_EXTENSIONS" };
+	static constexpr std::string DEVICE_LAYERS{ "DEVICE_LAYERS" };
 
 public:
 	MCadVkJSON( );

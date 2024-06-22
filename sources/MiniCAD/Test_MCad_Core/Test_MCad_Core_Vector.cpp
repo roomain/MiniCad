@@ -142,5 +142,17 @@ namespace TestMCadCore
 			pWDoc.lock( )->undoRedo( ).redo( );
 			Assert::IsNull(vec.at(0).get( ), L"pointer is not null");
 		}
+
+		TEST_METHOD(Test_Resize)
+		{
+			auto pWDoc = MCadDocumentManager::Instance( ).currentDocument( );
+			UndoRedo::TMCadVector<MCadTestObjectPtr> vec;
+			auto ptr = MCadTestObject::createObject( );
+			vec.push_back(ptr);
+			Assert::IsTrue(vec [ 0 ].hasAffectationCallback( ), L"Callback is missing");
+			vec.resize(2);
+			Assert::IsTrue(vec [ 0 ].hasAffectationCallback( ), L"Callback is missing after resize");
+		}
+
 	};
 }
