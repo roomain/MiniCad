@@ -18,14 +18,14 @@ template<typename Type>
 class MCadShared_ptr;
 
 template<typename Type>
-using AffectCB = std::function<void(const MCadShared_ptr<Type>*)>;
+using AffectactationCallback = std::function<void(const MCadShared_ptr<Type>*)>;
 
 /*@brief special smart pointer for MCad undo/redo*/
 template<typename Type>
 class MCadShared_ptr : public std::shared_ptr<Type>
 {
 private:
-    AffectCB<Type> m_affectationCallback;
+    AffectactationCallback<Type> m_affectationCallback; /*!< affectation callback*/
 
 public:
     using std::shared_ptr<Type>::shared_ptr;
@@ -35,7 +35,7 @@ public:
     explicit MCadShared_ptr(const std::shared_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
     explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other) {}
     explicit MCadShared_ptr(const std::weak_ptr<Type>& a_other) : std::shared_ptr<Type>(a_other) {}
-    explicit MCadShared_ptr(std::weak_ptr<Type>&& a_other) : std::shared_ptr<Type>(a_other) {}
+    explicit MCadShared_ptr(std::weak_ptr<Type>&& a_other)noexcept : std::shared_ptr<Type>(a_other) {}
     template<typename U>
     explicit MCadShared_ptr(std::shared_ptr<Type>&& a_other, Type* a_ptr) noexcept : std::shared_ptr<Type>(a_other, a_ptr) {}
     ~MCadShared_ptr()
@@ -87,7 +87,7 @@ public:
         return std::shared_ptr<Type>::operator bool();
     }
 
-    void setCallback(const AffectCB<Type>& a_callback)
+    void setCallback(const AffectactationCallback<Type>& a_callback)
     {
         m_affectationCallback = a_callback;
     }
