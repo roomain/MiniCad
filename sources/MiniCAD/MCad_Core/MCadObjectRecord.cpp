@@ -13,9 +13,9 @@ namespace UndoRedo
         m_recorded.open<MCadObject>( )->save(a_stream);
     }
 
-    void MCadObjectRecord::prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream)
+    void MCadObjectRecord::prepareRedo(MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_stream)
     {
-        auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
+        auto pObject = a_reallocMem.realloc(m_recorded, m_pObjectDef);
         if ( pObject )
         {
             m_dataRedoOffset = a_stream.offset( );
@@ -28,19 +28,19 @@ namespace UndoRedo
         }
     }
 
-    void MCadObjectRecord::do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem)
+    void MCadObjectRecord::do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem)
     {
-        loadObject(m_dataUndoOffset, a_stream, a_realocMem);
+        loadObject(m_dataUndoOffset, a_stream, a_reallocMem);
     }
 
-    void MCadObjectRecord::do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem)
+    void MCadObjectRecord::do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem)
     {
-        loadObject(m_dataRedoOffset, a_stream, a_realocMem);
+        loadObject(m_dataRedoOffset, a_stream, a_reallocMem);
     }
 
-    void MCadObjectRecord::loadObject(const size_t& a_offset, IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem)
+    void MCadObjectRecord::loadObject(const size_t& a_offset, IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem)
     {
-        auto pObject = a_realocMem.realloc(m_recorded, m_pObjectDef);
+        auto pObject = a_reallocMem.realloc(m_recorded, m_pObjectDef);
         if ( pObject )
         {
             m_recorded = pObject->objectUID( );

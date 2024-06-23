@@ -19,11 +19,11 @@ namespace UndoRedo
         std::weak_ptr<RTTIDefinition> m_pObjectDef; /*!< recorded object definition*/
 
     protected:
-        void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override;
-        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override;
-        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override;
+        void prepareRedo(MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_stream) override;
+        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override;
+        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override;
 
-        void loadObject(const size_t& a_offset, IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem);
+        void loadObject(const size_t& a_offset, IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem);
 
     public:
         MCadObjectRecord( ) = delete;

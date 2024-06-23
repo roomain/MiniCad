@@ -23,18 +23,18 @@ namespace UndoRedo
         bool m_bPrepareRedo = true; /*!< indicate redo need to be prepared*/
 
     protected:
-        virtual void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) = 0;
-        virtual void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) = 0;
-        virtual void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) = 0;
+        virtual void prepareRedo(MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_stream) = 0;
+        virtual void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) = 0;
+        virtual void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) = 0;
 
     public:
         IMCadRecord( ) = default;
         virtual ~IMCadRecord( ) = default;
         void erase(bool a_bErase) { m_bErased = a_bErase; }
-        bool isErased( )const { return m_bErased; }
+        [[nodiscard]]bool isErased( )const { return m_bErased; }
 
-        void undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem, IMCadOutputStream& a_outStream);
-        void redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem);
+        void undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_outStream);
+        void redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem);
     };
 
 

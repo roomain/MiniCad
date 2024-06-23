@@ -37,7 +37,7 @@ namespace UndoRedo
 		bool m_active = true;					/*!< undo redo activation*/
 		bool m_sessionActive = false;			/*!< flag indicating an active session*/
 		SessionList m_sessionList;				/*!< list of undoredo session*/
-		MCadReallocMemory m_realocMemory;		/*!< realocation memory*/
+		MCadReallocMemory m_reallocMemory;		/*!< realocation memory*/
 		SessionIterator m_SessionUndo;			/*!< iterator on undo session*/
 		SessionIterator m_SessionRedo;			/*!< iterator on redo session*/
 	public:

@@ -4,18 +4,18 @@
 namespace UndoRedo
 {
 
-    void IMCadRecord::undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem, IMCadOutputStream& a_outStream)
+    void IMCadRecord::undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_outStream)
     {
         if ( m_bPrepareRedo )
         {
-            prepareRedo(a_realocMem, a_outStream);
+            prepareRedo(a_reallocMem, a_outStream);
             m_bPrepareRedo = false;
         }
-        do_undo(a_stream, a_realocMem);
+        do_undo(a_stream, a_reallocMem);
     }
 
-    void IMCadRecord::redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem)
+    void IMCadRecord::redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem)
     {
-        do_redo(a_stream, a_realocMem);
+        do_redo(a_stream, a_reallocMem);
     }
 }

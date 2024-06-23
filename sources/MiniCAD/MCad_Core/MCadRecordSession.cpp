@@ -26,16 +26,16 @@ namespace UndoRedo
 		m_lRecords.emplace_front(a_record);
 	}
 
-	void MCadRecordSession::undo(MCadReallocMemory& a_realocMemory)
+	void MCadRecordSession::undo(MCadReallocMemory& a_reallocMemory)
 	{
 		for ( const auto& pRecord : m_lRecords )
-			pRecord->undo(m_inputStream, a_realocMemory, m_outputStream);
+			pRecord->undo(m_inputStream, a_reallocMemory, m_outputStream);
 	}
 
-	void MCadRecordSession::redo(MCadReallocMemory& a_realocMemory)
+	void MCadRecordSession::redo(MCadReallocMemory& a_reallocMemory)
 	{
 		for ( auto&& pRecord : m_lRecords )
-			pRecord->redo(m_inputStream, a_realocMemory);
+			pRecord->redo(m_inputStream, a_reallocMemory);
 	}
 
 }

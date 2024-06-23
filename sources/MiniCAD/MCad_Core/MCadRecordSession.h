@@ -45,8 +45,8 @@ namespace UndoRedo
 		[[nodiscard]] constexpr std::string title( )const noexcept { return m_title; }
 		[[nodiscard]] size_t size( )const noexcept { return m_lRecords.size( ); }
 		void append(const IMCadRecordPtr& a_record);
-		void undo(MCadReallocMemory& a_realocMemory);
-		void redo(MCadReallocMemory& a_realocMemory);
+		void undo(MCadReallocMemory& a_reallocMemory);
+		void redo(MCadReallocMemory& a_reallocMemory);
 
 	};
 

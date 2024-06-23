@@ -30,7 +30,7 @@ namespace UndoRedo
 	{
 		if ( hasRedo( ) && !m_sessionActive )
 		{
-			m_SessionRedo.value( )->redo(m_realocMemory);
+			m_SessionRedo.value( )->redo(m_reallocMemory);
 			if ( m_SessionRedo.value( ) == m_sessionList.end( ) - 1 )
 			{
 				m_SessionRedo.reset( );
@@ -48,7 +48,7 @@ namespace UndoRedo
 	{
 		if ( hasUndo( ) && !m_sessionActive )
 		{
-			m_SessionUndo.value( )->undo(m_realocMemory);
+			m_SessionUndo.value( )->undo(m_reallocMemory);
 			if ( m_SessionUndo.value( ) == m_sessionList.begin( ) )
 			{
 				m_SessionUndo.reset( );

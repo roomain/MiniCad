@@ -18,12 +18,12 @@
 using ReallocMap = std::unordered_map<ObjectUID, MCadShared_ptr<MCadObject>>;
 using ReallocWMap = std::unordered_map<ObjectUID, std::weak_ptr<MCadObject>>;
 
-/*@brief realocation memory object*/
+/*@brief reallocation memory object*/
 class MCAD_CORE_EXPORT MCadReallocMemory
 {
 private:
-	ReallocWMap m_undoRedoRealloc;	/*!< realocated pointer for all sessions*/
-	ReallocMap m_sessionRealoc;		/*!< realocated pointer for session*/
+	ReallocWMap m_undoRedoRealloc;	/*!< reallocated pointer for all sessions*/
+	ReallocMap m_sessionRealloc;	/*!< realocated pointer for session*/
 
 public:
 	MCadReallocMemory() = default;

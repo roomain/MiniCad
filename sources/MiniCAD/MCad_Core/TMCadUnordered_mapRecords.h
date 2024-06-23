@@ -34,12 +34,12 @@ namespace UndoRedo
         }
 
     protected:
-        void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override
+        void prepareRedo(MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_stream) override
         {
             // nothing todo
         }
 
-        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
+        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override
         {
             if ( m_container.valid( ) )
             {
@@ -51,12 +51,12 @@ namespace UndoRedo
             }
         }
 
-        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
+        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override
         {
             if ( m_container.valid( ) )
             {
                 ContainedType pObject;
-                a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
+                a_reallocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
                     ( *m_container.pointer( ) ) [ m_key ] = pObject;
@@ -106,17 +106,17 @@ namespace UndoRedo
         }
 
     protected:
-        void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override
+        void prepareRedo(MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_stream) override
         {
             // nothing todo
         }
 
-        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
+        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override
         {
             if ( m_container.valid( ) )
             {
                 ContainedType pObject;
-                a_realocMem.realloc(pObject, m_recorded, m_pObjectDef);
+                a_reallocMem.realloc(pObject, m_recorded, m_pObjectDef);
                 if ( pObject )
                 {
                     m_recorded = pObject->objectUID( );
@@ -133,7 +133,7 @@ namespace UndoRedo
             }
         }
 
-        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
+        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override
         {
 
             if ( m_container.valid( ) )
@@ -181,18 +181,18 @@ namespace UndoRedo
         }
 
     protected:
-        void prepareRedo(MCadReallocMemory& a_realocMem, IMCadOutputStream& a_stream) override
+        void prepareRedo(MCadReallocMemory& a_reallocMem, IMCadOutputStream& a_stream) override
         {
             if ( ( *m_container.pointer( ) ) [ m_key ] )
                 m_modifier = ( *m_container.pointer( ) ) [ m_key ]->objectUID( );
         }
 
-        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
+        void do_undo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override
         {
             if ( m_container.valid( ) )
             {
                 ContainedType pObject;
-                a_realocMem.realloc(pObject, m_modified, m_pObjectDef);
+                a_reallocMem.realloc(pObject, m_modified, m_pObjectDef);
                 if ( pObject )
                 {
                     m_modified = pObject->objectUID( );
@@ -205,12 +205,12 @@ namespace UndoRedo
             }
         }
 
-        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_realocMem) override
+        void do_redo(IMCadInputStream& a_stream, MCadReallocMemory& a_reallocMem) override
         {
             if ( m_container.valid( ) )
             {
                 ContainedType pObject;
-                a_realocMem.realloc(pObject, m_modifier, m_pObjectDef);
+                a_reallocMem.realloc(pObject, m_modifier, m_pObjectDef);
                 if ( pObject )
                 {
                     m_modifier = pObject->objectUID( );

@@ -43,7 +43,7 @@ MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID, c
 	{
 		pReallocObject = a_objectDef.lock()->create(a_objUID.m_uniqueId);
 		m_undoRedoRealloc.try_emplace(a_objUID.m_uniqueId, pReallocObject);
-		m_sessionRealoc.try_emplace(a_objUID.m_uniqueId, pReallocObject);
+		m_sessionRealloc.try_emplace(a_objUID.m_uniqueId, pReallocObject);
 		a_objUID.m_object = pReallocObject;
 	}
 	else
@@ -55,5 +55,5 @@ MCadShared_ptr<MCadObject> MCadReallocMemory::realloc(MCadObjectUID& a_objUID, c
 
 void MCadReallocMemory::endSession()
 {
-	m_sessionRealoc.clear();
+	m_sessionRealloc.clear();
 }

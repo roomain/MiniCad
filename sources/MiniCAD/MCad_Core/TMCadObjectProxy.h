@@ -34,7 +34,7 @@ private:
 		}
 	};
 
-	struct RealocableVisitor
+	struct ReallocableVisitor
 	{
 		bool operator ()([[maybe_unused]] const std::weak_ptr<Type>& a_ptr)const
 		{
@@ -60,7 +60,7 @@ private:
 		}
 	};
 
-	struct RealocVisitor
+	struct ReallocVisitor
 	{
 		MCadReallocMemory* const m_memory;
 		ObjectUID m_objID;
@@ -136,9 +136,9 @@ public:
 		return  std::visit(RealocableVisitor{}, m_proxyObj);
 	}
 
-	bool realocate(MCadReallocMemory& a_memory)
+	bool reallocate(MCadReallocMemory& a_memory)
 	{
-		return  std::visit(RealocVisitor{ &a_memory , m_objectUID , m_pObjectDef }, m_proxyObj);
+		return  std::visit(ReallocVisitor{ &a_memory , m_objectUID , m_pObjectDef }, m_proxyObj);
 	}
 
 	Type* const operator -> ( )
